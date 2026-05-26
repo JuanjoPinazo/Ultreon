@@ -46,15 +46,6 @@ function useInView(threshold = 0.15) {
 // ─────────────────────────────────────────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────────────────────────────────────────
-const CENTERS = [
-  { name: 'H. U. San Juan de Alicante', city: 'Alicante', status: 'active', cases: 0, code: 'SJA' },
-  { name: 'H. U. General de Elche', city: 'Elche', status: 'active', cases: 0, code: 'ELC' },
-  { name: 'H. U. General de Castellón', city: 'Castellón', status: 'active', cases: 0, code: 'CAS' },
-  { name: 'H. U. La Ribera', city: 'Alzira', status: 'active', cases: 0, code: 'RIB' },
-  { name: 'H. U. Manises', city: 'Manises', status: 'active', cases: 0, code: 'MAN' },
-  { name: 'Centro Pendiente', city: 'Comunitat Valenciana', status: 'pending', cases: 0, code: 'TBD' },
-];
-
 const SECONDARY_ENDPOINTS = [
   {
     icon: (
@@ -203,10 +194,33 @@ function MetricCard({
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
-// ─────────────────────────────────────────────────────────────────────────────
-export default function StudyClient() {
+interface StudyClientProps {
+  initialHospitals: {
+    id: string;
+    name: string;
+    short_name: string | null;
+    city: string | null;
+    province: string | null;
+    code: string;
+    cases: number;
+    investigators: {
+      id: string;
+      full_name: string;
+      role: string;
+      specialty: string | null;
+      is_principal_investigator: boolean;
+    }[];
+  }[];
+  initialStats: {
+    totalCases: number;
+    zeroContrastPct: number;
+    strategyModifiedPct: number;
+    meanOpstarScore: number;
+    activeHospitalsCount: number;
+  };
+}
+
+export default function StudyClient({ initialHospitals, initialStats }: StudyClientProps) {
   const [activeSection, setActiveSection] = useState('hero');
 
   const metricsRef = useInView(0.2);
@@ -352,7 +366,7 @@ export default function StudyClient() {
                 Levante
               </span>
               <br />
-              <span className="text-slate-400 text-4xl sm:text-5xl md:text-6xl font-light">Registry</span>
+              <span className="text-slate-400 text-4xl sm:text-5xl md:text-6xl font-light">Registro</span>
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 font-light max-w-2xl leading-relaxed mb-3">
@@ -770,44 +784,72 @@ export default function StudyClient() {
             Centros Participantes
           </h2>
           <p className="text-slate-500 text-sm max-w-lg leading-relaxed mb-10">
-            6 hospitales de tercer nivel de la Comunitat Valenciana. Todos los centros utilizan el eCRF de OPSTAR-AI estandarizado y el sistema ULTREON™ 3.0.
+            {initialStats.activeHospitalsCount} {initialStats.activeHospitalsCount === 1 ? 'hospital' : 'hospitales'} de tercer nivel de la Comunitat Valenciana. Todos los centros utilizan el eCRF de OPSTAR-AI estandarizado y el sistema ULTREON™ 3.0.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {CENTERS.map((center) => (
-              <div
-                key={center.code}
-                className={`relative p-5 rounded-2xl border transition-all duration-200 ${
-                  center.status === 'active'
-                    ? 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
-                    : 'border-slate-900 bg-slate-950/40 opacity-60'
-                }`}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center font-black font-mono text-xs text-cyan-400">
-                    {center.code}
+          {initialHospitals.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {initialHospitals.map((center) => (
+                <div
+                  key={center.id}
+                  className="bg-slate-900 border border-slate-800 hover:border-slate-750 rounded-3xl p-6 flex flex-col justify-between transition-all duration-200 relative overflow-hidden group"
+                >
+                  <div>
+                    <div className="flex justify-between items-start gap-2">
+                      <h4 className="font-bold text-sm text-slate-200 tracking-tight leading-snug group-hover:text-cyan-400 transition-colors">
+                        {center.name}
+                      </h4>
+                      <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/10">Activo</span>
+                    </div>
+                    <span className="text-[9px] font-mono text-cyan-400 font-bold bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/20 inline-block mt-2">
+                      {center.code}
+                    </span>
+
+                    <div className="text-[10px] font-mono text-slate-500 mt-2 mb-4">
+                      {center.city}{center.province ? `, ${center.province}` : ''} · España
+                    </div>
+
+                    {/* Investigators List inside Center Card */}
+                    <div className="space-y-2 border-t border-slate-850/60 pt-4">
+                      <span className="text-[8px] font-mono font-bold text-slate-500 uppercase tracking-wider block">Investigadores</span>
+                      {center.investigators && center.investigators.length > 0 ? (
+                        <ul className="space-y-2 text-xs text-slate-350">
+                          {center.investigators.map((inv) => (
+                            <li key={inv.id} className="flex items-start gap-2">
+                              <span className="text-[10px] translate-y-0.5">🩺</span>
+                              <div className="min-w-0">
+                                <span className="font-medium text-slate-250">{inv.full_name}</span>
+                                {inv.is_principal_investigator && (
+                                  <span className="ml-1.5 inline-block text-[7px] font-black font-mono tracking-wider px-1.5 py-0.25 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/30 uppercase">
+                                    IP
+                                  </span>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-[10px] text-slate-600 italic">Investigadores pendientes de asignación</p>
+                      )}
+                    </div>
                   </div>
-                  <span
-                    className={`text-[8px] font-black font-mono px-2 py-1 rounded-full uppercase tracking-wider ${
-                      center.status === 'active'
-                        ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40'
-                        : 'bg-slate-900 text-slate-600 border border-slate-800'
-                    }`}
-                  >
-                    {center.status === 'active' ? 'Activo' : 'Pendiente'}
-                  </span>
+
+                  <div className="mt-6 pt-3 border-t border-slate-850/60 flex justify-between items-center text-[10px] font-mono">
+                    <span className="text-slate-500 uppercase">Casos Registrados</span>
+                    <span className="text-sm font-black text-cyan-400">
+                      {center.cases > 0 ? center.cases : '—'}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-sm font-bold text-slate-200 mb-1">{center.name}</div>
-                <div className="text-[10px] font-mono text-slate-500 mb-4">{center.city} · España</div>
-                <div className="flex items-center justify-between pt-3 border-t border-slate-800/60">
-                  <span className="text-[9px] font-mono text-slate-600">Casos registrados</span>
-                  <span className="text-sm font-black font-mono text-cyan-400">
-                    {center.cases > 0 ? center.cases : '—'}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-12 rounded-3xl border border-slate-850 bg-slate-900/20 text-center space-y-3">
+              <span className="text-4xl">🏥</span>
+              <h4 className="text-sm font-bold text-slate-300">Sin hospitales activos</h4>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">No se han registrado hospitales activos en el sistema en este momento.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -828,11 +870,11 @@ export default function StudyClient() {
             ref={metricsRef.ref}
             className={`grid grid-cols-2 lg:grid-cols-5 gap-4 transition-all duration-700 ${metricsRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
           >
-            <MetricCard label="Casos Totales" value={0} suffix="" sub="Registrados en todos los centros" color="cyan" start={metricsRef.inView} />
-            <MetricCard label="Zero-Contraste %" value={0} suffix="%" sub="OCT realizadas con 0 mL de contraste" color="emerald" start={metricsRef.inView} />
-            <MetricCard label="Estrategia Modificada" value={0} suffix="%" sub="Cambio procedimental guiado por IA" color="violet" start={metricsRef.inView} />
-            <MetricCard label="Score OPSTAR Medio" value={0} suffix="/100" sub="Puntuación promedio de optimización" color="sky" start={metricsRef.inView} />
-            <MetricCard label="Centros Activos" value={5} suffix="" sub="Centros aportando datos clínicos" color="amber" start={metricsRef.inView} />
+            <MetricCard label="Casos Totales" value={initialStats.totalCases} suffix="" sub="Registrados en todos los centros" color="cyan" start={metricsRef.inView} />
+            <MetricCard label="Zero-Contraste %" value={initialStats.zeroContrastPct} suffix="%" sub="OCT realizadas con 0 mL de contraste" color="emerald" start={metricsRef.inView} />
+            <MetricCard label="Estrategia Modificada" value={initialStats.strategyModifiedPct} suffix="%" sub="Cambio procedimental guiado por IA" color="violet" start={metricsRef.inView} />
+            <MetricCard label="Score OPSTAR Medio" value={initialStats.meanOpstarScore} suffix="/100" sub="Puntuación promedio de optimización" color="sky" start={metricsRef.inView} />
+            <MetricCard label="Centros Activos" value={initialStats.activeHospitalsCount} suffix="" sub="Centros aportando datos clínicos" color="amber" start={metricsRef.inView} />
           </div>
 
           {/* Recruitment banner */}

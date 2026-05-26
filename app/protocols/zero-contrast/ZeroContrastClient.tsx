@@ -284,9 +284,9 @@ function QualityBadge({
   onSelect: () => void;
 }) {
   const map = {
-    excellent: { label: 'Excellent', cls: 'border-emerald-500 bg-emerald-950/40 text-emerald-400', dot: 'bg-emerald-400' },
-    adequate: { label: 'Adequate', cls: 'border-yellow-500/50 bg-yellow-950/30 text-yellow-400', dot: 'bg-yellow-400' },
-    suboptimal: { label: 'Suboptimal', cls: 'border-red-500/50 bg-red-950/30 text-red-400', dot: 'bg-red-400' },
+    excellent: { label: 'Excelente', cls: 'border-emerald-500 bg-emerald-950/40 text-emerald-400', dot: 'bg-emerald-400' },
+    adequate: { label: 'Aceptable', cls: 'border-yellow-500/50 bg-yellow-950/30 text-yellow-400', dot: 'bg-yellow-400' },
+    suboptimal: { label: 'Subóptimo', cls: 'border-red-500/50 bg-red-950/30 text-red-400', dot: 'bg-red-400' },
   };
   const m = map[value];
   return (
@@ -349,7 +349,7 @@ function HemoMode({
             className="text-[10px] font-black font-mono tracking-[0.3em] uppercase"
             style={{ color: accent }}
           >
-            HEMO MODE ACTIVE
+            MODO QUIRÓFANO ACTIVO
           </span>
           <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: accent }} />
         </div>
@@ -400,7 +400,7 @@ function HemoMode({
               className="text-[10px] font-black font-mono tracking-[0.4em] uppercase mb-2"
               style={{ color: accent }}
             >
-              STEP {current.id} / 4 — {current.code}
+              PASO {current.id} / 4 — {current.code}
             </div>
             <h2 className="text-4xl lg:text-5xl font-black text-slate-50 tracking-tight">
               {current.title}
@@ -411,7 +411,7 @@ function HemoMode({
           {/* Progress bar */}
           <div className="mb-6">
             <div className="flex justify-between text-xs font-mono font-bold mb-2">
-              <span className="text-slate-400">Progress</span>
+              <span className="text-slate-400">Progreso</span>
               <span style={{ color: accent }}>{done}/{total} completados</span>
             </div>
             <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
@@ -514,7 +514,7 @@ function HemoMode({
           disabled={step === 1}
           className="flex-1 py-4 text-slate-500 text-sm font-bold font-mono disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
         >
-          ← PREV
+          ← ANTERIOR
         </button>
         <div className="flex items-center px-4 border-x border-slate-900">
           <span className="text-xs font-mono text-slate-600">{step}/4</span>
@@ -525,7 +525,7 @@ function HemoMode({
           className="flex-1 py-4 text-sm font-bold font-mono disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
           style={{ color: accent }}
         >
-          NEXT →
+          SIGUIENTE →
         </button>
       </div>
     </div>
@@ -597,24 +597,24 @@ export default function ZeroContrastClient() {
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
-                Dashboard
+                Panel Principal
               </Link>
               <span className="text-slate-800 text-xs">/</span>
-              <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">Protocols</span>
+              <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">Protocolos</span>
               <span className="text-slate-800 text-xs">/</span>
-              <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest">Zero-Contrast</span>
+              <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest">Zero-Contraste</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-800/40">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-widest">Protocol v2.1</span>
+                <span className="text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-widest">Protocolo v2.1</span>
               </div>
               <button
                 onClick={() => setHemoMode(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/60 border border-red-800/50 text-red-400 text-[10px] font-black font-mono uppercase tracking-wider hover:bg-red-950 transition-all cursor-pointer"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-                Hemo Mode
+                Modo Quirófano
               </button>
             </div>
           </div>
@@ -638,7 +638,7 @@ export default function ZeroContrastClient() {
                 Dragonfly OPSTAR
               </span>
               <span className="text-[9px] font-black font-mono tracking-[0.25em] text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-3 py-1.5 rounded-full uppercase">
-                Zero-Contrast Protocol
+                Protocolo Zero-Contraste
               </span>
             </div>
 
@@ -654,8 +654,8 @@ export default function ZeroContrastClient() {
             </div>
 
             <p className="text-slate-400 text-lg md:text-xl font-light mb-2 max-w-2xl leading-relaxed">
-              Manual saline-guided OCT acquisition workflow.{' '}
-              <span className="text-slate-300 font-medium">Cath lab–ready, step-by-step.</span>
+              Flujo de trabajo de adquisición de OCT manual guiado por suero salino.{' '}
+              <span className="text-slate-300 font-medium">Paso a paso, optimizado para sala de hemodinámica.</span>
             </p>
             <p className="text-[11px] font-mono text-slate-600 mb-8 tracking-wider uppercase">
               Protocolo diseñado para sala de hemodinámica · iPad optimizado · 0 ml contraste
@@ -695,7 +695,7 @@ export default function ZeroContrastClient() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Start Protocol
+                Iniciar Protocolo
               </button>
 
               <button
@@ -705,7 +705,7 @@ export default function ZeroContrastClient() {
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                 </svg>
-                Quick View
+                Vista Rápida
               </button>
 
               <button
@@ -715,8 +715,30 @@ export default function ZeroContrastClient() {
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2" />
                 </svg>
-                Hemo Mode
+                Modo Quirófano
               </button>
+
+              <a
+                href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A3_v3.pdf"
+                download
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/40 text-slate-200 font-bold text-sm transition-all duration-200 cursor-pointer hover:text-cyan-400"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Póster A3
+              </a>
+
+              <a
+                href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A4_v3.pdf"
+                download
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/40 text-slate-200 font-bold text-sm transition-all duration-200 cursor-pointer hover:text-cyan-400"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Póster A4
+              </a>
             </div>
           </div>
         </section>
@@ -766,7 +788,7 @@ export default function ZeroContrastClient() {
           <aside className="lg:w-64 xl:w-72 flex-shrink-0">
             <div className="lg:sticky lg:top-20 space-y-2">
               <div className="text-[9px] font-black font-mono tracking-[0.3em] text-slate-600 uppercase mb-4 px-1">
-                Protocol Steps
+                Pasos del Protocolo
               </div>
               {PROTOCOL_STEPS.map((s) => {
                 const prog = getStepProgress(s.id);
@@ -801,7 +823,7 @@ export default function ZeroContrastClient() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-[9px] font-black font-mono uppercase tracking-widest" style={isActive ? { color } : { color: '#475569' }}>
-                          Step {s.id} · {s.code}
+                          Paso {s.id} · {s.code}
                         </div>
                         <div className={`text-xs font-bold truncate ${isActive ? 'text-slate-100' : 'text-slate-500'}`}>
                           {s.title}
@@ -813,7 +835,7 @@ export default function ZeroContrastClient() {
                       <div className="h-full rounded-full transition-all duration-400" style={{ width: `${prog.pct}%`, background: color }} />
                     </div>
                     <div className="flex justify-between items-center mt-1 ml-11">
-                      <span className="text-[9px] font-mono text-slate-600">{prog.done}/{prog.total} checks</span>
+                      <span className="text-[9px] font-mono text-slate-600">{prog.done}/{prog.total} verificados</span>
                       <span className="text-[9px] font-mono" style={isActive ? { color } : { color: '#334155' }}>{s.duration}</span>
                     </div>
                   </button>
@@ -827,11 +849,42 @@ export default function ZeroContrastClient() {
                   className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-red-950/30 border border-red-900/50 text-red-400 hover:bg-red-950/60 hover:border-red-800 transition-all duration-200 cursor-pointer group"
                 >
                   <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-                  <span className="text-xs font-black font-mono uppercase tracking-wider">Hemo Mode</span>
+                  <span className="text-xs font-black font-mono uppercase tracking-wider">Modo Quirófano</span>
                   <svg className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                   </svg>
                 </button>
+              </div>
+
+              {/* Sidebar: PDF Downloads */}
+              <div className="pt-1">
+                <div className="p-4 rounded-2xl border border-slate-900 bg-slate-950/40 space-y-2">
+                  <p className="text-[9px] font-black font-mono text-slate-500 uppercase tracking-widest text-center">
+                    Pósters del Protocolo
+                  </p>
+                  <div className="flex flex-col gap-1.5">
+                    <a
+                      href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A3_v3.pdf"
+                      download
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-slate-800 hover:border-cyan-500/40 bg-slate-900/60 hover:bg-cyan-950/20 text-slate-300 hover:text-cyan-400 text-[10px] font-bold font-mono transition-all"
+                    >
+                      <span>Póster Oficial A3</span>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </a>
+                    <a
+                      href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A4_v3.pdf"
+                      download
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-slate-800 hover:border-cyan-500/40 bg-slate-900/60 hover:bg-cyan-950/20 text-slate-300 hover:text-cyan-400 text-[10px] font-bold font-mono transition-all"
+                    >
+                      <span>Póster de Bolsillo A4</span>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
               </div>
 
               {/* Sidebar: QR placeholder */}
@@ -855,8 +908,8 @@ export default function ZeroContrastClient() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-[9px] font-black font-mono text-slate-500 uppercase tracking-wider">QR Protocol</p>
-                    <p className="text-[8px] font-mono text-slate-700 mt-0.5">Scan for quick access</p>
+                    <p className="text-[9px] font-black font-mono text-slate-500 uppercase tracking-wider">Código QR</p>
+                    <p className="text-[8px] font-mono text-slate-700 mt-0.5">Acceso rápido en sala</p>
                   </div>
                 </div>
               </div>
@@ -872,9 +925,9 @@ export default function ZeroContrastClient() {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <div className={`text-[10px] font-black font-mono tracking-[0.35em] uppercase ${accent.text} mb-2`}>
-                      Step {activeStep} / 4 — {currentStepData.code}
+                      Paso {activeStep} / 4 — {currentStepData.code}
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-black text-slate-50 tracking-tight">
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-55 font-mono tracking-tight">
                       {currentStepData.title}
                     </h2>
                     <p className="text-slate-500 text-sm mt-1">{currentStepData.titleEn}</p>
@@ -893,7 +946,7 @@ export default function ZeroContrastClient() {
                 {/* Step progress */}
                 <div className="mt-5">
                   <div className="flex justify-between text-[10px] font-mono mb-1.5">
-                    <span className="text-slate-600">Checklist Progress</span>
+                    <span className="text-slate-600">Progreso de Verificación</span>
                     <span className={accent.text}>{getStepProgress(activeStep).done}/{getStepProgress(activeStep).total}</span>
                   </div>
                   <div className="h-1.5 bg-slate-900 rounded-full overflow-hidden">
@@ -945,7 +998,7 @@ export default function ZeroContrastClient() {
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
-                  PREV
+                  ANTERIOR
                 </button>
                 <div className="flex gap-1">
                   {([1, 2, 3, 4] as Step[]).map((n) => (
@@ -973,7 +1026,7 @@ export default function ZeroContrastClient() {
                       : { borderColor: '#1e293b', color: '#475569' }
                   }
                 >
-                  NEXT
+                  SIGUIENTE
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
@@ -985,18 +1038,18 @@ export default function ZeroContrastClient() {
             <div className="rounded-3xl border border-slate-800 bg-slate-900/40 overflow-hidden">
               <div className="p-6 border-b border-slate-800/60 flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-200 font-mono uppercase tracking-wider">Video Reference</h3>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Demostraciones procedurales — próximamente disponibles</p>
+                  <h3 className="text-sm font-bold text-slate-200 font-mono uppercase tracking-wider">Videos de Referencia</h3>
+                  <p className="text-[10px] text-slate-500 mt-0.5">Demostraciones del procedimiento (próximamente)</p>
                 </div>
                 <span className="text-[9px] font-black font-mono text-slate-600 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full uppercase tracking-widest">
-                  Coming Soon
+                  Próximamente
                 </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
                 {[
-                  { title: 'Técnica de Inyección', duration: '1:42', tag: 'Injection' },
-                  { title: 'Pullback & Acquisition', duration: '2:15', tag: 'OCT' },
-                  { title: 'Troubleshooting: Blood Residual', duration: '0:58', tag: 'Tips' },
+                  { title: 'Técnica de Inyección', duration: '1:42', tag: 'Inyección' },
+                  { title: 'Pullback y Adquisición', duration: '2:15', tag: 'OCT' },
+                  { title: 'Resolución de Problemas: Sangre Residual', duration: '0:58', tag: 'Consejos' },
                 ].map((vid, i) => (
                   <div
                     key={i}
@@ -1033,7 +1086,7 @@ export default function ZeroContrastClient() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-slate-100 font-mono uppercase tracking-wider">Common Issues</h3>
+                    <h3 className="text-sm font-bold text-slate-100 font-mono uppercase tracking-wider">Problemas Comunes</h3>
                     <p className="text-[10px] text-slate-500 mt-0.5">Problemas frecuentes y soluciones rápidas para sala</p>
                   </div>
                 </div>
@@ -1045,7 +1098,7 @@ export default function ZeroContrastClient() {
               </div>
             </div>
 
-            {/* ── QUALITY ASSESSMENT ─────────────────────────────────────── */}
+            {/* ── EVALUACIÓN DE CALIDAD ─────────────────────────────────────── */}
             <div className="rounded-3xl border border-slate-800 bg-slate-900/30 overflow-hidden">
               <div className="p-6 md:p-8 border-b border-slate-800/60">
                 <div className="flex items-center gap-3">
@@ -1055,7 +1108,7 @@ export default function ZeroContrastClient() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-slate-100 font-mono uppercase tracking-wider">Quality Assessment</h3>
+                    <h3 className="text-sm font-bold text-slate-100 font-mono uppercase tracking-wider">Evaluación de Calidad</h3>
                     <p className="text-[10px] text-slate-500 mt-0.5">Evalúa la calidad de la adquisición al final del procedimiento</p>
                   </div>
                 </div>
@@ -1064,7 +1117,7 @@ export default function ZeroContrastClient() {
                 {/* Wash quality */}
                 <div>
                   <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-widest block mb-2">
-                    Calidad del Lavado (Wash Quality)
+                    Calidad de Aclarado (Lavado)
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {(['excellent', 'adequate', 'suboptimal'] as const).map((v) => (
@@ -1081,7 +1134,7 @@ export default function ZeroContrastClient() {
                 {/* Residual blood */}
                 <div>
                   <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-widest block mb-2">
-                    Sangre Residual (Residual Blood)
+                    Sangre Residual
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {(['excellent', 'adequate', 'suboptimal'] as const).map((v) => (
@@ -1115,7 +1168,7 @@ export default function ZeroContrastClient() {
                 {/* Additional contrast */}
                 <div>
                   <label className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-widest block mb-2">
-                    ¿Contraste adicional requerido?
+                    ¿Se requirió contraste de rescate?
                   </label>
                   <div className="flex gap-2">
                     {[false, true].map((v) => (
@@ -1140,23 +1193,30 @@ export default function ZeroContrastClient() {
                 {(quality.washQuality || quality.residualBlood || quality.octImageQuality || quality.additionalContrast !== null) && (
                   <div className="pt-4 border-t border-slate-800/60">
                     <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
-                      <div className="text-[9px] font-black font-mono text-slate-500 uppercase tracking-widest mb-3">Resumen de Evaluación</div>
+                      <div className="text-[9px] font-black font-mono text-slate-550 uppercase tracking-widest mb-3">Resumen de la Evaluación</div>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                         {[
-                          { label: 'Wash', value: quality.washQuality },
-                          { label: 'Blood', value: quality.residualBlood },
-                          { label: 'OCT Img', value: quality.octImageQuality },
-                          { label: 'Contrast', value: quality.additionalContrast === false ? 'excellent' : quality.additionalContrast === true ? 'suboptimal' : null },
+                          { label: 'Lavado', value: quality.washQuality },
+                          { label: 'Sangre', value: quality.residualBlood },
+                          { label: 'Imagen OCT', value: quality.octImageQuality },
+                          { label: 'Contraste', value: quality.additionalContrast === false ? 'excellent' : quality.additionalContrast === true ? 'suboptimal' : null },
                         ].map((item) => {
                           const clsMap: Record<string, string> = {
                             excellent: 'text-emerald-400 bg-emerald-950/40 border-emerald-800/50',
                             adequate: 'text-yellow-400 bg-yellow-950/30 border-yellow-800/40',
                             suboptimal: 'text-red-400 bg-red-950/30 border-red-800/40',
                           };
+                          const valTextMap: Record<string, string> = {
+                            excellent: 'Excelente',
+                            adequate: 'Aceptable',
+                            suboptimal: 'Subóptimo',
+                          };
                           return (
                             <div key={item.label} className={`p-2 rounded-xl border ${item.value ? clsMap[item.value] : 'bg-slate-900 border-slate-800 text-slate-600'}`}>
                               <div className="text-[8px] font-mono font-bold mb-1 opacity-70 uppercase">{item.label}</div>
-                              <div className="text-xs font-black capitalize">{item.value ?? '—'}</div>
+                              <div className="text-xs font-black capitalize">
+                                {item.value ? (valTextMap[item.value] ?? item.value) : '—'}
+                              </div>
                             </div>
                           );
                         })}
@@ -1164,6 +1224,33 @@ export default function ZeroContrastClient() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* ── METAS DEL REGISTRO Y BANNER CLÍNICO ─────────────────────── */}
+            <div className="rounded-3xl border border-cyan-500/20 bg-slate-900/40 p-6 md:p-8 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-cyan-950/60 border border-cyan-800/60 flex items-center justify-center text-cyan-400">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-100 font-mono uppercase tracking-wider">Metas del Registro OPSTAR-AI</h3>
+                  <p className="text-[10px] text-slate-500 mt-0.5">Objetivo clínico principal y documentación obligatoria en el eCRF</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-350 leading-relaxed font-sans pt-2">
+                <div className="space-y-2">
+                  <p>
+                    <span className="text-cyan-400 font-bold">Prevención de la Nefropatía por Contraste (NIC):</span> El objetivo principal de este protocolo es demostrar la viabilidad de la adquisición de OCT intracoronaria utilizando exclusivamente <span className="text-cyan-300 font-semibold">0 mL de medio de contraste yodado</span>. Esto es especialmente crítico en pacientes con insuficiencia renal severa (TFG &lt; 30 mL/min/1.73m²), donde el contraste convencional puede acelerar la necesidad de terapia de reemplazo renal.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p>
+                    <span className="text-cyan-400 font-bold">Requisitos de Documentación:</span> Todos los operadores deben documentar de forma estricta los volúmenes de contraste utilizados (meta de 0 mL), los hallazgos de aposición del stent mediante la IA de <span className="text-cyan-300 font-semibold">ULTREON™ 3.0</span> y el grado de aclarado del vaso. Esta información es obligatoria para el cálculo automático de la métrica de optimización procedural en la sección del eCRF del registro.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -1204,7 +1291,7 @@ export default function ZeroContrastClient() {
           title="Activar Hemo Mode — pantalla completa optimizada"
         >
           <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-          <span className="hidden sm:inline">Hemo Mode</span>
+          <span className="hidden sm:inline">Modo Quirófano</span>
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
           </svg>

@@ -87,6 +87,16 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
             </Link>
 
             <Link
+              href="/admin/investigators"
+              className="flex items-center gap-3 px-4 py-3 text-xs font-bold font-mono tracking-wide uppercase text-slate-400 hover:text-cyan-400 hover:bg-slate-950/30 rounded-xl transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Investigadores
+            </Link>
+
+            <Link
               href="/dashboard"
               className="flex items-center gap-3 px-4 py-3 text-xs font-bold font-mono tracking-wide uppercase text-cyan-400/80 hover:text-cyan-450 hover:bg-slate-950/30 rounded-xl transition-all border border-dashed border-cyan-800/25 mt-6"
             >

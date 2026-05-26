@@ -459,3 +459,231 @@ export async function toggleFollowUpValidationAction(id: string, validated: bool
   }
 }
 
+// 12. GET ACTIVE HOSPITALS WITH INVESTIGATORS (ordered by Principal Investigator first, then display_order)
+export async function getActiveHospitalsWithInvestigators() {
+  try {
+    const supabase = await createServerClient();
+    
+    // Fetch active hospitals
+    const { data: hospitals, error: hospError } = await supabase
+      .from('hospitals')
+      .select('*')
+      .eq('is_active', true)
+      .order('name');
+      
+    if (hospError) throw hospError;
+    if (!hospitals) return [];
+    
+    // Fetch active investigators (RLS-aware)
+    const { data: investigators, error: invError } = await supabase
+      .from('opstar_investigators')
+      .select('*')
+      .eq('is_active', true)
+      .order('is_principal_investigator', { ascending: false })
+      .order('display_order', { ascending: true });
+      
+    const cleanInvestigators = investigators || [];
+    
+    // Fetch case counts per hospital (RLS-aware)
+    const { data: casesData } = await supabase
+      .from('ecrf_opstar_records')
+      .select('hospital_id');
+      
+    const caseCounts: Record<string, number> = {};
+    if (casesData) {
+      casesData.forEach((c) => {
+        if (c.hospital_id) {
+          caseCounts[c.hospital_id] = (caseCounts[c.hospital_id] || 0) + 1;
+        }
+      });
+    }
+    
+    // Map investigators and cases to hospitals
+    return hospitals.map((h) => ({
+      id: h.id,
+      name: h.name,
+      short_name: h.short_name,
+      city: h.city,
+      province: h.province,
+      code: h.code,
+      cases: caseCounts[h.id] || 0,
+      investigators: cleanInvestigators.filter((i) => i.hospital_id === h.id),
+    }));
+  } catch (err) {
+    console.error('Error in getActiveHospitalsWithInvestigators:', err);
+    return [];
+  }
+}
+
+// 13. GET STUDY OVERVIEW STATS (calculates real metrics from DB)
+export async function getStudyOverviewStats() {
+  try {
+    const supabase = await createServerClient();
+    
+    // Fetch active hospitals count
+    const { count: activeHospitalsCount } = await supabase
+      .from('hospitals')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_active', true);
+      
+    // Fetch cases (RLS-aware)
+    const { data: cases } = await supabase
+      .from('ecrf_opstar_records')
+      .select('id, modifico_estrategia, expected_contrast_ml, actual_contrast_ml, zero_contrast_completed');
+      
+    // Fetch optimization results to calculate mean OPSTAR score
+    const { data: optResults } = await supabase
+      .from('opstar_optimization_results')
+      .select('opstar_score');
+      
+    const totalCases = cases?.length || 0;
+    
+    const zeroContrastCount = cases?.filter(
+      (c) => c.zero_contrast_completed === true || Number(c.actual_contrast_ml) === 0
+    ).length || 0;
+    const zeroContrastPct = totalCases > 0 ? Math.round((zeroContrastCount / totalCases) * 100) : 0;
+    
+    const strategyModifiedCount = cases?.filter((c) => c.modifico_estrategia === true).length || 0;
+    const strategyModifiedPct = totalCases > 0 ? Math.round((strategyModifiedCount / totalCases) * 100) : 0;
+    
+    const totalScores = optResults?.filter((r) => r.opstar_score !== null && r.opstar_score !== undefined) || [];
+    const sumScore = totalScores.reduce((sum, r) => sum + (r.opstar_score || 0), 0);
+    const meanOpstarScore = totalScores.length > 0 ? Math.round(sumScore / totalScores.length) : 0;
+    
+    return {
+      totalCases,
+      zeroContrastPct,
+      strategyModifiedPct,
+      meanOpstarScore,
+      activeHospitalsCount: activeHospitalsCount || 0
+    };
+  } catch (err) {
+    console.error('Error in getStudyOverviewStats:', err);
+    return {
+      totalCases: 0,
+      zeroContrastPct: 0,
+      strategyModifiedPct: 0,
+      meanOpstarScore: 0,
+      activeHospitalsCount: 0
+    };
+  }
+}
+
+// 14. CREATE INVESTIGATOR ACTION
+export async function createInvestigatorAction(data: {
+  hospitalId: string;
+  fullName: string;
+  role: string;
+  email: string | null;
+  phone: string | null;
+  specialty: string | null;
+  isPrincipalInvestigator: boolean;
+  isActive: boolean;
+  displayOrder: number;
+}) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) {
+    return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+
+  try {
+    const supabase = await createServerClient();
+    const { error } = await supabase.from('opstar_investigators').insert([
+      {
+        hospital_id: data.hospitalId,
+        full_name: data.fullName,
+        role: data.role,
+        email: data.email || null,
+        phone: data.phone || null,
+        specialty: data.specialty || null,
+        is_principal_investigator: data.isPrincipalInvestigator,
+        is_active: data.isActive,
+        display_order: data.displayOrder,
+      },
+    ]);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/investigators');
+    revalidatePath('/study');
+    revalidatePath('/about');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error del servidor al crear el investigador.' };
+  }
+}
+
+// 15. UPDATE INVESTIGATOR ACTION
+export async function updateInvestigatorAction(
+  id: string,
+  data: {
+    hospitalId: string;
+    fullName: string;
+    role: string;
+    email: string | null;
+    phone: string | null;
+    specialty: string | null;
+    isPrincipalInvestigator: boolean;
+    isActive: boolean;
+    displayOrder: number;
+  }
+) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) {
+    return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+
+  try {
+    const supabase = await createServerClient();
+    const { error } = await supabase
+      .from('opstar_investigators')
+      .update({
+        hospital_id: data.hospitalId,
+        full_name: data.fullName,
+        role: data.role,
+        email: data.email || null,
+        phone: data.phone || null,
+        specialty: data.specialty || null,
+        is_principal_investigator: data.isPrincipalInvestigator,
+        is_active: data.isActive,
+        display_order: data.displayOrder,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/investigators');
+    revalidatePath('/study');
+    revalidatePath('/about');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error del servidor al actualizar el investigador.' };
+  }
+}
+
+// 16. TOGGLE INVESTIGATOR ACTIVE STATE ACTION
+export async function toggleInvestigatorActiveAction(id: string, isActive: boolean) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) {
+    return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+
+  try {
+    const supabase = await createServerClient();
+    const { error } = await supabase
+      .from('opstar_investigators')
+      .update({ is_active: isActive, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/investigators');
+    revalidatePath('/study');
+    revalidatePath('/about');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error del servidor al alternar estado.' };
+  }
+}
+
