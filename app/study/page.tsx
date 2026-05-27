@@ -1,8 +1,11 @@
 // app/study/page.tsx
 import React from 'react';
 import type { Metadata } from 'next';
-import { getActiveHospitalsWithInvestigators, getStudyOverviewStats } from '@/lib/supabase/actions';
+import { getActiveHospitalsWithInvestigators, getStudyOverviewStats, getStudyGovernanceAction } from '@/lib/supabase/actions';
 import StudyClient from './StudyClient';
+
+// Force dynamic rendering since this page uses cookies() for auth
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Descripción del Estudio — Registro OPSTAR-AI Levante',
@@ -11,11 +14,14 @@ export const metadata: Metadata = {
 };
 
 export default async function StudyPage() {
-  // Query Supabase server-side for dynamic active centers, investigators and metrics
-  const [hospitals, stats] = await Promise.all([
+  // Query Supabase server-side for dynamic active centers, investigators, metrics, and governance
+  const [hospitals, stats, governanceResult] = await Promise.all([
     getActiveHospitalsWithInvestigators(),
     getStudyOverviewStats(),
+    getStudyGovernanceAction(),
   ]);
+
+  const governance = governanceResult.success ? governanceResult.data : [];
 
   return (
     <StudyClient
@@ -27,6 +33,7 @@ export default async function StudyPage() {
         meanOpstarScore: 0,
         activeHospitalsCount: 0
       }}
+      initialGovernance={governance || []}
     />
   );
 }
