@@ -13,7 +13,7 @@ export default async function AdminInvestigatorsPage() {
     .order('full_name');
 
   if (invError) {
-    console.error('Error fetching investigators:', invError);
+    console.error('Error fetching investigators:', invError.message || JSON.stringify(invError));
   }
 
   // Fetch all hospitals to choose from in the dropdown select

@@ -6,12 +6,22 @@ import Link from 'next/link';
 // Components
 import CaseHero from '@/components/case-detail/CaseHero';
 import ProceduralTimeline from '@/components/case-detail/ProceduralTimeline';
+import KeyImagesSection from '@/components/case-detail/KeyImagesSection';
 import AIAnalysisPanel from '@/components/case-detail/AIAnalysisPanel';
 import StrategyModificationPanel from '@/components/case-detail/StrategyModificationPanel';
 import ZeroContrastAnalysis from '@/components/case-detail/ZeroContrastAnalysis';
 import TriadaUltreeon from '@/components/case-detail/TriadaUltreeon';
 import FollowUpPanel from '@/components/case-detail/FollowUpPanel';
 import CongressExportButton from '@/components/case-detail/CongressExportButton';
+
+interface KeyImage {
+  id: string;
+  file_name: string;
+  file_type?: string;
+  media_category: string;
+  acquisition_phase: string;
+  corelab_quality?: string;
+}
 
 interface FollowUp {
   id: string;
@@ -47,9 +57,10 @@ interface CaseRecord {
 interface CaseDetailClientProps {
   caseRecord: CaseRecord;
   followups: FollowUp[];
+  keyImages: KeyImage[];
 }
 
-export default function CaseDetailClient({ caseRecord, followups }: CaseDetailClientProps) {
+export default function CaseDetailClient({ caseRecord, followups, keyImages }: CaseDetailClientProps) {
   // Resolve hospital name (handle both single object and array)
   const hospitalName = caseRecord.hospitals
     ? Array.isArray(caseRecord.hospitals)
@@ -121,6 +132,11 @@ export default function CaseDetailClient({ caseRecord, followups }: CaseDetailCl
           {/* 2. PROCEDURAL TIMELINE */}
           <ProceduralTimeline />
 
+          {/* 2.5. KEY IMAGES SECTION */}
+          {keyImages.length > 0 && (
+            <KeyImagesSection caseId={caseRecord.id} keyImages={keyImages} />
+          )}
+
           {/* 3. AI ANALYSIS PANEL */}
           <AIAnalysisPanel
             severeCalcium={caseRecord.calcio_ia}
@@ -147,7 +163,7 @@ export default function CaseDetailClient({ caseRecord, followups }: CaseDetailCl
           <FollowUpPanel caseId={caseRecord.id} followups={followups} />
 
           {/* 8. CONGRESS EXPORT */}
-          <CongressExportButton />
+          <CongressExportButton caseId={caseRecord.id} />
         </div>
       </div>
     </main>

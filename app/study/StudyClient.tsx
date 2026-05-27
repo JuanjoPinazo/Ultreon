@@ -194,6 +194,15 @@ function MetricCard({
   );
 }
 
+interface GovernanceItem {
+  id: string;
+  section: string;
+  title: string;
+  body: string;
+  display_order: number;
+  is_active: boolean;
+}
+
 interface StudyClientProps {
   initialHospitals: {
     id: string;
@@ -218,9 +227,10 @@ interface StudyClientProps {
     meanOpstarScore: number;
     activeHospitalsCount: number;
   };
+  initialGovernance: GovernanceItem[];
 }
 
-export default function StudyClient({ initialHospitals, initialStats }: StudyClientProps) {
+export default function StudyClient({ initialHospitals, initialStats, initialGovernance }: StudyClientProps) {
   const [activeSection, setActiveSection] = useState('hero');
 
   const metricsRef = useInView(0.2);
@@ -235,6 +245,7 @@ export default function StudyClient({ initialHospitals, initialStats }: StudyCli
     { id: 'triada', label: 'La Tríada' },
     { id: 'workflow', label: 'Flujo de Trabajo' },
     { id: 'centers', label: 'Centros' },
+    { id: 'governance', label: 'Gobernanza' },
     { id: 'metrics', label: 'Datos en Vivo' },
     { id: 'resources', label: 'Recursos' },
   ];
@@ -342,7 +353,7 @@ export default function StudyClient({ initialHospitals, initialStats }: StudyCli
               {[
                 { text: 'Registro Multicéntrico', color: 'cyan' },
                 { text: 'Prospectivo · Observacional', color: 'slate' },
-                { text: '6 Hospitales · Levante', color: 'slate' },
+                { text: `${initialStats.activeHospitalsCount} ${initialStats.activeHospitalsCount === 1 ? 'Hospital' : 'Hospitales'} · Levante`, color: 'slate' },
                 { text: 'ULTREON™ 3.0 · Dragonfly OPSTAR', color: 'cyan' },
               ].map((b) => (
                 <span
@@ -413,7 +424,7 @@ export default function StudyClient({ initialHospitals, initialStats }: StudyCli
               {[
                 { label: 'Diseño', value: 'Multicéntrico' },
                 { label: 'Tipo', value: 'Prospectivo · Obs.' },
-                { label: 'Centros', value: '6 Hospitales' },
+                { label: 'Centros', value: `${initialStats.activeHospitalsCount} ${initialStats.activeHospitalsCount === 1 ? 'Hospital' : 'Hospitales'}` },
                 { label: 'Región', value: 'Levante · España' },
               ].map((m) => (
                 <div key={m.label}>
@@ -848,6 +859,50 @@ export default function StudyClient({ initialHospitals, initialStats }: StudyCli
               <span className="text-4xl">🏥</span>
               <h4 className="text-sm font-bold text-slate-300">Sin hospitales activos</h4>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">No se han registrado hospitales activos en el sistema en este momento.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── GOVERNANCE ──────────────────────────────────────────────────── */}
+      <section id="governance" className="py-20 md:py-28 border-t border-slate-900">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="mb-3">
+            <span className="text-[9px] font-black font-mono tracking-[0.35em] text-cyan-400 uppercase">Organización y Gobernanza</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-50 tracking-tight mb-3">
+            Estructura de Gobernanza
+          </h2>
+          <p className="text-slate-500 text-sm max-w-lg leading-relaxed mb-10">
+            Organización científica y administrativa del Registro OPSTAR-AI Levante.
+          </p>
+
+          {initialGovernance.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {initialGovernance.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-slate-900 border border-slate-800 hover:border-slate-750 rounded-2xl p-6 flex flex-col justify-between transition-all duration-200 group"
+                >
+                  <div>
+                    <h4 className="text-sm font-black text-slate-50 tracking-tight group-hover:text-cyan-400 transition-colors">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs text-slate-600 font-mono mt-1 mb-4">
+                      {item.section.toUpperCase().replace(/_/g, ' ')}
+                    </p>
+                    <p className="text-xs leading-relaxed text-slate-300 whitespace-pre-wrap max-h-24 overflow-y-auto">
+                      {item.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-12 rounded-3xl border border-slate-850 bg-slate-900/20 text-center space-y-3">
+              <span className="text-4xl">📋</span>
+              <h4 className="text-sm font-bold text-slate-300">Información pendiente de completar</h4>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">La estructura de gobernanza será publicada próximamente.</p>
             </div>
           )}
         </div>
