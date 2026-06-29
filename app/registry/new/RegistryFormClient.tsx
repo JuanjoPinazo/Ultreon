@@ -4,17 +4,17 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { ZeroContrastInsertPayload } from '@/types/zero-contrast';
 import { calculateContrastReduction, calculateOpstarScore, getOpstarScoreCategory, getOpstarScoreCategoryLabel } from '@/lib/clinical';
 import { saveRegistryCaseAction, createInvestigatorAction } from '@/lib/supabase/actions';
 import { uploadCaseMediaAction } from '@/lib/supabase/media-actions';
-import CoronaryVisual from './visuals/CoronaryVisual';
-import { CoronaryTreeNavigator, Segment } from '@/components/CoronaryTreeNavigator';
+import { CoronaryTreeNavigator, Segment, CORONARY_SEGMENTS } from '@/components/CoronaryTreeNavigator';
 
 // Design System components import
 import Card from '@/components/design-system/Card';
 import Badge from '@/components/design-system/Badge';
 import MetricCard from '@/components/design-system/MetricCard';
-import UploadCard from '@/components/design-system/UploadCard';
+import ClinicalStoryboardCard from '@/components/design-system/ClinicalStoryboardCard';
 import Alert from '@/components/design-system/Alert';
 
 interface eCRFFormData {
@@ -103,7 +103,7 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
 
   const [step, setStep] = useState<number>(1);
   const [formData, setFormData] = useState<eCRFFormData>(INITIAL_FORM_STATE);
-  const [errors, setErrors] = useState<Partial<Record<keyof eCRFFormData, string>>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   
   // Local NHC / SIP to generate anonymized ID
   const [localNhc, setLocalNhc] = useState<string>('');
@@ -112,6 +112,10 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
 
   // IA Scan simulation state
   const [isAnalysing, setIsAnalysing] = useState<boolean>(false);
+
+  // Draft recovery state
+  const [hasDraft, setHasDraft] = useState<boolean>(false);
+  const [showDraftToast, setShowDraftToast] = useState<boolean>(false);
 
   // Projection values (Angio rotation)
   const [projHorizDeg, setProjHorizDeg] = useState<number>(10);
@@ -125,6 +129,9 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
   const [newOperatorName, setNewOperatorName] = useState<string>('');
   const [newOperatorIsPi, setNewOperatorIsPi] = useState<boolean>(false);
   const [isAddingOperator, setIsAddingOperator] = useState<boolean>(false);
+  
+  // Operators for selected hospital
+  const [hospitalOperators, setHospitalOperators] = useState<any[]>([]);
 
   // Helper to get formatted select values for projections
   const getHorizSelectValue = () => {
@@ -248,6 +255,78 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
     }
   }, [profile, hospitals]);
 
+  // Check for existing draft on mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('opstar_ecrf_draft');
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed.formData && (parsed.formData.idPaciente || parsed.formData.centroMedico || parsed.localNhc)) {
+          setHasDraft(true);
+        }
+      } catch (e) {
+        console.error("Error parsing saved draft:", e);
+      }
+    }
+  }, []);
+
+  // Autosave draft when form data changes
+  useEffect(() => {
+    if (formData !== INITIAL_FORM_STATE || localNhc || localSip) {
+      const draft = {
+        formData,
+        localNhc,
+        localSip,
+        step
+      };
+      localStorage.setItem('opstar_ecrf_draft', JSON.stringify(draft));
+    }
+  }, [formData, localNhc, localSip, step]);
+
+  const restoreDraft = () => {
+    const savedDraft = localStorage.getItem('opstar_ecrf_draft');
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed.formData) setFormData(parsed.formData);
+        if (parsed.localNhc) setLocalNhc(parsed.localNhc);
+        if (parsed.localSip) setLocalSip(parsed.localSip);
+        if (parsed.step) setStep(parsed.step);
+        setShowDraftToast(true);
+        setTimeout(() => setShowDraftToast(false), 4000);
+      } catch (e) {
+        console.error("Error restoring draft:", e);
+      }
+    }
+    setHasDraft(false);
+  };
+
+  const discardDraft = () => {
+    localStorage.removeItem('opstar_ecrf_draft');
+    setHasDraft(false);
+  };
+
+  // Fetch operators when hospital changes
+  useEffect(() => {
+    async function fetchOperators() {
+      if (!formData.centroMedico) {
+        setHospitalOperators([]);
+        return;
+      }
+      const selectedHospital = hospitals.find((h) => h.name === formData.centroMedico);
+      if (selectedHospital) {
+        const { getOperatorsForHospitalAction } = await import('@/lib/supabase/actions');
+        const res = await getOperatorsForHospitalAction(selectedHospital.id);
+        if (res.success && res.data) {
+          setHospitalOperators(res.data);
+        } else {
+          setHospitalOperators([]);
+        }
+      }
+    }
+    fetchOperators();
+  }, [formData.centroMedico, hospitals]);
+
   // Autogenerate Anonymous ID
   useEffect(() => {
     if (manualIdEdit) return;
@@ -290,18 +369,29 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
       setSelectedFiles(prev => ({ ...prev, [key]: file }));
       const previewUrl = URL.createObjectURL(file);
       setPreviewUrls(prev => ({ ...prev, [key]: previewUrl }));
+    } else {
+      setSelectedFiles(prev => ({ ...prev, [key]: null }));
+      setPreviewUrls(prev => ({ ...prev, [key]: '' }));
+    }
+
+    if (errors[key]) {
+      const newErr = { ...errors };
+      delete newErr[key];
+      setErrors(newErr);
     }
   };
 
   const handleInputChange = (key: keyof eCRFFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
     if (errors[key]) {
-      setErrors((prev) => ({ ...prev, [key]: undefined }));
+      const newErr = { ...errors };
+      delete newErr[key];
+      setErrors(newErr);
     }
   };
 
   const validateStep = (currentStep: number): boolean => {
-    const newErrors: Partial<Record<keyof eCRFFormData, string>> = {};
+    const newErrors: Record<string, string> = {};
 
     if (currentStep === 1) {
       if (!formData.centroMedico) newErrors.centroMedico = 'Seleccione el Centro Médico.';
@@ -321,6 +411,16 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
       }
       if (formData.necesitoContrasteOct && !formData.motivoContrasteOct.trim()) {
         newErrors.motivoContrasteOct = 'Escriba el motivo de la conversión a contraste.';
+      }
+    } else if (currentStep === 3) {
+      if (!selectedFiles.pre_oct) {
+        newErrors.pre_oct = 'El OCT Basal es una evidencia obligatoria del caso.';
+      }
+      if (!selectedFiles.strategy_change) {
+        newErrors.strategy_change = 'La evidencia de Cambio de Estrategia es obligatoria.';
+      }
+      if (!selectedFiles.post_oct) {
+        newErrors.post_oct = 'El OCT Final de Optimización es una evidencia obligatoria.';
       }
     } else if (currentStep === 4) {
       if (formData.ultreonLongitudLesion === '') newErrors.ultreonLongitudLesion = 'Longitud requerida';
@@ -370,64 +470,71 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
       return;
     }
 
-    const contrastReduction = calculateContrastReduction(15, Number(formData.actualContrastMl));
-    const dbPayload: any = {
-      id_paciente: formData.idPaciente,
-      centro: formData.centroMedico,
-      vaso_diana: formData.vasoDiana,
-      tecnica_purga_oct: 'SALINO',
-      ffr_oct: null,
-      calcio_ia: formData.ultreonCalcio,
-      placa_lipida_ia: false,
-      arco_lipidico_estimado: null,
-      landing_zone: formData.ultreonEel ? 'GUIADO_IA_EEL' : 'VISUAL_ANGIO',
-      diametro: formData.ultreonReferenciaProx || null,
-      modifico_estrategia: formData.modificoEstrategiaUltreon,
-      expansion: formData.ultreonExpansionStent || null,
-      malaposicion_struts: false,
-      diseccion_bordes: false,
-      contraste_ml: formData.actualContrastMl || 0,
-      expected_contrast_ml: 15,
-      actual_contrast_ml: formData.actualContrastMl || 0,
-      contrast_reduction_percent: contrastReduction,
-      zero_contrast_completed: Number(formData.actualContrastMl) === 0,
+    const selectedSegmentObj = CORONARY_SEGMENTS.find(s => s.id === formData.vasoDiana);
+
+    // Build the strategy change string list for strategy_change_type
+    const changeTypes: string[] = [];
+    if (formData.modificoEstrategiaUltreon) {
+      if (formData.changedStentDiameter) changeTypes.push('diameter');
+      if (formData.changedStentLength) changeTypes.push('length');
+      if (formData.requiredPlaquePreparation) changeTypes.push('plaque_prep');
+      if (formData.changedLandingZoneProximal) changeTypes.push('landing_prox');
+      if (formData.changedLandingZoneDistal) changeTypes.push('landing_dist');
+      if (formData.additionalPostdilatation) changeTypes.push('post_dil');
+      if (formData.otherChange) changeTypes.push('other');
+    }
+    const strategyChangeType = changeTypes.join(', ');
+
+    const payload: ZeroContrastInsertPayload = {
       hospital_id: dbHospitalId,
-      created_by: user.id,
-
-      operador: formData.operador,
-      fecha_procedimiento: formData.fechaProcedimiento,
-      contraste_adquisicion_oct: formData.contrasteAdquisicionOct || 0,
-      calidad_lavado: formData.calidadLavado,
-      necesito_contraste_oct: formData.necesitoContrasteOct,
-      motivo_contraste_oct: formData.necesitoContrasteOct ? formData.motivoContrasteOct : null,
-      ultreon_calcio: formData.ultreonCalcio,
-      ultreon_arco_calcio_gt_180: formData.ultreonArcoCalcioGt180,
-      ultreon_eel: formData.ultreonEel,
-      ultreon_longitud_lesion: formData.ultreonLongitudLesion || null,
-      ultreon_referencia_prox: formData.ultreonReferenciaProx || null,
-      ultreon_referencia_dist: formData.ultreonReferenciaDist || null,
-      ultreon_area_luminal_min: formData.ultreonAreaLuminalMin || null,
-      ultreon_expansion_stent: formData.ultreonExpansionStent || null,
-    };
-
-    const strategyPayload = {
-      modified_strategy: formData.modificoEstrategiaUltreon,
-      change_magnitude: formData.modificoEstrategiaUltreon ? 'minor' : null,
-      change_description: formData.modificoEstrategiaUltreon ? 'Saline protocol strategy changes' : null,
-      changed_stent_diameter: formData.modificoEstrategiaUltreon && formData.changedStentDiameter,
-      changed_stent_length: formData.modificoEstrategiaUltreon && formData.changedStentLength,
-      changed_landing_zone_proximal: formData.modificoEstrategiaUltreon && formData.changedLandingZoneProximal,
-      changed_landing_zone_distal: formData.modificoEstrategiaUltreon && formData.changedLandingZoneDistal,
-      required_plaque_preparation: formData.modificoEstrategiaUltreon && formData.requiredPlaquePreparation,
-      used_nc_balloon: false,
-      used_scoring_cutting_balloon: false,
-      used_ivl: false,
-      used_atherectomy: false,
-      decided_no_stent: false,
-      treated_edge: false,
-      additional_postdilatation: formData.modificoEstrategiaUltreon && formData.additionalPostdilatation,
-      global_strategy_change: false,
-      other_change: formData.modificoEstrategiaUltreon && formData.otherChange,
+      operator_id: formData.operador, // Stores the selected operator ID (UUID)
+      procedure_date: formData.fechaProcedimiento,
+      patient_code: formData.idPaciente,
+      local_nhc: localNhc || null,
+      local_sip: localSip || null,
+      anonymous_code: formData.idPaciente || null,
+      
+      // Anatomy
+      coronary_segment: formData.vasoDiana,
+      coronary_vessel: selectedSegmentObj?.vessel || null,
+      coronary_group: selectedSegmentObj?.group || null,
+      
+      // Projections
+      projection_horizontal: getHorizSelectValue(),
+      projection_vertical: getVertSelectValue(),
+      axial_rotation: projAxial,
+      
+      // Saline protocol
+      saline_protocol_used: true,
+      syringe_size_ml: 20, // Default 20ml
+      fast_pullback_seconds: 3.5, // Default acquisition duration is 3.5s
+      contrast_during_oct_ml: Number(formData.contrasteAdquisicionOct),
+      total_contrast_ml: Number(formData.actualContrastMl) || 0,
+      wash_quality: formData.calidadLavado,
+      
+      // Contrast conversion
+      contrast_conversion_needed: formData.necesitoContrasteOct,
+      contrast_conversion_reason: formData.necesitoContrasteOct ? formData.motivoContrasteOct : null,
+      
+      // ULTREON AI
+      ultreon_calcium: formData.ultreonCalcio,
+      ultreon_calcium_arc_gt_180: formData.ultreonArcoCalcioGt180,
+      ultreon_eel_detected: formData.ultreonEel,
+      lesion_length_mm: Number(formData.ultreonLongitudLesion) || null,
+      proximal_reference_mm: Number(formData.ultreonReferenciaProx) || null,
+      distal_reference_mm: Number(formData.ultreonReferenciaDist) || null,
+      mla_mm2: Number(formData.ultreonAreaLuminalMin) || null,
+      
+      // Optimization
+      final_stent_expansion_percent: Number(formData.ultreonExpansionStent) || null,
+      
+      // Strategy
+      ultreon_modified_strategy: formData.modificoEstrategiaUltreon,
+      strategy_change_type: strategyChangeType || null,
+      strategy_change_notes: null,
+      
+      // Management
+      case_status: 'completed',
     };
 
     const calculatedScore = calculateOpstarScore({
@@ -447,27 +554,10 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
       distalEdgeDissection: false,
     });
 
-    const optimizationPayload = {
-      post_stent_msa_mm2: null,
-      stent_expansion_percent: formData.ultreonExpansionStent || null,
-      adequate_expansion: Number(formData.ultreonExpansionStent) >= 80 ? 'yes' : 'no',
-      significant_malapposition: 'no',
-      malapposition_length_mm: null,
-      requires_malapposition_correction: false,
-      proximal_edge_dissection: false,
-      distal_edge_dissection: false,
-      proximal_dissection_length_mm: null,
-      distal_dissection_length_mm: null,
-      significant_flap_gt_3mm: false,
-      requires_edge_treatment: false,
-      opstar_score: calculatedScore,
-      opstar_score_category: getOpstarScoreCategory(calculatedScore),
-    };
-
     setDbLogs((prev) => [...prev, '➡️ Conectando con Supabase e insertando registro del caso...']);
 
     try {
-      const res = await saveRegistryCaseAction(dbPayload, strategyPayload, optimizationPayload);
+      const res = await saveRegistryCaseAction(payload);
 
       if (res.error) {
         setDbLogs((prev) => [...prev, `❌ Error en Supabase: ${res.error}`]);
@@ -541,20 +631,13 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
       ]);
 
       setSupabasePayload(
-        JSON.stringify(
-          {
-            casoBase: dbPayload,
-            cambiosEstrategia: strategyPayload,
-            resultadosOptimizacion: optimizationPayload,
-          },
-          null,
-          2
-        )
+        JSON.stringify(payload, null, 2)
       );
 
       await new Promise((resolve) => setTimeout(resolve, 800));
       setIsSubmitting(false);
       setIsSuccess(true);
+      localStorage.removeItem('opstar_ecrf_draft');
     } catch (err: any) {
       setDbLogs((prev) => [...prev, `❌ Error de conexión con Supabase: ${err?.message || 'Error de red'}`]);
       setIsSubmitting(false);
@@ -566,6 +649,7 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
       ...INITIAL_FORM_STATE,
       centroMedico: profile.role === 'hospital_user' ? formData.centroMedico : '',
     });
+    localStorage.removeItem('opstar_ecrf_draft');
     setSelectedFiles({
       pre_oct: null,
       ultreon_screenshot: null,
@@ -660,15 +744,19 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
           {/* Saved status & save draft */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
-              <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
-              <span>Registro no guardado</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-500 animate-pulse" />
+              <span>Autoguardado activo</span>
             </div>
             <button
               type="button"
-              onClick={() => alert('Borrador guardado localmente')}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-[10px] font-bold text-slate-300 rounded-lg transition-all"
+              onClick={() => {
+                localStorage.setItem('opstar_ecrf_draft', JSON.stringify({ formData, localNhc, localSip, step }));
+                setShowDraftToast(true);
+                setTimeout(() => setShowDraftToast(false), 3000);
+              }}
+              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-[10px] font-bold text-slate-300 rounded-lg transition-all flex items-center gap-1.5"
             >
-              Guardar borrador
+              <span>💾</span> Guardar borrador
             </button>
           </div>
 
@@ -678,6 +766,46 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
       {/* Main Body */}
       <div className="flex-1 max-w-[1400px] w-full mx-auto p-4 md:p-6">
         
+        {/* Draft Recovery Banner */}
+        {hasDraft && (
+          <div className="mb-4 flex items-center justify-between gap-4 bg-amber-950/40 border border-amber-800/50 rounded-2xl px-5 py-3 animate-fade-slide">
+            <div className="flex items-center gap-3">
+              <span className="text-lg">📋</span>
+              <div>
+                <span className="text-xs font-bold text-amber-300 block">Borrador recuperado</span>
+                <span className="text-[10px] text-amber-500">Tiene un registro iniciado anteriormente. ¿Desea recuperarlo?</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                type="button"
+                onClick={restoreDraft}
+                className="px-3 py-1.5 bg-amber-900/60 hover:bg-amber-800/60 border border-amber-700/40 text-amber-300 text-[10px] font-bold rounded-lg transition-all"
+              >
+                Recuperar borrador
+              </button>
+              <button
+                type="button"
+                onClick={discardDraft}
+                className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 text-[10px] font-bold rounded-lg transition-all"
+              >
+                Descartar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Draft Saved Toast */}
+        {showDraftToast && (
+          <div className="mb-4 flex items-center gap-3 bg-cyan-950/50 border border-cyan-800/40 rounded-2xl px-5 py-3 animate-fade-slide">
+            <span className="text-lg">💾</span>
+            <div>
+              <span className="text-xs font-bold text-cyan-300 block">Borrador guardado</span>
+              <span className="text-[10px] text-cyan-500">El estado actual del formulario ha sido guardado localmente.</span>
+            </div>
+          </div>
+        )}
+
         {isSuccess ? (
           /* ── SUCCESS COMPLIANCE CARD SCREEN ── */
           <div className="max-w-2xl mx-auto space-y-6 my-6 animate-scale-up">
@@ -773,11 +901,9 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
 
                   <div className="flex-1 min-h-[500px]">
                     <CoronaryTreeNavigator
-                      selectedSegment={formData.vasoDiana as Segment | null}
-                      onSelectSegment={(segment) => handleInputChange('vasoDiana', segment)}
-                      projection="Frontal"
-                      showLabels={true}
-                      animationEnabled={true}
+                      selectedSegmentId={formData.vasoDiana}
+                      onSelectSegment={(segmentId) => handleInputChange('vasoDiana', segmentId)}
+                      showSidebar={true}
                     />
                   </div>
 
@@ -843,9 +969,9 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
                         className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs outline-none text-slate-200 focus:border-cyan-500/40"
                       >
                         <option value="">Seleccionar...</option>
-                        {(hospitals.find(h => h.name === formData.centroMedico)?.investigators || []).map((inv: any) => (
-                          <option key={inv.id} value={inv.full_name}>
-                            {inv.full_name} {inv.is_principal_investigator ? '(IP)' : ''}
+                        {hospitalOperators.map((op: any) => (
+                          <option key={op.id} value={op.id}>
+                            {op.full_name}
                           </option>
                         ))}
                       </select>
@@ -1098,61 +1224,158 @@ export default function RegistryFormClient({ user, profile, hospitals }: Registr
                 <div>
                   <h2 className="text-lg font-bold tracking-wide text-slate-50 uppercase flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-                    3. Adquisición y Carga de Evidencia
+                    3. Evidencia Clínica y Storyboard del Caso
                   </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Asigne las imágenes diagnósticas obtenidas. Cada tarjeta resumirá los datos clínicos asociados.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">El Registro OPSTAR es un storyboard clínico. Suba las imágenes que acreditan cada etapa del procedimiento.</p>
                 </div>
 
+                {/* Progress Bar */}
+                <div className="bg-slate-900/40 border border-slate-850 p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div className="text-left space-y-1">
+                    <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block">EVIDENCIA CLÍNICA</span>
+                    <span className="text-sm font-black text-slate-200">
+                      {Object.values(selectedFiles).filter(f => f !== null).length} / 5 imágenes cargadas
+                    </span>
+                  </div>
+                  <div className="flex-1 w-full max-w-md h-2 bg-slate-950 border border-slate-850 rounded-full overflow-hidden flex">
+                    {[1, 2, 3, 4, 5].map((i) => {
+                      const keys = ['pre_oct', 'ultreon_screenshot', 'strategy_change', 'post_oct', 'final_result'] as const;
+                      const hasFile = !!selectedFiles[keys[i - 1]];
+                      return (
+                        <div
+                          key={i}
+                          className={`h-full flex-1 border-r border-slate-950 last:border-r-0 transition-all duration-300 ${
+                            hasFile ? 'bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)]' : 'bg-slate-900'
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Card Storyboard Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                  <UploadCard
-                    label="1. Pre OCT"
-                    subText={getEvidenceSummary('pre_oct') || 'Pullback basal del vaso'}
+                  <ClinicalStoryboardCard
+                    label="1. OCT BASAL"
+                    subText="Imagen basal antes de cualquier preparación de placa."
+                    required={true}
                     file={selectedFiles.pre_oct}
                     previewUrl={previewUrls.pre_oct}
                     onFileSelect={(e) => handleFileSelect('pre_oct', e)}
+                    onRemove={() => handleFileSelect('pre_oct', { target: { files: [] } } as any)}
+                    whatShouldBeSeen={['Pullback basal', 'Lesión responsable', 'Antes de balón/litotricia', 'Estado inicial del vaso']}
+                    tooltipText="Haga clic para ver un ejemplo del pullback basal que define la lesión antes del tratamiento."
                   />
-                  <UploadCard
-                    label="2. Captura ULTREON"
-                    subText={getEvidenceSummary('ultreon_screenshot') || 'Análisis IA inicial'}
+
+                  <ClinicalStoryboardCard
+                    label="2. HALLAZGO ULTREON™"
+                    subText="Evidencia de la información aportada por la Inteligencia Artificial."
                     file={selectedFiles.ultreon_screenshot}
                     previewUrl={previewUrls.ultreon_screenshot}
                     onFileSelect={(e) => handleFileSelect('ultreon_screenshot', e)}
+                    onRemove={() => handleFileSelect('ultreon_screenshot', { target: { files: [] } } as any)}
+                    whatShouldBeSeen={['Calcio detectado', 'Línea EEL', 'Medición IA', 'Hallazgo relevante']}
+                    icons={[<span key="ca">🦴 Calcio</span>, <span key="ee">📏 EEL</span>, <span key="ia">🧠 IA</span>]}
+                    bottomText="Suba la captura donde ULTREON aporta información útil para la planificación."
+                    tooltipText="Capture la pantalla de la consola ULTREON que muestre el análisis automatizado de calcio o EEL."
                   />
-                  <UploadCard
-                    label="3. Cambio Estrategia"
-                    subText={getEvidenceSummary('strategy_change') || 'Justificación médica'}
+
+                  <ClinicalStoryboardCard
+                    label="3. CAMBIO DE ESTRATEGIA"
+                    subText="Imagen que justifica el cambio terapéutico."
+                    badge="⭐ Evidencia Principal"
+                    isPrimary={true}
+                    required={true}
                     file={selectedFiles.strategy_change}
                     previewUrl={previewUrls.strategy_change}
                     onFileSelect={(e) => handleFileSelect('strategy_change', e)}
+                    onRemove={() => handleFileSelect('strategy_change', { target: { files: [] } } as any)}
+                    whatShouldBeSeen={['Cambio de diámetro', 'Cambio de longitud', 'Preparación de placa', 'Landing zone (o decisión de mantener)']}
+                    bottomText="Esta imagen constituye la principal evidencia científica del estudio."
+                    tooltipText="Documente visualmente la justificación del cambio o mantenimiento en la estrategia de stent."
                   />
-                  <UploadCard
-                    label="4. Post OCT"
-                    subText={getEvidenceSummary('post_oct') || 'Pullback post-stent'}
+
+                  <ClinicalStoryboardCard
+                    label="4. OCT FINAL OPTIMIZACIÓN"
+                    subText="Pullback tras el implante del stent."
+                    required={true}
                     file={selectedFiles.post_oct}
                     previewUrl={previewUrls.post_oct}
                     onFileSelect={(e) => handleFileSelect('post_oct', e)}
+                    onRemove={() => handleFileSelect('post_oct', { target: { files: [] } } as any)}
+                    whatShouldBeSeen={['Buena expansión', 'Buena aposición', 'Bordes adecuados', 'Resultado intracoronario']}
+                    tooltipText="Muestre el pullback final del stent implantado para documentar la correcta optimización con salino."
                   />
-                  <UploadCard
-                    label="5. Resultado Final"
-                    subText={getEvidenceSummary('final_result') || 'Angiografía final'}
+
+                  <ClinicalStoryboardCard
+                    label="5. ANGIOGRAFÍA FINAL"
+                    subText="Resultado angiográfico definitivo."
                     file={selectedFiles.final_result}
                     previewUrl={previewUrls.final_result}
                     onFileSelect={(e) => handleFileSelect('final_result', e)}
+                    onRemove={() => handleFileSelect('final_result', { target: { files: [] } } as any)}
+                    whatShouldBeSeen={['Flujo final', 'Resultado procedimiento', 'Ausencia complicaciones', 'Imagen final del caso']}
+                    tooltipText="Suba la angiografía final post-PCI que demuestre el flujo final TIMI III."
                   />
                 </div>
 
-                <div className="bg-slate-900/60 border border-slate-850 p-5 rounded-3xl flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">📸</span>
-                    <div>
-                      <span className="text-xs font-bold text-slate-100 block">Sincronización de Imagen Médica</span>
-                      <span className="text-[10px] text-slate-500 block">Las imágenes son anonimizadas localmente antes de iniciar la transmisión.</span>
+                {/* Timeline Storyboard Row */}
+                <div className="bg-slate-900/40 border border-slate-850 p-6 rounded-3xl">
+                  <span className="text-[8px] font-bold text-slate-500 font-mono tracking-wider block uppercase mb-4 text-center">
+                    SECUENCIA CLÍNICA DEL PROCEDIMIENTO (STORYBOARD)
+                  </span>
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4 max-w-4xl mx-auto font-mono text-[9px]">
+                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                      selectedFiles.pre_oct 
+                        ? 'bg-cyan-950/60 text-cyan-400 border-cyan-500/30' 
+                        : 'bg-slate-950 text-slate-500 border-slate-900'
+                    }`}>
+                      <span>① OCT Basal</span>
+                    </div>
+                    <span className="text-slate-700">→</span>
+                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                      selectedFiles.ultreon_screenshot 
+                        ? 'bg-cyan-950/60 text-cyan-400 border-cyan-500/30' 
+                        : 'bg-slate-950 text-slate-500 border-slate-900'
+                    }`}>
+                      <span>② IA ULTREON</span>
+                    </div>
+                    <span className="text-slate-700">→</span>
+                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                      selectedFiles.strategy_change 
+                        ? 'bg-cyan-950/60 text-cyan-400 border-cyan-500/30' 
+                        : 'bg-slate-950 text-slate-500 border-slate-900'
+                    }`}>
+                      <span>③ Cambio Estratégico</span>
+                    </div>
+                    <span className="text-slate-700">→</span>
+                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                      selectedFiles.post_oct 
+                        ? 'bg-cyan-950/60 text-cyan-400 border-cyan-500/30' 
+                        : 'bg-slate-950 text-slate-500 border-slate-900'
+                    }`}>
+                      <span>④ OCT Final</span>
+                    </div>
+                    <span className="text-slate-700">→</span>
+                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                      selectedFiles.final_result 
+                        ? 'bg-cyan-950/60 text-cyan-400 border-cyan-500/30' 
+                        : 'bg-slate-950 text-slate-500 border-slate-900'
+                    }`}>
+                      <span>⑤ Angiografía Final</span>
                     </div>
                   </div>
-                  <Badge variant="cyan">
-                    {Object.values(selectedFiles).filter(f => f !== null).length} / 5 Cargadas
-                  </Badge>
                 </div>
+
+                {/* Validation Warnings */}
+                {(errors.pre_oct || errors.strategy_change || errors.post_oct) && (
+                  <div className="bg-red-950/30 border border-red-800/40 rounded-2xl p-4 text-xs text-red-400 space-y-1 font-mono">
+                    <span className="font-bold uppercase tracking-wider block">⚠️ EVIDENCIAS REQUERIDAS PENDIENTES</span>
+                    {errors.pre_oct && <p>• {errors.pre_oct}</p>}
+                    {errors.strategy_change && <p>• {errors.strategy_change}</p>}
+                    {errors.post_oct && <p>• {errors.post_oct}</p>}
+                  </div>
+                )}
               </div>
             )}
 

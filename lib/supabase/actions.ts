@@ -2,6 +2,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { ZeroContrastInsertPayload } from '@/types/zero-contrast';
 import { createClient as createServerClient } from './server';
 import { createAdminClient } from './admin';
 
@@ -337,51 +338,45 @@ export async function toggleCaseValidationAction(id: string, validated: boolean)
   }
 }
 
-// 9. SAVE REGISTRY CASE TRANSACTION (WITH RELATED TABLES)
-export async function saveRegistryCaseAction(
-  casePayload: any,
-  strategyPayload: any,
-  optimizationPayload: any
-) {
+// 9. SAVE REGISTRY CASE (ZERO-CONTRAST ALIGNED)
+export async function saveRegistryCaseAction(payload: ZeroContrastInsertPayload) {
   try {
     const supabase = await createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { error: 'No autenticado.' };
 
-    // 1. Insert Case Record into ecrf_opstar_records
+    // Validation (as requested in step 6)
+    if (!payload.hospital_id) return { error: 'El campo "hospital_id" es obligatorio.' };
+    if (!payload.operator_id) return { error: 'El campo "operator_id" es obligatorio.' };
+    if (!payload.procedure_date) return { error: 'El campo "procedure_date" es obligatorio.' };
+    if (!payload.patient_code) return { error: 'El campo "patient_code" es obligatorio.' };
+    if (!payload.coronary_segment) return { error: 'El campo "coronary_segment" es obligatorio.' };
+    if (payload.contrast_during_oct_ml === undefined || payload.contrast_during_oct_ml === null) {
+      return { error: 'El campo "contrast_during_oct_ml" es obligatorio.' };
+    }
+    if (!payload.wash_quality) return { error: 'El campo "wash_quality" es obligatorio.' };
+
+    const insertData = {
+      ...payload,
+      created_by: user.id,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Insert into ecrf_opstar_records
     const { data: insertedCase, error: caseError } = await supabase
       .from('ecrf_opstar_records')
-      .insert([casePayload])
+      .insert([insertData])
       .select('id')
       .single();
 
-    if (caseError || !insertedCase) {
-      return { error: `Error al guardar ficha base: ${caseError.message}` };
-    }
-
-    const caseId = insertedCase.id;
-
-    // 2. Insert related records in parallel
-    const [strategyRes, optimizationRes] = await Promise.all([
-      supabase.from('opstar_strategy_changes').insert([{ ...strategyPayload, case_id: caseId }]),
-      supabase.from('opstar_optimization_results').insert([{ ...optimizationPayload, case_id: caseId }])
-    ]);
-
-    if (strategyRes.error) {
-      // Clean up case record if secondary insert fails
-      await supabase.from('ecrf_opstar_records').delete().eq('id', caseId);
-      return { error: `Error al guardar cambios de estrategia: ${strategyRes.error.message}` };
-    }
-
-    if (optimizationRes.error) {
-      // Clean up case record and strategy record if third insert fails
-      await supabase.from('ecrf_opstar_records').delete().eq('id', caseId);
-      return { error: `Error al guardar resultados de optimización: ${optimizationRes.error.message}` };
+    if (caseError) {
+      console.error("Error inserting zero-contrast case:", caseError.message);
+      return { error: `Error al guardar en Supabase (campo o tabla inexistente): ${caseError.message}` };
     }
 
     revalidatePath('/dashboard');
     revalidatePath('/admin');
-    return { success: true, id: caseId };
+    return { success: true, id: insertedCase.id };
   } catch (err: any) {
     return { error: err?.message || 'Error de servidor al guardar la ficha clínica.' };
   }
@@ -1568,4 +1563,134 @@ export async function deleteHospitalAction(id: string) {
   }
 }
 
+
+
+// 21. CREATE OPERATOR ACTION
+export async function createOperatorAction(data: {
+  fullName: string;
+  email: string | null;
+  isActive: boolean;
+  hospitalIds: string[];
+}) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) {
+    return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+
+  try {
+    const supabase = await createServerClient();
+    
+    // 1. Insert Operator
+    const { data: opData, error: opError } = await supabase
+      .from('operators')
+      .insert([{
+        full_name: data.fullName,
+        email: data.email,
+        is_active: data.isActive
+      }])
+      .select('id')
+      .single();
+
+    if (opError) return { error: opError.message };
+
+    // 2. Link to Hospitals
+    if (data.hospitalIds.length > 0) {
+      const hospitalLinks = data.hospitalIds.map(hId => ({
+        operator_id: opData.id,
+        hospital_id: hId,
+        is_active: true
+      }));
+
+      const { error: linkError } = await supabase
+        .from('hospital_operators')
+        .insert(hospitalLinks);
+
+      if (linkError) return { error: linkError.message };
+    }
+
+    revalidatePath('/admin/operators');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error del servidor al crear el operador.' };
+  }
+}
+
+// 22. GET OPERATORS FOR HOSPITAL
+export async function getOperatorsForHospitalAction(hospitalId: string) {
+  try {
+    const supabase = await createServerClient();
+    const { data, error } = await supabase
+      .from('hospital_operators')
+      .select('operator_id, operators(id, full_name, email, is_active)')
+      .eq('hospital_id', hospitalId)
+      .eq('is_active', true);
+
+    if (error) {
+      console.warn("Using fallback to opstar_investigators for operators dropdown:", error.message);
+      // Fallback query to opstar_investigators
+      const { data: invData, error: invError } = await supabase
+        .from('opstar_investigators')
+        .select('id, full_name, email, is_active')
+        .eq('hospital_id', hospitalId)
+        .eq('is_active', true);
+      if (invError) throw invError;
+      return { success: true, data: invData || [] };
+    }
+    
+    // Extract actual operator records
+    const ops = data ? data.map(d => d.operators).filter(Boolean) : [];
+    return { success: true, data: ops };
+  } catch (err: any) {
+    return { error: err?.message || 'Error al obtener operadores del centro.' };
+  }
+}
+
+// 23. GET ALL OPERATORS WITH HOSPITALS (admin)
+export async function getAllOperatorsAction() {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado.' };
+
+  try {
+    const supabase = await createServerClient();
+    const { data, error } = await supabase
+      .from('operators')
+      .select(`
+        id, full_name, email, is_active, created_at,
+        hospital_operators(
+          hospital_id,
+          hospitals(name)
+        )
+      `)
+      .order('full_name');
+
+    if (error) {
+      console.warn("Using fallback to opstar_investigators for all operators admin list:", error.message);
+      // Fallback to opstar_investigators for admin screen
+      const { data: invData, error: invError } = await supabase
+        .from('opstar_investigators')
+        .select(`
+          id, hospital_id, full_name, email, is_active, created_at,
+          hospitals(name)
+        `)
+        .order('full_name');
+      if (invError) throw invError;
+
+      const adapted = (invData || []).map((inv: any) => ({
+        id: inv.id,
+        full_name: inv.full_name,
+        email: inv.email,
+        is_active: inv.is_active,
+        created_at: inv.created_at,
+        hospital_operators: inv.hospitals ? [{
+          hospital_id: inv.hospital_id,
+          hospitals: { name: inv.hospitals.name }
+        }] : []
+      }));
+      return { success: true, data: adapted };
+    }
+    return { success: true, data: data || [] };
+  } catch (err: any) {
+    return { error: err?.message || 'Error al obtener operadores.' };
+  }
+}
 
