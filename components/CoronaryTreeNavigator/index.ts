@@ -2,5 +2,12 @@
 
 export { default as CoronaryTreeNavigator } from './CoronaryTreeNavigator';
 export * from './types';
-export { CORONARY_SEGMENTS, getAllSegments, getMainBranches, getSegmentsBySystem } from './geometry/segments';
-export { COLORS, getSegmentColor, SVG_FILTERS, ANIMATION_TIMINGS } from './geometry/colors';
+export {
+  CORONARY_GEOMETRY,
+  getSegmentVisuals,
+  SVG_FILTER_DEFS,
+  CORONARY_LABELS,
+  getCoronarySegments,
+  getMainVessels,
+  getBranches,
+} from './coronaryGeometry';
