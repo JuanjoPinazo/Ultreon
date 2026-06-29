@@ -115,36 +115,50 @@ export default function AboutClient({ profile, hospitals }: AboutClientProps) {
               <div className="relative w-64 h-64 bg-slate-950/50 border border-slate-800 rounded-full p-4 flex items-center justify-center shadow-inner group">
                 <div className="absolute inset-0 bg-cyan-500/5 rounded-full blur-md group-hover:bg-cyan-500/10 transition-all" />
                 
-                {/* SVG Connecting Map */}
+                                {/* SVG Connecting Map - 6 participating centers */}
                 <svg className="w-full h-full text-cyan-500/30" viewBox="0 0 100 100">
-                  {/* Connection lines */}
-                  <line x1="50" y1="50" x2="25" y2="25" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" className="animate-pulse" />
-                  <line x1="50" y1="50" x2="75" y2="25" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <line x1="50" y1="50" x2="15" y2="60" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <line x1="50" y1="50" x2="85" y2="60" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <line x1="50" y1="50" x2="50" y2="85" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  
-                  {/* Central Node (Valencia Coordinator) */}
-                  <circle cx="50" cy="50" r="6" fill="#06b6d4" className="animate-ping opacity-75" />
+                  {/* Connection lines from central Valencia node */}
+                  <line x1="50" y1="50" x2="25" y2="22" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" className="animate-pulse" />
+                  <line x1="50" y1="50" x2="78" y2="22" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                  <line x1="50" y1="50" x2="12" y2="58" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                  <line x1="50" y1="50" x2="88" y2="58" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                  <line x1="50" y1="50" x2="35" y2="84" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                  <line x1="50" y1="50" x2="68" y2="84" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+
+                  {/* Central Node - Clínico Valencia / Coordinator */}
+                  <circle cx="50" cy="50" r="6" fill="#06b6d4" className="animate-ping opacity-50" />
                   <circle cx="50" cy="50" r="4.5" fill="#0891b2" />
-                  
+
                   {/* Satellite Nodes */}
-                  <circle cx="25" cy="25" r="3" fill="#3b82f6" />
-                  <circle cx="75" cy="25" r="3" fill="#3b82f6" />
-                  <circle cx="15" cy="60" r="3" fill="#14b8a6" />
-                  <circle cx="85" cy="60" r="3" fill="#14b8a6" />
-                  <circle cx="50" cy="85" r="3" fill="#6366f1" />
-                  
-                  {/* Labels on SVG */}
+                  <circle cx="25" cy="22" r="3" fill="#3b82f6" />  {/* Castellón */}
+                  <circle cx="78" cy="22" r="3" fill="#3b82f6" />  {/* Arrixaca / Murcia */}
+                  <circle cx="12" cy="58" r="3" fill="#14b8a6" />  {/* San Juan */}
+                  <circle cx="88" cy="58" r="3" fill="#14b8a6" />  {/* Elche */}
+                  <circle cx="35" cy="84" r="3" fill="#6366f1" />  {/* La Ribera */}
+                  <circle cx="68" cy="84" r="3" fill="#6366f1" />  {/* Manises */}
+
+                  {/* Labels */}
                   <text x="50" y="42" textAnchor="middle" fill="#22d3ee" fontSize="5" fontWeight="bold" className="font-mono">VLC</text>
-                  <text x="25" y="19" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">CST</text>
-                  <text x="75" y="19" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">FE</text>
-                  <text x="12" y="68" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">ALC</text>
-                  <text x="88" y="68" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">ELC</text>
-                  <text x="50" y="93" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">PESET</text>
+                  <text x="25" y="16" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">CST</text>
+                  <text x="78" y="16" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">MNS</text>
+                  <text x="8" y="66" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">SJN</text>
+                  <text x="92" y="66" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">ELC</text>
+                  <text x="35" y="92" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">RIB</text>
+                  <text x="68" y="92" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">GEN</text>
                 </svg>
               </div>
             </div>
+
+            {/* Network Legend */}
+            <div className="mt-4 grid grid-cols-3 gap-x-4 gap-y-1 text-[9px] font-mono text-slate-500">
+              <span><span className="text-cyan-400 font-bold">VLC</span> Clínico Valencia</span>
+              <span><span className="text-blue-400 font-bold">CST</span> Gral. Castellón</span>
+              <span><span className="text-blue-400 font-bold">MNS</span> Manises</span>
+              <span><span className="text-teal-400 font-bold">SJN</span> San Juan</span>
+              <span><span className="text-teal-400 font-bold">ELC</span> Gral. Elche</span>
+              <span><span className="text-indigo-400 font-bold">RIB</span> La Ribera</span>
+            </div>
+
           </div>
         </div>
 
@@ -213,7 +227,7 @@ export default function AboutClient({ profile, hospitals }: AboutClientProps) {
               <div className="space-y-2">
                 <h4 className="font-bold text-cyan-400 font-mono text-[11px] uppercase tracking-wider">Comité Científico Ejecutor</h4>
                 <p className="text-slate-300">
-                  Presidido por el <span className="font-semibold text-slate-200">Dr. Alberto Pérez</span> (Hospital Clínico), encargado de auditar y autorizar los protocolos de optimización por OCT y la coherencia en las puntuaciones OPSTAR de cada centro participante.
+                  Presidido por el <span className="font-semibold text-slate-200">Dr. Ramón López-Palop</span> (H. Clínico Univ. Virgen de la Arrixaca, Murcia), asesor científico de referencia en Imagen Intracoronaria, encargado de auditar y autorizar los protocolos de optimización por OCT y la coherencia en las puntuaciones OPSTAR de cada centro participante.
                 </p>
               </div>
 
