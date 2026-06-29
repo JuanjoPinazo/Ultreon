@@ -17,39 +17,44 @@ export function calculateContrastReduction(expected: number | '', actual: number
 }
 
 /**
- * Computes the exploratory OPSTAR Optimization Score (0-100).
- * Based on 7 clinical criteria.
+ * Computes the simplified OPSTAR Optimization Score (0-100).
+ * Based on Zero-Contrast protocol and ULTREON findings.
  */
 export function calculateOpstarScore(data: {
   actualContrast: number | '';
-  ffrOct: number | '';
+  contrasteAdquisicionOct: number | '';
+  calidadLavado: string;
+  necesitoContrasteOct: boolean;
   landingZone: string;
   diametroReferenciaVaso: number | '';
   modificoEstrategiaUltreon: boolean;
   adequateExpansion: 'yes' | 'no' | 'na';
+  ultreonExpansionStent: number | '';
+  ultreonEel: boolean;
+  ultreonCalcio: boolean;
   significantMalapposition: 'yes' | 'no' | 'na';
   proximalEdgeDissection: boolean;
   distalEdgeDissection: boolean;
 }): number {
   let score = 0;
 
-  // 1. Zero contrast completed (+15)
-  if (data.actualContrast !== '' && data.actualContrast === 0) {
-    score += 15;
+  // 1. Zero contrast during OCT acquisition (Primary Endpoint) (+35)
+  if (data.contrasteAdquisicionOct === 0 || data.necesitoContrasteOct === false) {
+    score += 35;
   }
 
-  // 2. FFR-OCT used (+10)
-  if (data.ffrOct !== '' && data.ffrOct !== null) {
-    score += 10;
+  // 2. High-quality saline flush (+20)
+  if (data.calidadLavado === 'Excelente' || data.calidadLavado === 'Buena') {
+    score += 20;
   }
 
-  // 3. EEL reference / landing zone registered (+10)
-  // Deemed complete if EEL is guided by IA or a valid diameter is registered
+  // 3. EEL / landing zone and calcium indicators registered (+20)
   if (
     data.landingZone === 'GUIADO_IA_EEL' ||
+    data.ultreonEel ||
     (data.landingZone !== '' && data.diametroReferenciaVaso !== '' && data.diametroReferenciaVaso > 0)
   ) {
-    score += 10;
+    score += 20;
   }
 
   // 4. ULTREON modified strategy (+15)
@@ -57,19 +62,12 @@ export function calculateOpstarScore(data: {
     score += 15;
   }
 
-  // 5. Expansion adequate (+20)
-  if (data.adequateExpansion === 'yes') {
-    score += 20;
-  }
-
-  // 6. No significant malapposition (+15)
-  if (data.significantMalapposition === 'no') {
-    score += 15;
-  }
-
-  // 7. No significant edge dissection (+15)
-  if (!data.proximalEdgeDissection && !data.distalEdgeDissection) {
-    score += 15;
+  // 5. Expansion adequate (+10)
+  if (
+    data.adequateExpansion === 'yes' ||
+    (data.ultreonExpansionStent !== '' && data.ultreonExpansionStent >= 80)
+  ) {
+    score += 10;
   }
 
   return score;

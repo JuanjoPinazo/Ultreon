@@ -50,32 +50,22 @@ const SECONDARY_ENDPOINTS = [
   {
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-      </svg>
-    ),
-    label: 'Reducción de Contraste',
-    desc: 'Reducción absoluta y relativa del volumen de contraste frente a la estimación angiográfica inicial.',
-    color: 'cyan',
-  },
-  {
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    label: 'Factibilidad de Zero-Contraste',
-    desc: 'Porcentaje de adquisiciones de OCT completadas con 0 mL de contraste yodado.',
-    color: 'emerald',
+    label: 'Calidad de Imagen',
+    desc: 'Evaluación cualitativa de la aclaración del canal coronario con salino (Excelente, Buena, Regular, Mala).',
+    color: 'teal',
   },
   {
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
       </svg>
     ),
-    label: 'Expansión del Stent',
-    desc: 'Área mínima del stent (MSA) y % de expansión frente al área nominal del stent después del implante guiado por IA.',
-    color: 'sky',
+    label: 'Conversión a Contraste',
+    desc: 'Tasa de necesidad de inyección de contraste yodado de rescate durante la adquisición de OCT.',
+    color: 'red',
   },
   {
     icon: (
@@ -83,19 +73,19 @@ const SECONDARY_ENDPOINTS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
       </svg>
     ),
-    label: 'Detección de Malaposición',
-    desc: 'Prevalencia y longitud de la malaposición significativa de struts en el análisis por OCT.',
+    label: 'Contraste Total en PCI',
+    desc: 'Volumen total de medio de contraste yodado administrado a lo largo de todo el procedimiento clínico.',
     color: 'violet',
   },
   {
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
-    label: 'Disección de Bordes',
-    desc: 'Incidencia de disecciones de bordes proximales o distales identificadas y necesidad de tratamiento.',
-    color: 'amber',
+    label: 'Reducción de Contraste',
+    desc: 'Reducción absoluta del uso de contraste yodado comparada con la estimación estándar del procedimiento.',
+    color: 'cyan',
   },
   {
     icon: (
@@ -103,19 +93,9 @@ const SECONDARY_ENDPOINTS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
       </svg>
     ),
-    label: 'Preparación de Placa',
-    desc: 'Porcentaje de modificación de placa inducida por la detección automática de calcio por IA (IVL, balones especiales o NC).',
+    label: 'Hallazgos de ULTREON™',
+    desc: 'Detección automatizada por inteligencia artificial de calcio severo, arco de calcio, longitud de lesión y diámetros de referencia.',
     color: 'orange',
-  },
-  {
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    ),
-    label: 'Integración FFR-OCT',
-    desc: 'Valores derivados de FFR-OCT obtenidos y su correlación directa con las decisiones estratégicas de revascularización.',
-    color: 'rose',
   },
   {
     icon: (
@@ -124,9 +104,9 @@ const SECONDARY_ENDPOINTS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
       </svg>
     ),
-    label: 'Calidad de Adquisición OCT',
-    desc: 'Puntuación del aclarado (wash quality) y tasa de imagen diagnóstica exitosa entre operadores.',
-    color: 'teal',
+    label: 'Modificación de Estrategia',
+    desc: 'Impacto de las imágenes de OCT en la toma de decisiones clínicas y cambio de la estrategia inicialmente planificada.',
+    color: 'emerald',
   },
   {
     icon: (
@@ -134,8 +114,8 @@ const SECONDARY_ENDPOINTS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     ),
-    label: 'Consistencia Multicéntrica',
-    desc: 'Homogeneidad inter-centro en las cuantificaciones de ULTREON™ y la puntuación de optimización OPSTAR.',
+    label: 'Reproducibilidad Inter-Centro',
+    desc: 'Consistencia y reproducibilidad en la adquisición de pullbacks y tasas de éxito clínico entre los diferentes centros.',
     color: 'indigo',
   },
 ];
@@ -381,10 +361,10 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 font-light max-w-2xl leading-relaxed mb-3">
-              Impacto de la integración de fisiología y OCT guiada por IA en la optimización de la estrategia de ICP.
+              Multicenter Registry for Zero-Contrast OCT Acquisition Using Dragonfly OPSTAR™ and ULTREON™ 3.0
             </p>
             <p className="text-sm text-slate-650 font-mono mb-10 max-w-xl">
-              Evaluación del impacto clínico de ULTREON™ 3.0 + Dragonfly OPSTAR en la estrategia de ICP en 6 hospitales de la Comunitat Valenciana.
+              Investigación prospectiva sobre la viabilidad de adquirir imágenes diagnósticas mediante lavado exclusivo con suero salino al 100% y guiado de precisión ULTREON™ 3.0.
             </p>
 
             {/* CTAs */}
@@ -484,7 +464,7 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
                 icon: '🧠',
                 color: 'violet',
                 title: 'IA: ULTREON™ 3.0',
-                body: 'Cuantificación en tiempo real de calcio, lípidos, diámetro de EEL y derivación de FFR-OCT. Elimina la variabilidad del operador y acelera la toma de decisiones en el laboratorio de hemodinámica.',
+                body: 'Cuantificación en tiempo real de calcio, diámetro de EEL y expansión del stent. Elimina la variabilidad del operador y acelera la toma de decisiones en el laboratorio de hemodinámica.',
                 tag: 'INNOVACIÓN',
               },
               {

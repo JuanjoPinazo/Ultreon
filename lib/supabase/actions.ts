@@ -1515,3 +1515,57 @@ export async function getSiteMonitoringDataAction() {
   }
 }
 
+// 31. DELETE HOSPITAL ACTION
+export async function deleteHospitalAction(id: string) {
+  try {
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return { error: 'No autenticado.' };
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile || profile.role !== 'admin') {
+      return { error: 'No autorizado. Se requieren permisos de administrador.' };
+    }
+
+    // Check if cases are associated
+    const { count, error: countError } = await supabase
+      .from('ecrf_opstar_records')
+      .select('*', { count: 'exact', head: true })
+      .eq('hospital_id', id);
+
+    if (countError) return { error: countError.message };
+    if (count && count > 0) {
+      return { error: 'No se puede eliminar el hospital porque tiene casos clínicos asociados.' };
+    }
+
+    // Check if users are associated
+    const { count: userCount, error: userCountError } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .eq('hospital_id', id);
+
+    if (userCountError) return { error: userCountError.message };
+    if (userCount && userCount > 0) {
+      return { error: 'No se puede eliminar el hospital porque tiene usuarios asociados.' };
+    }
+
+    const { error } = await supabase
+      .from('hospitals')
+      .delete()
+      .eq('id', id);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/hospitals');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error de servidor al eliminar el hospital.' };
+  }
+}
+
+

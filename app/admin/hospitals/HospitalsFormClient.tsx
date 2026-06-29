@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { createHospitalAction, updateHospitalAction } from '@/lib/supabase/actions';
+import { createHospitalAction, updateHospitalAction, deleteHospitalAction } from '@/lib/supabase/actions';
 
 interface Hospital {
   id: string;
@@ -58,6 +58,17 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
     setEditingId(h.id);
     setFormError(null);
     setShowForm(true);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    if (window.confirm('¿Está seguro de que desea eliminar este hospital? Esta acción no se puede deshacer.')) {
+      startTransition(async () => {
+        const res = await deleteHospitalAction(id);
+        if (res?.error) {
+          alert(res.error);
+        }
+      });
+    }
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -274,6 +285,14 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
               </div>
 
               <div className="mt-5 flex justify-end gap-2 border-t border-slate-850/60 pt-4">
+                {caseCount === 0 && (
+                  <button
+                    onClick={() => handleDeleteClick(h.id)}
+                    className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                  >
+                    Eliminar
+                  </button>
+                )}
                 <button
                   onClick={() => handleEditClick(h)}
                   className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-350 text-[10px] font-bold rounded-lg transition-all cursor-pointer"

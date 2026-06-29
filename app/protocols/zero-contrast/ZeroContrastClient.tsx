@@ -38,7 +38,7 @@ const PROTOCOL_STEPS = [
     checklist: [
       { id: 'ntg', label: 'NTG intracoronaria', sub: '100–200 µg IC antes de adquisición', critical: true },
       { id: 'heparin', label: 'Suero heparinizado 37°C', sub: '10 U heparina / mL salino al 0,9%', critical: true },
-      { id: 'syringe', label: 'Jeringa Luer-Lock 50 mL', sub: 'Cebada sin burbujas de aire', critical: false },
+      { id: 'syringe', label: 'Jeringa Luer-Lock 10 mL / 20 mL', sub: 'Cebada sin burbujas de aire (nunca usar jeringas de 50 mL)', critical: true },
       { id: 'system', label: 'Sistema OPSTAR™ preparado', sub: 'Dragonfly posicionado distal a lesión', critical: true },
     ],
     notes: 'Verifica que la guía esté estable y que el catéter guía esté bien alojado antes de comenzar la purga.',
@@ -134,7 +134,7 @@ const TROUBLESHOOTING = [
     severity: 'medium' as const,
     problem: 'Clearing parcial — sangre visible en región proximal o distal',
     cause: 'Volumen insuficiente, colateral prominente, catéter guía mal alojado',
-    solution: 'Aumentar volumen (50–60 mL). Asegurar engagement del catéter guía. Ocluir colateral si necesario.',
+    solution: 'Repetir la purga de salino de forma más vigorosa usando jeringas de 20 mL. Asegurar engagement del catéter guía. Ocluir colateral si necesario.',
     icon: '🌊',
   },
   {

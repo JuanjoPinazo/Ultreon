@@ -2,6 +2,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { createClient as createServerClient } from '@/lib/supabase/server';
+import { getActiveHospitalsWithInvestigators } from '@/lib/supabase/actions';
 import RegistryFormClient from './RegistryFormClient';
 
 export default async function NewRegistryPage() {
@@ -28,16 +29,8 @@ export default async function NewRegistryPage() {
     redirect('/dashboard');
   }
 
-  // Fetch all active hospitals from the database
-  const { data: hospitals, error: hospitalsError } = await supabase
-    .from('hospitals')
-    .select('id, name, short_name, code')
-    .eq('is_active', true)
-    .order('name');
-
-  if (hospitalsError || !hospitals) {
-    console.error('Error fetching hospitals:', hospitalsError);
-  }
+  // Fetch active hospitals with associated investigators dynamically
+  const hospitals = await getActiveHospitalsWithInvestigators();
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 md:p-8 antialiased font-sans">
@@ -51,11 +44,12 @@ export default async function NewRegistryPage() {
           animation: fadeSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
       `}</style>
-      <div className="w-full max-w-4xl animate-fade-slide">
+      <div className="w-full max-w-7xl animate-fade-slide">
         <RegistryFormClient 
           user={user} 
           profile={profile} 
           hospitals={hospitals || []} 
+          // Note: we fetch and pass the hospitals with their investigators list nested!
         />
       </div>
     </main>

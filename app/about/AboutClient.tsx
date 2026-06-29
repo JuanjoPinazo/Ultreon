@@ -3,65 +3,56 @@
 import React from 'react';
 import Link from 'next/link';
 
+interface Investigator {
+  id: string;
+  full_name: string;
+  role: string;
+  is_principal_investigator: boolean;
+  specialty?: string;
+  is_active: boolean;
+}
+
+interface Hospital {
+  id: string;
+  name: string;
+  short_name: string;
+  city: string;
+  province: string;
+  code: string;
+  cases: number;
+  investigators: Investigator[];
+}
+
 interface AboutClientProps {
   profile: {
     fullName: string;
     role: string;
     hospitalName: string;
   };
+  hospitals: Hospital[];
 }
 
-export default function AboutClient({ profile }: AboutClientProps) {
-  const centers = [
-    {
-      name: 'Hospital Clínico Universitario de Valencia',
-      role: 'Centro Coordinador y Promotor',
-      city: 'Valencia',
-      investigators: ['Dr. Salvador Almenar (IP)', 'Dra. Ana Guijarro', 'Dr. Manuel Heredia'],
-      cases: 'Activo - Reclutando',
-      color: 'from-cyan-500 to-blue-600',
-    },
-    {
-      name: 'Hospital Universitari i Politècnic La Fe',
-      role: 'Centro Participante',
-      city: 'Valencia',
-      investigators: ['Dr. Luis Martínez-Dolz (IP)', 'Dr. José Ramón Rumoroso'],
-      cases: 'Activo',
-      color: 'from-blue-600 to-indigo-600',
-    },
-    {
-      name: 'Hospital General Universitario de Alicante',
-      role: 'Centro Participante',
-      city: 'Alicante',
-      investigators: ['Dra. María Teresa López (IP)', 'Dr. Carlos Merino'],
-      cases: 'Activo',
-      color: 'from-cyan-500 to-teal-500',
-    },
-    {
-      name: 'Hospital General Universitario de Elche',
-      role: 'Centro Participante',
-      city: 'Elche',
-      investigators: ['Dr. Francisco Pomar (IP)', 'Dr. Alejandro Soler'],
-      cases: 'Activo',
-      color: 'from-indigo-600 to-purple-600',
-    },
-    {
-      name: 'Hospital General de Castellón',
-      role: 'Centro Participante',
-      city: 'Castellón',
-      investigators: ['Dr. Roberto Delgado (IP)', 'Dra. Sonia Mascarós'],
-      cases: 'Activo',
-      color: 'from-teal-500 to-emerald-500',
-    },
-    {
-      name: 'Hospital Universitario Doctor Peset',
-      role: 'Centro Participante',
-      city: 'Valencia',
-      investigators: ['Dr. Vicente Bodí (IP)', 'Dra. Pilar Merlos'],
-      cases: 'Activo',
-      color: 'from-cyan-600 to-blue-700',
-    },
+export default function AboutClient({ profile, hospitals }: AboutClientProps) {
+  // Predefined list of beautiful gradient combinations for UI
+  const colorGradients = [
+    'from-cyan-500 to-blue-600',
+    'from-blue-600 to-indigo-600',
+    'from-cyan-500 to-teal-500',
+    'from-indigo-600 to-purple-600',
+    'from-teal-500 to-emerald-500',
+    'from-cyan-600 to-blue-700',
   ];
+
+  const centers = hospitals.map((h, i) => ({
+    name: h.name,
+    role: h.code === 'HOSP-SANJUAN' ? 'Centro Coordinador y Promotor' : 'Centro Participante',
+    city: h.city || 'Levante',
+    investigators: h.investigators.map(inv => 
+      `${inv.full_name}${inv.is_principal_investigator ? ' (IP)' : ''}`
+    ),
+    cases: `${h.cases} ${h.cases === 1 ? 'caso' : 'casos'} registrado(s)`,
+    color: colorGradients[i % colorGradients.length],
+  }));
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased font-sans">
@@ -165,7 +156,7 @@ export default function AboutClient({ profile }: AboutClientProps) {
               <p className="text-xs text-slate-400">Centros investigadores activos en el reclutamiento y seguimiento longitudinal.</p>
             </div>
             <span className="px-3 py-1 bg-slate-900 border border-slate-800 text-[10px] text-slate-400 font-mono font-bold rounded-lg">
-              Total: 6 Centros Activos
+              Total: {hospitals.length} Centros Activos
             </span>
           </div>
 

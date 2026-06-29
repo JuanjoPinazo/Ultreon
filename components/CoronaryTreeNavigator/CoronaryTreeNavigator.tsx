@@ -10,7 +10,15 @@ import {
   SEGMENT_NAMES,
   SEGMENT_TO_SYSTEM,
 } from './types';
-import { CORONARY_GEOMETRY, getSegmentVisuals, SVG_FILTER_DEFS, CORONARY_LABELS } from './coronaryGeometry';
+import {
+  CORONARY_GEOMETRY,
+  getSegmentVisuals,
+  SVG_FILTER_DEFS,
+  CORONARY_LABELS,
+  HEART_SILHOUETTE,
+  RIGHT_ATRIUM,
+  LEFT_ATRIUM,
+} from './coronaryGeometry';
 
 /**
  * CoronaryTreeNavigator — Premium Medical Edition
@@ -123,6 +131,40 @@ export default function CoronaryTreeNavigator({
         {/* Background patterns */}
         <rect width="600" height="800" fill="url(#coronaryGridBg)" opacity="0.4" />
         <rect width="600" height="800" fill="url(#depthGrad)" opacity="0.5" />
+
+        {/* Heart silhouette as anatomical reference */}
+        <g className="heart-anatomy">
+          {/* Main heart outline */}
+          <path
+            d={HEART_SILHOUETTE}
+            fill="none"
+            stroke="#0891b2"
+            strokeWidth="2"
+            opacity="0.3"
+            className="pointer-events-none"
+          />
+
+          {/* Heart glow background */}
+          <circle cx="300" cy="380" r="180" fill="url(#heartGlow)" opacity="0.6" />
+
+          {/* Atrium outlines (subtle) */}
+          <path
+            d={RIGHT_ATRIUM}
+            fill="rgba(6, 182, 212, 0.05)"
+            stroke="rgba(6, 182, 212, 0.15)"
+            strokeWidth="1"
+            opacity="0.4"
+            className="pointer-events-none"
+          />
+          <path
+            d={LEFT_ATRIUM}
+            fill="rgba(6, 182, 212, 0.05)"
+            stroke="rgba(6, 182, 212, 0.15)"
+            strokeWidth="1"
+            opacity="0.4"
+            className="pointer-events-none"
+          />
+        </g>
 
         {/* Render all coronary segments */}
         {Object.entries(CORONARY_GEOMETRY).map(([segId, geometry]) => {

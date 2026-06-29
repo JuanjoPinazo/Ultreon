@@ -3,42 +3,82 @@
 import { Segment } from './types';
 
 /**
- * Realistic coronary artery geometry with natural bezier curves.
+ * Realistic coronary artery geometry with heart silhouette.
  *
- * SVG viewBox: 600x800 (larger canvas for readability)
+ * SVG viewBox: 600x800
+ * Heart silhouette integrated as anatomical reference.
+ * All coronary paths positioned relative to realistic heart anatomy.
  *
- * Anatomical reference system:
- * - Origin (TCI): ~(300, 80) at top center
- * - LAD: Descends vertically along interventricular septum (left side)
- * - LCx: Curves laterally around left ventricle
- * - RCA: Right side, curves toward PDA/PL
- * - Diagonals: Branch from LAD rightward
- * - Obtuse Marginalis: Branch from LCx downward/lateral
- * - PDA: Posterior descending artery from RCA
- * - PL: Posterolateral branch from RCA
- *
- * All paths use smooth bezier curves (Q and C commands) for natural appearance.
+ * Cardiac positioning:
+ * - Aortic root: ~(300, 50-80)
+ * - Right atrium: (380-450, 100-200)
+ * - Left atrium: (180-250, 100-200)
+ * - Right ventricle: (300-420, 200-500)
+ * - Left ventricle: (200-300, 300-600)
+ * - Apex: (~250, 650)
  */
 
 export interface CoronaryPath {
   id: Segment;
   displayName: string;
   category: 'main' | 'diagonal' | 'marginal' | 'posterior';
-  path: string; // SVG path data
+  path: string;
   baseStrokeWidth: number;
   isMainVessel: boolean;
 }
 
+/**
+ * Heart silhouette path for anatomical reference.
+ * Realistic cardiac contour showing chambers and great vessels area.
+ */
+export const HEART_SILHOUETTE = `
+  M 250,40
+  C 200,50 150,100 150,170
+  C 150,220 170,280 200,320
+  L 200,600
+  C 200,650 220,700 250,700
+  C 280,700 300,650 300,600
+  L 300,320
+  C 330,280 350,220 350,170
+  C 350,100 300,50 250,40
+  Z
+`;
+
+/**
+ * Right atrium outline (subtle background element)
+ */
+export const RIGHT_ATRIUM = `
+  M 350,80
+  C 400,90 450,120 460,180
+  C 465,220 450,260 420,270
+  C 400,260 380,200 380,140
+  C 380,110 365,90 350,80
+  Z
+`;
+
+/**
+ * Left atrium outline (subtle background element)
+ */
+export const LEFT_ATRIUM = `
+  M 150,80
+  C 100,90 50,120 40,180
+  C 35,220 50,260 80,270
+  C 100,260 120,200 120,140
+  C 120,110 135,90 150,80
+  Z
+`;
+
 export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
   // ═══════════════════════════════════════════════════════════════
-  // LEFT MAIN (TCI) — Origin bifurcation at top center
+  // LEFT MAIN (TCI) — Origin at aortic root
   // ═══════════════════════════════════════════════════════════════
 
   'LM-Ostial': {
     id: 'LM-Ostial',
     displayName: 'Tronco Común - Ostial',
     category: 'main',
-    path: 'M 300,45 L 300,70',
+    // From left aortic cusp downward
+    path: 'M 310,50 C 310,55 305,60 300,65',
     baseStrokeWidth: 3.5,
     isMainVessel: true,
   },
@@ -47,7 +87,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LM-Body',
     displayName: 'Tronco Común - Cuerpo',
     category: 'main',
-    path: 'M 300,70 C 300,80 305,88 315,100',
+    // Short trunk before bifurcation
+    path: 'M 300,65 C 298,75 292,85 285,95',
     baseStrokeWidth: 3.2,
     isMainVessel: true,
   },
@@ -56,21 +97,22 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LM-Distal',
     displayName: 'Tronco Común - Distal',
     category: 'main',
-    path: 'M 315,100 C 325,110 330,115 340,125',
+    // Final segment before LAD/LCx split
+    path: 'M 285,95 C 275,105 265,110 255,120',
     baseStrokeWidth: 2.8,
     isMainVessel: true,
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // LAD (Descendente Anterior) — Descends along IV septum
+  // LAD (Descendente Anterior) — Descends along anterior IV septum
   // ═══════════════════════════════════════════════════════════════
 
   'LAD-Ostial': {
     id: 'LAD-Ostial',
     displayName: 'DA - Ostial',
     category: 'main',
-    // Smooth leftward turn from LM bifurcation
-    path: 'M 340,125 C 310,135 280,140 260,160',
+    // Sharp leftward turn from bifurcation
+    path: 'M 255,120 C 240,125 225,135 210,155',
     baseStrokeWidth: 2.8,
     isMainVessel: true,
   },
@@ -79,8 +121,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LAD-Proximal',
     displayName: 'DA - Proximal',
     category: 'main',
-    // Long smooth descent along IV septum with natural curve
-    path: 'M 260,160 C 255,200 250,250 245,310',
+    // Long smooth descent along IV septum
+    path: 'M 210,155 C 205,200 202,260 200,320',
     baseStrokeWidth: 2.5,
     isMainVessel: true,
   },
@@ -89,8 +131,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LAD-Mid',
     displayName: 'DA - Medio',
     category: 'main',
-    // Continues descent with smooth posterior taper
-    path: 'M 245,310 C 240,370 238,410 240,480',
+    // Continues descent with gentle leftward curve
+    path: 'M 200,320 C 198,380 200,440 210,500',
     baseStrokeWidth: 2.0,
     isMainVessel: true,
   },
@@ -99,8 +141,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LAD-Distal',
     displayName: 'DA - Distal',
     category: 'main',
-    // Curves smoothly to apex and posterior wrap
-    path: 'M 240,480 C 245,540 255,600 270,680',
+    // Terminates at apex with posterior wrap
+    path: 'M 210,500 C 225,560 250,630 265,700',
     baseStrokeWidth: 1.5,
     isMainVessel: true,
   },
@@ -112,8 +154,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'D1',
     displayName: 'Diagonal 1',
     category: 'diagonal',
-    // Smooth rightward branch from proximal LAD
-    path: 'M 258,195 C 290,200 320,210 350,235',
+    // First diagonal: lateral-rightward from proximal LAD
+    path: 'M 208,180 C 235,190 260,210 280,240',
     baseStrokeWidth: 1.8,
     isMainVessel: false,
   },
@@ -122,8 +164,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'D2',
     displayName: 'Diagonal 2',
     category: 'diagonal',
-    // Second diagonal from mid-LAD, curves smoothly
-    path: 'M 248,300 C 280,310 310,325 340,350',
+    // Second diagonal: from mid-LAD
+    path: 'M 202,310 C 225,325 250,345 270,370',
     baseStrokeWidth: 1.5,
     isMainVessel: false,
   },
@@ -132,8 +174,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'D3',
     displayName: 'Diagonal 3',
     category: 'diagonal',
-    // Smaller distal diagonal
-    path: 'M 242,430 C 265,445 290,460 320,475',
+    // Third diagonal: smaller, distal
+    path: 'M 208,460 C 225,475 245,490 265,510',
     baseStrokeWidth: 1.2,
     isMainVessel: false,
   },
@@ -146,8 +188,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LCX-Ostial',
     displayName: 'CX - Ostial',
     category: 'main',
-    // Smooth rightward turn from LM bifurcation
-    path: 'M 340,125 C 370,130 390,140 420,165',
+    // Rightward turn from bifurcation
+    path: 'M 255,120 C 270,125 285,135 300,160',
     baseStrokeWidth: 2.6,
     isMainVessel: true,
   },
@@ -156,8 +198,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LCX-Proximal',
     displayName: 'CX - Proximal',
     category: 'main',
-    // Gentle lateral curve with smooth S-curve around ventricle
-    path: 'M 420,165 C 455,180 480,210 495,260',
+    // Smooth lateral curve around left ventricle
+    path: 'M 300,160 C 330,175 360,200 380,260',
     baseStrokeWidth: 2.3,
     isMainVessel: true,
   },
@@ -166,8 +208,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'LCX-Distal',
     displayName: 'CX - Distal',
     category: 'main',
-    // Smooth continuation around inferior wall
-    path: 'M 495,260 C 500,310 480,370 440,440',
+    // Continues around inferior wall toward crux
+    path: 'M 380,260 C 390,320 370,400 330,480',
     baseStrokeWidth: 1.8,
     isMainVessel: true,
   },
@@ -179,8 +221,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'OM1',
     displayName: 'Marginal 1',
     category: 'marginal',
-    // Smooth lateral branch from proximal LCx
-    path: 'M 445,185 C 485,180 520,195 555,225',
+    // First obtuse marginal: lateral branch
+    path: 'M 335,190 C 365,190 395,210 420,250',
     baseStrokeWidth: 1.6,
     isMainVessel: false,
   },
@@ -189,8 +231,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'OM2',
     displayName: 'Marginal 2',
     category: 'marginal',
-    // Second marginal: smooth lateral-inferior branch
-    path: 'M 490,260 C 525,285 550,320 570,365',
+    // Second marginal: from mid-LCx
+    path: 'M 375,280 C 405,310 430,350 450,400',
     baseStrokeWidth: 1.3,
     isMainVessel: false,
   },
@@ -199,22 +241,22 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'OM3',
     displayName: 'Marginal 3',
     category: 'marginal',
-    // Smaller distal marginal
-    path: 'M 465,400 C 495,415 525,440 550,480',
+    // Third marginal: smaller, distal
+    path: 'M 350,430 C 375,455 395,485 415,530',
     baseStrokeWidth: 1.0,
     isMainVessel: false,
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // RCA (Coronaria Derecha) — Right side, curves toward PDA
+  // RCA (Coronaria Derecha) — Right side, curves toward crux
   // ═══════════════════════════════════════════════════════════════
 
   'RCA-Ostial': {
     id: 'RCA-Ostial',
     displayName: 'CD - Ostial',
     category: 'main',
-    // Smooth rightward curve from aorta
-    path: 'M 300,45 C 330,55 355,60 375,70',
+    // From right aortic cusp
+    path: 'M 290,50 C 320,55 350,65 370,85',
     baseStrokeWidth: 3.0,
     isMainVessel: true,
   },
@@ -223,8 +265,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'RCA-Proximal',
     displayName: 'CD - Proximal',
     category: 'main',
-    // Smooth curve around right atrium with natural taper
-    path: 'M 375,70 C 410,90 435,120 450,165',
+    // Smooth curve around right atrium
+    path: 'M 370,85 C 400,105 430,140 440,200',
     baseStrokeWidth: 2.7,
     isMainVessel: true,
   },
@@ -233,8 +275,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'RCA-Mid',
     displayName: 'CD - Medio',
     category: 'main',
-    // Smooth curve around right ventricle
-    path: 'M 450,165 C 470,220 480,270 485,330',
+    // Around right ventricle with posterior curve
+    path: 'M 440,200 C 450,270 445,350 420,420',
     baseStrokeWidth: 2.3,
     isMainVessel: true,
   },
@@ -243,21 +285,21 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'RCA-Distal',
     displayName: 'CD - Distal',
     category: 'main',
-    // Smooth continuation to crux for PDA/PL bifurcation
-    path: 'M 485,330 C 480,390 470,450 455,520',
+    // Reaches crux for PDA/PL bifurcation
+    path: 'M 420,420 C 400,470 370,520 340,570',
     baseStrokeWidth: 1.8,
     isMainVessel: true,
   },
 
   // ─────────────────────────────────────────────────────────────
-  // Posterior branches (from RCA)
+  // Posterior branches (from RCA at crux)
 
   'PDA': {
     id: 'PDA',
     displayName: 'Arteria Descendente Posterior',
     category: 'posterior',
-    // Smooth posterior descending from crux
-    path: 'M 455,520 C 438,575 425,630 420,700',
+    // Main posterior descending artery
+    path: 'M 340,570 C 320,610 305,660 300,710',
     baseStrokeWidth: 1.8,
     isMainVessel: false,
   },
@@ -266,8 +308,8 @@ export const CORONARY_GEOMETRY: Record<Segment, CoronaryPath> = {
     id: 'PL',
     displayName: 'Rama Posterolateral',
     category: 'posterior',
-    // Smooth posterolateral branch from crux
-    path: 'M 460,525 C 490,555 520,590 545,650',
+    // Posterolateral branch from crux
+    path: 'M 345,575 C 365,610 385,650 405,690',
     baseStrokeWidth: 1.4,
     isMainVessel: false,
   },
@@ -291,7 +333,7 @@ export function getSegmentVisuals(
 ): SegmentVisualProps {
   if (isSelected) {
     return {
-      stroke: '#00e5ff', // Bright cyan
+      stroke: '#00e5ff',
       strokeWidth: baseStrokeWidth + 1.2,
       opacity: 1,
       filter: 'url(#cyanGlow)',
@@ -300,7 +342,7 @@ export function getSegmentVisuals(
 
   if (isHovered) {
     return {
-      stroke: '#06b6d4', // Cyan-500
+      stroke: '#06b6d4',
       strokeWidth: baseStrokeWidth + 0.6,
       opacity: 1,
       filter: 'url(#hoverGlow)',
@@ -309,18 +351,17 @@ export function getSegmentVisuals(
 
   if (isHighlighted) {
     return {
-      stroke: '#0891b2', // Cyan-600
+      stroke: '#0891b2',
       strokeWidth: baseStrokeWidth + 0.3,
       opacity: 0.9,
       filter: 'url(#softGlow)',
     };
   }
 
-  // Resting state: grayish-blue, subtle
   return {
-    stroke: '#64748b', // Slate-500
+    stroke: '#64748b',
     strokeWidth: baseStrokeWidth,
-    opacity: 0.7,
+    opacity: 0.75,
     filter: undefined,
   };
 }
@@ -370,6 +411,12 @@ export const SVG_FILTER_DEFS = `
       <stop offset="0%" stopColor="#1c2436" stopOpacity="0.08" />
       <stop offset="100%" stopColor="#000000" stopOpacity="0.15" />
     </radialGradient>
+
+    <!-- Blue glow for heart silhouette background -->
+    <radialGradient id="heartGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stopColor="#0066ff" stopOpacity="0.15" />
+      <stop offset="100%" stopColor="#001133" stopOpacity="0" />
+    </radialGradient>
   </defs>
 `;
 
@@ -377,10 +424,10 @@ export const SVG_FILTER_DEFS = `
  * SVG label definitions with medical nomenclature
  */
 export const CORONARY_LABELS = {
-  'LM': { x: 280, y: 60, size: 14, text: 'TCI' },
-  'LAD': { x: 200, y: 300, size: 14, text: 'DA' },
-  'LCX': { x: 450, y: 280, size: 14, text: 'CX' },
-  'RCA': { x: 480, y: 200, size: 14, text: 'CD' },
+  'LM': { x: 280, y: 110, size: 15, text: 'TCI' },
+  'LAD': { x: 170, y: 380, size: 15, text: 'DA' },
+  'LCX': { x: 400, y: 300, size: 15, text: 'CX' },
+  'RCA': { x: 470, y: 220, size: 15, text: 'CD' },
 };
 
 /**
