@@ -276,6 +276,42 @@ export async function updateUserAction(
   }
 }
 
+// 6b. DELETE USER ACTION (Uses Admin SDK)
+export async function deleteUserAction(id: string) {
+  // Verify requester is admin
+  const supabase = await createServerClient();
+  const { data: { user: currentUser } } = await supabase.auth.getUser();
+  if (!currentUser) return { error: 'No autenticado.' };
+
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) {
+    return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+
+  // Prevent self-deletion
+  if (currentUser.id === id) {
+    return { error: 'No puedes eliminar tu propia cuenta.' };
+  }
+
+  try {
+    const adminClient = createAdminClient();
+
+    // Delete from Supabase Auth (cascades to profiles via trigger, but we also delete manually)
+    const { error: authError } = await adminClient.auth.admin.deleteUser(id);
+    if (authError) {
+      return { error: `Error al eliminar el usuario de Auth: ${authError.message}` };
+    }
+
+    // Also delete profile row in case no cascade trigger exists
+    await adminClient.from('profiles').delete().eq('id', id);
+
+    revalidatePath('/admin/users');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error de servidor al eliminar el usuario.' };
+  }
+}
+
 // 7. TOGGLE CASE LOCK STATUS (Admin / Monitor permission)
 export async function toggleCaseLockAction(id: string, locked: boolean) {
   try {
@@ -1642,6 +1678,103 @@ export async function getOperatorsForHospitalAction(hospitalId: string) {
     return { success: true, data: ops };
   } catch (err: any) {
     return { error: err?.message || 'Error al obtener operadores del centro.' };
+  }
+}
+
+// 24. UPDATE OPERATOR ACTION
+export async function updateOperatorAction(
+  id: string,
+  data: {
+    fullName: string;
+    email: string | null;
+    isActive: boolean;
+    hospitalIds: string[];
+  }
+) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) {
+    return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+
+  try {
+    const supabase = await createServerClient();
+
+    // 1. Update operator core data
+    const { error: opError } = await supabase
+      .from('operators')
+      .update({
+        full_name: data.fullName,
+        email: data.email || null,
+        is_active: data.isActive,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id);
+
+    if (opError) return { error: opError.message };
+
+    // 2. Remove all existing hospital links
+    const { error: deleteError } = await supabase
+      .from('hospital_operators')
+      .delete()
+      .eq('operator_id', id);
+
+    if (deleteError) return { error: deleteError.message };
+
+    // 3. Re-insert new hospital links
+    if (data.hospitalIds.length > 0) {
+      const hospitalLinks = data.hospitalIds.map(hId => ({
+        operator_id: id,
+        hospital_id: hId,
+        is_active: true,
+      }));
+
+      const { error: linkError } = await supabase
+        .from('hospital_operators')
+        .insert(hospitalLinks);
+
+      if (linkError) return { error: linkError.message };
+    }
+
+    revalidatePath('/admin/operators');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error del servidor al actualizar el operador.' };
+  }
+}
+
+// 25. DELETE OPERATOR ACTION
+export async function deleteOperatorAction(id: string) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) {
+    return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+
+  try {
+    const supabase = await createServerClient();
+
+    // Check if operator has associated cases
+    const { count, error: countError } = await supabase
+      .from('ecrf_opstar_records')
+      .select('*', { count: 'exact', head: true })
+      .eq('operator_id', id);
+
+    if (countError) return { error: countError.message };
+    if (count && count > 0) {
+      return { error: 'No se puede eliminar el operador porque tiene casos clínicos asociados.' };
+    }
+
+    // Delete hospital links first
+    await supabase.from('hospital_operators').delete().eq('operator_id', id);
+
+    // Delete operator
+    const { error } = await supabase.from('operators').delete().eq('id', id);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/operators');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error del servidor al eliminar el operador.' };
   }
 }
 

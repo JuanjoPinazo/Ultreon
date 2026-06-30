@@ -22,12 +22,15 @@ interface HospitalsFormClientProps {
 
 export default function HospitalsFormClient({ hospitals, userCounts, caseCounts }: HospitalsFormClientProps) {
   const [isPending, startTransition] = useTransition();
-  
+  const [localHospitals, setLocalHospitals] = useState<Hospital[]>(hospitals);
+
   // Form states
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  
-  // Fields states
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  // Field states
   const [name, setName] = useState('');
   const [shortName, setShortName] = useState('');
   const [city, setCity] = useState('');
@@ -49,6 +52,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
   };
 
   const handleEditClick = (h: Hospital) => {
+    setDeleteConfirmId(null);
     setName(h.name);
     setShortName(h.short_name || '');
     setCity(h.city || '');
@@ -58,17 +62,22 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
     setEditingId(h.id);
     setFormError(null);
     setShowForm(true);
+    // Scroll to form
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   };
 
-  const handleDeleteClick = (id: string) => {
-    if (window.confirm('¿Está seguro de que desea eliminar este hospital? Esta acción no se puede deshacer.')) {
-      startTransition(async () => {
-        const res = await deleteHospitalAction(id);
-        if (res?.error) {
-          alert(res.error);
-        }
-      });
-    }
+  const handleDeleteConfirm = (id: string) => {
+    setDeleteError(null);
+    startTransition(async () => {
+      const res = await deleteHospitalAction(id);
+      if (res?.error) {
+        setDeleteError(res.error);
+        setDeleteConfirmId(null);
+      } else {
+        setLocalHospitals(prev => prev.filter(h => h.id !== id));
+        setDeleteConfirmId(null);
+      }
+    });
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -106,6 +115,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
         setFormError(res.error);
       } else {
         resetForm();
+        setTimeout(() => window.location.reload(), 400);
       }
     });
   };
@@ -131,6 +141,13 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
           </button>
         )}
       </div>
+
+      {/* Global delete error */}
+      {deleteError && (
+        <p className="p-3 bg-red-950/20 border border-red-500/30 text-red-400 rounded-xl text-[10px] font-mono">
+          ⚠ {deleteError}
+        </p>
+      )}
 
       {/* Editor / Form Card */}
       {showForm && (
@@ -201,10 +218,13 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   placeholder="Ej: HOSP-SANJUAN"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200 font-mono"
-                  disabled={editingId !== null} // Lock code once created to maintain relations
+                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={editingId !== null}
                   required
                 />
+                {editingId && (
+                  <span className="text-[9px] text-slate-600 font-mono">El código no puede modificarse una vez creado.</span>
+                )}
               </div>
 
               {/* Active Toggle */}
@@ -217,6 +237,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
                 >
                   <div className={`w-5 h-5 rounded-full bg-slate-900 absolute top-0.5 transition-transform shadow ${isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
                 </button>
+                <span className="text-[10px] text-slate-400">{isActive ? 'Activo' : 'Inactivo'}</span>
               </div>
 
             </div>
@@ -249,9 +270,12 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
 
       {/* Grid of Hospital Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {hospitals.map((h) => {
+        {localHospitals.map((h) => {
           const userCount = userCounts[h.id] || 0;
           const caseCount = caseCounts[h.id] || 0;
+          const isConfirmingDelete = deleteConfirmId === h.id;
+          const canDelete = caseCount === 0;
+
           return (
             <div
               key={h.id}
@@ -261,9 +285,9 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
                 <div className="flex justify-between items-start gap-2">
                   <h4 className="font-bold text-sm text-slate-200 tracking-tight leading-snug">{h.name}</h4>
                   {h.is_active ? (
-                    <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/10">Activo</span>
+                    <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/10 flex-shrink-0">Activo</span>
                   ) : (
-                    <span className="text-[8px] font-bold bg-slate-950 text-slate-500 px-2 py-0.5 rounded border border-slate-800">Inactivo</span>
+                    <span className="text-[8px] font-bold bg-slate-950 text-slate-500 px-2 py-0.5 rounded border border-slate-800 flex-shrink-0">Inactivo</span>
                   )}
                 </div>
                 <span className="text-[9px] font-mono text-cyan-400 font-bold bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/20 inline-block mt-2">{h.code}</span>
@@ -284,21 +308,56 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
                 </div>
               </div>
 
+              {/* Delete confirmation panel */}
+              {isConfirmingDelete && (
+                <div className="mt-4 p-3 bg-red-950/20 border border-red-900/40 rounded-xl">
+                  <p className="text-[10px] text-red-300 mb-3">
+                    ¿Eliminar <strong>{h.name}</strong>?
+                    {userCount > 0 && (
+                      <span className="block mt-1 text-amber-400">⚠ Tiene {userCount} usuario(s) asignado(s). Considera marcarlo como <strong>Inactivo</strong> en su lugar.</span>
+                    )}
+                  </p>
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      onClick={() => setDeleteConfirmId(null)}
+                      className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={() => handleDeleteConfirm(h.id)}
+                      disabled={isPending}
+                      className="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-[10px] font-bold rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {isPending ? 'Eliminando...' : 'Sí, eliminar'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-5 flex justify-end gap-2 border-t border-slate-850/60 pt-4">
-                {caseCount === 0 && (
-                  <button
-                    onClick={() => handleDeleteClick(h.id)}
-                    className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
-                  >
-                    Eliminar
-                  </button>
+                {!isConfirmingDelete && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setDeleteConfirmId(h.id);
+                        setShowForm(false);
+                        setEditingId(null);
+                      }}
+                      disabled={!canDelete}
+                      title={!canDelete ? 'No se puede eliminar un centro con casos clínicos asociados. Márcalo como Inactivo.' : 'Eliminar centro'}
+                      className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      Eliminar
+                    </button>
+                    <button
+                      onClick={() => handleEditClick(h)}
+                      className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-350 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                    >
+                      Editar
+                    </button>
+                  </>
                 )}
-                <button
-                  onClick={() => handleEditClick(h)}
-                  className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-350 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
-                >
-                  Editar
-                </button>
               </div>
             </div>
           );

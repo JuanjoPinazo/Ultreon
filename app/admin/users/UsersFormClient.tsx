@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { createUserAction, updateUserAction } from '@/lib/supabase/actions';
+import { createUserAction, updateUserAction, deleteUserAction } from '@/lib/supabase/actions';
 
 interface Profile {
   id: string;
@@ -24,14 +24,18 @@ interface Hospital {
 interface UsersFormClientProps {
   users: Profile[];
   hospitals: Hospital[];
+  currentUserId?: string;
 }
 
-export default function UsersFormClient({ users, hospitals }: UsersFormClientProps) {
+export default function UsersFormClient({ users, hospitals, currentUserId }: UsersFormClientProps) {
   const [isPending, startTransition] = useTransition();
+  const [localUsers, setLocalUsers] = useState<Profile[]>(users);
 
   // Form states
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Field states
   const [email, setEmail] = useState('');
@@ -55,6 +59,7 @@ export default function UsersFormClient({ users, hospitals }: UsersFormClientPro
   };
 
   const handleEditClick = (u: Profile) => {
+    setDeleteConfirmId(null);
     setEmail(u.email);
     setFullName(u.full_name || '');
     setRole(u.role);
@@ -63,6 +68,20 @@ export default function UsersFormClient({ users, hospitals }: UsersFormClientPro
     setEditingId(u.id);
     setFormError(null);
     setShowForm(true);
+  };
+
+  const handleDeleteConfirm = (userId: string) => {
+    setDeleteError(null);
+    startTransition(async () => {
+      const res = await deleteUserAction(userId);
+      if (res?.error) {
+        setDeleteError(res.error);
+        setDeleteConfirmId(null);
+      } else {
+        setLocalUsers(prev => prev.filter(u => u.id !== userId));
+        setDeleteConfirmId(null);
+      }
+    });
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -101,6 +120,8 @@ export default function UsersFormClient({ users, hospitals }: UsersFormClientPro
         setFormError(res.error);
       } else {
         resetForm();
+        // Reload to get updated list from server
+        setTimeout(() => window.location.reload(), 400);
       }
     });
   };
@@ -141,6 +162,13 @@ export default function UsersFormClient({ users, hospitals }: UsersFormClientPro
           </button>
         )}
       </div>
+
+      {/* Global delete error */}
+      {deleteError && (
+        <p className="p-3 bg-red-950/20 border border-red-500/30 text-red-400 rounded-xl text-[10px] font-mono">
+          ⚠ {deleteError}
+        </p>
+      )}
 
       {/* Editor / Form */}
       {showForm && (
@@ -207,7 +235,7 @@ export default function UsersFormClient({ users, hospitals }: UsersFormClientPro
                   onChange={(e) => {
                     setRole(e.target.value);
                     if (e.target.value !== 'hospital_user') {
-                      setHospitalId(''); // Reset hospital assignment for non-hospital_users
+                      setHospitalId('');
                     }
                   }}
                   className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200 cursor-pointer"
@@ -219,7 +247,7 @@ export default function UsersFormClient({ users, hospitals }: UsersFormClientPro
                 </select>
               </div>
 
-              {/* Hospital assignment (only active if role = hospital_user) */}
+              {/* Hospital assignment */}
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">
                   Hospital Asignado {role !== 'hospital_user' && ' (No aplicable)'}
@@ -281,44 +309,90 @@ export default function UsersFormClient({ users, hospitals }: UsersFormClientPro
 
       {/* Grid of User cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {users.map((u) => (
-          <div
-            key={u.id}
-            className={`bg-slate-900 border ${u.is_active ? 'border-slate-800' : 'border-slate-850 opacity-60'} rounded-2xl p-5 flex flex-col justify-between hover:border-slate-750 transition-all`}
-          >
-            <div>
-              <div className="flex justify-between items-start gap-2">
-                <div>
-                  <h4 className="font-bold text-sm text-slate-200 tracking-tight leading-snug">{u.full_name || 'Sin nombre asignado'}</h4>
-                  <span className="text-[10px] font-mono text-slate-500 leading-none">{u.email}</span>
+        {localUsers.map((u) => {
+          const isSelf = currentUserId === u.id;
+          const isConfirmingDelete = deleteConfirmId === u.id;
+
+          return (
+            <div
+              key={u.id}
+              className={`bg-slate-900 border ${u.is_active ? 'border-slate-800' : 'border-slate-850 opacity-60'} rounded-2xl p-5 flex flex-col justify-between hover:border-slate-750 transition-all`}
+            >
+              <div>
+                <div className="flex justify-between items-start gap-2">
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-200 tracking-tight leading-snug">{u.full_name || 'Sin nombre asignado'}</h4>
+                    <span className="text-[10px] font-mono text-slate-500 leading-none">{u.email}</span>
+                  </div>
+                  {u.is_active ? (
+                    <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/10">Activo</span>
+                  ) : (
+                    <span className="text-[8px] font-bold bg-slate-950 text-slate-550 px-2 py-0.5 rounded border border-slate-800">Inactivo</span>
+                  )}
                 </div>
-                {u.is_active ? (
-                  <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/10">Activo</span>
-                ) : (
-                  <span className="text-[8px] font-bold bg-slate-950 text-slate-550 px-2 py-0.5 rounded border border-slate-800">Inactivo</span>
-                )}
+
+                <div className="mt-4 flex flex-wrap gap-2 items-center">
+                  {getRoleBadge(u.role)}
+                  {isSelf && (
+                    <span className="text-[9px] font-mono text-slate-500">(Tú)</span>
+                  )}
+                  {u.role === 'hospital_user' && (
+                    <span className="text-[9px] font-mono text-slate-400 truncate max-w-[150px]" title={u.hospitals?.name || 'Ninguno'}>
+                      🏢 {u.hospitals?.name || 'Hospital no asignado'}
+                    </span>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-2 items-center">
-                {getRoleBadge(u.role)}
-                {u.role === 'hospital_user' && (
-                  <span className="text-[9px] font-mono text-slate-400 truncate max-w-[150px]" title={u.hospitals?.name || 'Ninguno'}>
-                    🏢 {u.hospitals?.name || 'Hospital no asignado'}
-                  </span>
+              {/* Delete confirmation panel */}
+              {isConfirmingDelete && (
+                <div className="mt-4 p-3 bg-red-950/20 border border-red-900/40 rounded-xl">
+                  <p className="text-[10px] text-red-300 mb-3">
+                    ¿Eliminar a <strong>{u.full_name || u.email}</strong>? Esta acción es irreversible y eliminará su acceso al sistema.
+                  </p>
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      onClick={() => setDeleteConfirmId(null)}
+                      className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={() => handleDeleteConfirm(u.id)}
+                      disabled={isPending}
+                      className="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-[10px] font-bold rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {isPending ? 'Eliminando...' : 'Sí, eliminar'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-5 flex justify-end gap-2 border-t border-slate-850/60 pt-4">
+                {!isSelf && !isConfirmingDelete && (
+                  <button
+                    onClick={() => {
+                      setDeleteConfirmId(u.id);
+                      setShowForm(false);
+                      setEditingId(null);
+                    }}
+                    className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                  >
+                    Eliminar
+                  </button>
+                )}
+                {!isConfirmingDelete && (
+                  <button
+                    onClick={() => handleEditClick(u)}
+                    className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-350 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                  >
+                    Editar
+                  </button>
                 )}
               </div>
             </div>
-
-            <div className="mt-5 flex justify-end gap-2 border-t border-slate-850/60 pt-4">
-              <button
-                onClick={() => handleEditClick(u)}
-                className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-350 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
-              >
-                Editar
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
     </div>
