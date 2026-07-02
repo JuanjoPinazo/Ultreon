@@ -36,7 +36,7 @@ export default async function AdminOperatorsPage() {
 
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto animate-fade-in">
-      <AdminOperatorsClient initialOperators={operators} allHospitals={hospitals || []} />
+      <AdminOperatorsClient initialOperators={operators as any} allHospitals={hospitals || []} />
     </div>
   );
 }

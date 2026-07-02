@@ -1,0 +1,158 @@
+{
+  "hospitals": [
+    {
+      "id": "demo-hosp-1",
+      "name": "Hospital Clínico Universitario de Valencia",
+      "short_name": "HCUV",
+      "is_active": true
+    },
+    {
+      "id": "demo-hosp-2",
+      "name": "Hospital Universitario y Politécnico La Fe",
+      "short_name": "La Fe",
+      "is_active": true
+    },
+    {
+      "id": "demo-hosp-3",
+      "name": "Hospital General Universitario de Alicante",
+      "short_name": "HGUA",
+      "is_active": true
+    },
+    {
+      "id": "demo-hosp-4",
+      "name": "Hospital General Universitario de Castellón",
+      "short_name": "HGUCS",
+      "is_active": true
+    }
+  ],
+  "investigators": [
+    {
+      "id": "demo-op-1",
+      "full_name": "Dr. Vicente Bodí",
+      "hospital_id": "demo-hosp-1",
+      "role": "Principal Investigator"
+    },
+    {
+      "id": "demo-op-2",
+      "full_name": "Dra. Pilar Sepúlveda",
+      "hospital_id": "demo-hosp-2",
+      "role": "Investigator"
+    },
+    {
+      "id": "demo-op-3",
+      "full_name": "Dr. Carlos Sánchez",
+      "hospital_id": "demo-hosp-3",
+      "role": "Investigator"
+    }
+  ],
+  "cases": [
+    {
+      "id": "demo-case-1",
+      "patient_code": "PAC-9912",
+      "id_paciente": "PAC-9912",
+      "hospital_id": "demo-hosp-1",
+      "operator_id": "demo-op-1",
+      "vaso_diana": "LAD",
+      "placa_tipo": "Severa",
+      "calcio": "Severo",
+      "modifico_estrategia": true,
+      "zero_contrast_completed": true,
+      "actual_contrast_ml": 0,
+      "contraste_ml": 0,
+      "stent_length": 38,
+      "mla_post": 6.8,
+      "monitor_validated": true,
+      "locked": true,
+      "created_at": "2026-06-15T10:00:00Z",
+      "opstar_optimization_results": [
+        {
+          "wash_quality_score": 9.2,
+          "opstar_score": 92
+        }
+      ]
+    },
+    {
+      "id": "demo-case-2",
+      "patient_code": "PAC-9913",
+      "id_paciente": "PAC-9913",
+      "hospital_id": "demo-hosp-2",
+      "operator_id": "demo-op-2",
+      "vaso_diana": "RCA",
+      "placa_tipo": "Moderada",
+      "calcio": "Moderado",
+      "modifico_estrategia": true,
+      "zero_contrast_completed": true,
+      "actual_contrast_ml": 0,
+      "contraste_ml": 0,
+      "stent_length": 22,
+      "mla_post": 5.4,
+      "monitor_validated": true,
+      "locked": false,
+      "created_at": "2026-06-18T11:30:00Z",
+      "opstar_optimization_results": [
+        {
+          "wash_quality_score": 8.8,
+          "opstar_score": 88
+        }
+      ]
+    },
+    {
+      "id": "demo-case-3",
+      "patient_code": "PAC-9914",
+      "id_paciente": "PAC-9914",
+      "hospital_id": "demo-hosp-3",
+      "operator_id": "demo-op-3",
+      "vaso_diana": "LCX",
+      "placa_tipo": "Leve",
+      "calcio": "Leve",
+      "modifico_estrategia": false,
+      "zero_contrast_completed": false,
+      "actual_contrast_ml": 12,
+      "contraste_ml": 12,
+      "stent_length": 18,
+      "mla_post": 7.1,
+      "monitor_validated": false,
+      "locked": false,
+      "created_at": "2026-06-25T09:15:00Z",
+      "opstar_optimization_results": [
+        {
+          "wash_quality_score": 7.5,
+          "opstar_score": 82
+        }
+      ]
+    },
+    {
+      "id": "demo-case-4",
+      "patient_code": "PAC-9915",
+      "id_paciente": "PAC-9915",
+      "hospital_id": "demo-hosp-1",
+      "operator_id": "demo-op-1",
+      "vaso_diana": "LAD",
+      "placa_tipo": "Severa",
+      "calcio": "Severo",
+      "modifico_estrategia": true,
+      "zero_contrast_completed": true,
+      "actual_contrast_ml": 0,
+      "contraste_ml": 0,
+      "stent_length": 42,
+      "mla_post": 5.9,
+      "monitor_validated": true,
+      "locked": true,
+      "created_at": "2026-07-01T14:45:00Z",
+      "opstar_optimization_results": [
+        {
+          "wash_quality_score": 9.5,
+          "opstar_score": 95
+        }
+      ]
+    }
+  ],
+  "simulator": {
+    "default_hospitals": 6,
+    "default_operators": 18,
+    "cases_per_operator_month": 4,
+    "zero_contrast_pct": 75,
+    "sale_price": 1200,
+    "cost_price": 700
+  }
+}

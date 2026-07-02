@@ -95,6 +95,19 @@ export default async function AdminDashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       )
+    },
+    {
+      title: 'Dashboard IA',
+      value: 'PRO',
+      description: 'Inteligencia Clínica OPSTAR',
+      link: '/executive',
+      color: 'from-slate-800 to-black',
+      borderColor: 'border-slate-700',
+      icon: (
+        <svg className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      )
     }
   ];
 

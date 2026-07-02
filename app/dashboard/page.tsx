@@ -223,12 +223,23 @@ export default async function DashboardPage(props: {
 
           <div className="flex flex-wrap gap-3">
             {profile.role === 'admin' && (
-              <Link
-                href="/admin"
-                className="px-5 py-3 bg-slate-950 border border-slate-800 hover:border-cyan-500/30 text-cyan-400 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
-              >
-                Panel de Administración
-              </Link>
+              <>
+                <Link
+                  href="/admin"
+                  className="px-5 py-3 bg-slate-950 border border-slate-800 hover:border-cyan-500/30 text-cyan-400 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+                >
+                  Panel de Administración
+                </Link>
+                <Link
+                  href="/executive"
+                  className="px-5 py-3 bg-gradient-to-r from-slate-900 to-black border border-slate-800 hover:border-slate-600 text-slate-200 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-lg shadow-black/50"
+                >
+                  <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Dashboard IA
+                </Link>
+              </>
             )}
 
             {/* Analítica Científica (Visible para todos los investigadores) */}

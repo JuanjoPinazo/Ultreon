@@ -1827,3 +1827,42 @@ export async function getAllOperatorsAction() {
   }
 }
 
+// 26. GET EXECUTIVE DASHBOARD STATS
+export async function getExecutiveDashboardStats() {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado.' };
+
+  try {
+    const supabase = await createServerClient();
+    
+    // 1. Get all cases
+    const { data: cases, error: casesError } = await supabase
+      .from('ecrf_opstar_records')
+      .select('*, hospitals(name, id), opstar_strategy_changes(*), opstar_optimization_results(*)');
+      
+    if (casesError) throw casesError;
+
+    // 2. Get active hospitals for adoption table
+    const { data: hospitals, error: hospError } = await supabase
+      .from('hospitals')
+      .select('*')
+      .eq('is_active', true)
+      .order('name');
+      
+    if (hospError) throw hospError;
+
+    // 3. Get investigators/operators for rankings
+    const { data: investigators, error: invError } = await supabase
+      .from('opstar_investigators')
+      .select('id, full_name, hospital_id, role');
+
+    return { 
+      success: true, 
+      cases: cases || [],
+      hospitals: hospitals || [],
+      investigators: investigators || []
+    };
+  } catch (err: any) {
+    return { error: err?.message || 'Error al obtener datos del dashboard ejecutivo.' };
+  }
+}

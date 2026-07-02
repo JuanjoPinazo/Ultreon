@@ -3,6 +3,7 @@
 
 import React, { useActionState, useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { loginAction } from '@/lib/supabase/actions';
 
 function LoginForm() {
@@ -130,8 +131,10 @@ function LoginForm() {
       </form>
 
       {/* Card Footer */}
-      <div className="p-6 bg-slate-950 border-t border-slate-850/50 text-center text-[10px] text-slate-600 font-mono">
-        🔒 Conexión segura SSL/TLS · Cumple RGPD de datos médicos
+      <div className="p-6 bg-slate-950 border-t border-slate-850/50 flex flex-col items-center justify-center gap-4">
+        <div className="text-center text-[10px] text-slate-600 font-mono">
+          🔒 Conexión segura SSL/TLS · Cumple RGPD de datos médicos
+        </div>
       </div>
     </div>
   );
