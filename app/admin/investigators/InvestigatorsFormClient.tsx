@@ -105,6 +105,7 @@ export default function InvestigatorsFormClient({
     setEditingId(inv.id);
     setFormError(null);
     setShowForm(true);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -167,21 +168,37 @@ export default function InvestigatorsFormClient({
   });
 
   // Group investigators by hospital for visual sorting
+  // Requirement: Order by Center -> Investigator Name
   const groupedByHospital = hospitals.reduce<Record<string, { hospital: Hospital; items: Investigator[] }>>(
     (acc, hosp) => {
       const items = filteredInvestigators.filter((inv) => inv.hospital_id === hosp.id);
-      // Sort items: principal_investigator first, then display_order asc
+      // Sort items: principal_investigator first, then alphabetically by name
       const sortedItems = [...items].sort((a, b) => {
         if (a.is_principal_investigator && !b.is_principal_investigator) return -1;
         if (!a.is_principal_investigator && b.is_principal_investigator) return 1;
-        return a.display_order - b.display_order;
+        return a.full_name.localeCompare(b.full_name);
       });
 
-      acc[hosp.id] = { hospital: hosp, items: sortedItems };
+      if (sortedItems.length > 0 || selectedHospitalFilter === hosp.id) {
+        acc[hosp.id] = { hospital: hosp, items: sortedItems };
+      }
       return acc;
     },
     {}
   );
+  
+  // Create a flat list ordered by hospital name, then investigator name
+  const flatOrderedInvestigators: (Investigator & { hospitalObj: Hospital })[] = [];
+  hospitals
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .forEach(hosp => {
+      if (groupedByHospital[hosp.id] && groupedByHospital[hosp.id].items.length > 0) {
+        groupedByHospital[hosp.id].items.forEach(item => {
+          flatOrderedInvestigators.push({ ...item, hospitalObj: hosp });
+        });
+      }
+    });
 
   return (
     <div className="space-y-6">
@@ -405,107 +422,90 @@ export default function InvestigatorsFormClient({
         </div>
       </div>
 
-      {/* Investigators List (Grouped by Hospital) */}
-      <div className="space-y-6">
-        {hospitals.map((hosp) => {
-          const group = groupedByHospital[hosp.id];
-          if (!group || group.items.length === 0) return null;
-
-          return (
-            <div key={hosp.id} className="bg-slate-900/60 border border-slate-850 rounded-3xl p-5 space-y-4">
-              {/* Hospital Title Banner */}
-              <div className="flex justify-between items-center pb-3 border-b border-slate-850">
-                <div>
-                  <h4 className="font-bold text-sm text-slate-200 tracking-tight">{hosp.name}</h4>
-                  <span className="text-[8px] font-mono text-slate-500 uppercase tracking-widest">Investigadores adscritos</span>
-                </div>
-                <span className="px-2.5 py-0.5 bg-slate-950 border border-slate-800 text-[9px] font-mono font-bold rounded-lg text-slate-400">
-                  {group.items.length} {group.items.length === 1 ? 'médico' : 'médicos'}
-                </span>
-              </div>
-
-              {/* Table / Grid */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-850/40 text-[9px] font-mono text-slate-500 uppercase tracking-widest">
-                      <th className="py-2.5 font-bold">Investigador</th>
-                      <th className="py-2.5 font-bold">Rol en Registro</th>
-                      <th className="py-2.5 font-bold">Especialidad</th>
-                      <th className="py-2.5 font-bold">Contacto</th>
-                      <th className="py-2.5 font-bold text-center">Orden</th>
-                      <th className="py-2.5 font-bold text-right">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-850/20 text-xs">
-                    {group.items.map((inv) => (
-                      <tr key={inv.id} className={`group hover:bg-slate-950/20 ${!inv.is_active ? 'opacity-50' : ''}`}>
-                        <td className="py-3">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm">🩺</span>
-                            <div>
-                              <span className="font-bold text-slate-200 block">{inv.full_name}</span>
-                              {inv.is_principal_investigator && (
-                                <span className="inline-block mt-0.5 text-[8px] font-black font-mono tracking-wider px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/40 uppercase">
-                                  Investigador Principal (IP)
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${ROLE_COLORS[inv.role] || ROLE_COLORS.other}`}>
-                            {ROLE_LABELS[inv.role] || inv.role}
-                          </span>
-                        </td>
-                        <td className="py-3 text-slate-400 italic">
-                          {inv.specialty || 'No especificada'}
-                        </td>
-                        <td className="py-3 font-mono text-[10px] text-slate-400 space-y-0.5">
-                          {inv.email && <div className="block">{inv.email}</div>}
-                          {inv.phone && <div className="block text-slate-550">{inv.phone}</div>}
-                          {!inv.email && !inv.phone && <span className="text-slate-700">—</span>}
-                        </td>
-                        <td className="py-3 text-center font-mono text-slate-400">
-                          {inv.display_order}
-                        </td>
-                        <td className="py-3 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => handleToggleActive(inv.id, inv.is_active)}
-                              className={`px-2 py-1 rounded text-[9px] font-bold font-mono transition-all cursor-pointer ${
-                                inv.is_active
-                                  ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-800/30 hover:bg-emerald-950/80'
-                                  : 'bg-red-950/40 text-red-400 border border-red-800/30 hover:bg-red-950/80'
-                              }`}
-                            >
-                              {inv.is_active ? 'Activo' : 'Inactivo'}
-                            </button>
-                            <button
-                              onClick={() => handleEditClick(inv)}
-                              className="px-2.5 py-1 bg-slate-950 hover:bg-slate-800 border border-slate-800 text-[9.5px] text-slate-350 font-bold rounded transition-all cursor-pointer"
-                            >
-                              Editar
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          );
-        })}
-
-        {filteredInvestigators.length === 0 && (
-          <div className="p-8 rounded-3xl border border-slate-850 bg-slate-900/20 text-center space-y-2">
-            <span className="text-3xl">🔎</span>
-            <h4 className="text-sm font-bold text-slate-300">No se encontraron investigadores</h4>
-            <p className="text-xs text-slate-500 max-w-md mx-auto">Pruebe a cambiar los términos de búsqueda o verifique que el hospital seleccionado contenga investigadores activos.</p>
-          </div>
-        )}
+      {/* List / Table View of Investigators */}
+      <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-slate-950/50 border-b border-slate-800 text-[10px] uppercase font-mono text-slate-400">
+              <th className="px-4 py-3 font-bold tracking-wider">Investigador</th>
+              <th className="px-4 py-3 font-bold tracking-wider">Centro</th>
+              <th className="px-4 py-3 font-bold tracking-wider">Rol / Posición</th>
+              <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
+              <th className="px-4 py-3 font-bold tracking-wider text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-800/60">
+            {flatOrderedInvestigators.map((inv) => {
+              const roleBadgeColor = ROLE_COLORS[inv.role] || ROLE_COLORS.other;
+              return (
+                <tr key={inv.id} className={`hover:bg-slate-800/30 transition-colors ${!inv.is_active ? 'opacity-60' : ''}`}>
+                  <td className="px-4 py-3 align-middle">
+                    <div className="flex items-center gap-2">
+                      <div>
+                        <div className="font-bold text-sm text-slate-200">
+                          {inv.is_principal_investigator && <span className="mr-1.5 text-cyan-400">★</span>}
+                          {inv.full_name}
+                        </div>
+                        {inv.email && <div className="text-[10px] font-mono text-slate-500 mt-0.5">{inv.email}</div>}
+                        {inv.specialty && <div className="text-[10px] text-slate-400 mt-0.5">{inv.specialty}</div>}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-middle">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[12px]">🏥</span>
+                      <span className="text-xs text-slate-300 font-medium">
+                        {inv.hospitalObj.name}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-middle">
+                    <span className={`inline-block px-2 py-0.5 rounded border text-[9px] font-bold font-mono tracking-wide ${roleBadgeColor}`}>
+                      {ROLE_LABELS[inv.role] || 'Otro'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 align-middle text-center">
+                    {inv.is_active ? (
+                      <span className="text-[9px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/20">ACTIVO</span>
+                    ) : (
+                      <span className="text-[9px] font-bold bg-slate-900 text-slate-500 px-2 py-0.5 rounded border border-slate-700">INACTIVO</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 align-middle text-right">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => handleEditClick(inv)}
+                        className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded transition-colors"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => handleToggleActive(inv.id, inv.is_active)}
+                        className={`px-2.5 py-1.5 border text-[10px] font-bold rounded transition-colors ${
+                          inv.is_active
+                            ? 'bg-red-950/20 hover:bg-red-900/40 border-red-900/30 text-red-400'
+                            : 'bg-emerald-950/20 hover:bg-emerald-900/40 border-emerald-900/30 text-emerald-400'
+                        }`}
+                      >
+                        {inv.is_active ? 'Desactivar' : 'Activar'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+            
+            {flatOrderedInvestigators.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 text-xs">
+                  No se encontraron investigadores.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
+      
     </div>
   );
 }

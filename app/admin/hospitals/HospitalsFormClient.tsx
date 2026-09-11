@@ -18,9 +18,11 @@ interface HospitalsFormClientProps {
   hospitals: Hospital[];
   userCounts: Record<string, number>;
   caseCounts: Record<string, number>;
+  invCounts?: Record<string, number>;
+  opCounts?: Record<string, number>;
 }
 
-export default function HospitalsFormClient({ hospitals, userCounts, caseCounts }: HospitalsFormClientProps) {
+export default function HospitalsFormClient({ hospitals, userCounts, caseCounts, invCounts = {}, opCounts = {} }: HospitalsFormClientProps) {
   const [isPending, startTransition] = useTransition();
   const [localHospitals, setLocalHospitals] = useState<Hospital[]>(hospitals);
 
@@ -268,100 +270,124 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts 
         </div>
       )}
 
-      {/* Grid of Hospital Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {localHospitals.map((h) => {
-          const userCount = userCounts[h.id] || 0;
-          const caseCount = caseCounts[h.id] || 0;
-          const isConfirmingDelete = deleteConfirmId === h.id;
-          const canDelete = caseCount === 0;
+      {/* List / Table of Hospitals */}
+      <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-slate-950/50 border-b border-slate-800 text-[10px] uppercase font-mono text-slate-400">
+              <th className="px-4 py-3 font-bold tracking-wider">Centro</th>
+              <th className="px-4 py-3 font-bold tracking-wider">Acrónimo/Código</th>
+              <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
+              <th className="px-4 py-3 font-bold tracking-wider">Asociados</th>
+              <th className="px-4 py-3 font-bold tracking-wider">Ubicación</th>
+              <th className="px-4 py-3 font-bold tracking-wider text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-800/60">
+            {localHospitals.map((h) => {
+              const userCount = userCounts[h.id] || 0;
+              const caseCount = caseCounts[h.id] || 0;
+              const invCount = invCounts[h.id] || 0;
+              const opCount = opCounts[h.id] || 0;
+              
+              const isConfirmingDelete = deleteConfirmId === h.id;
+              const canDelete = caseCount === 0;
 
-          return (
-            <div
-              key={h.id}
-              className={`bg-slate-900 border ${h.is_active ? 'border-slate-800' : 'border-slate-850 opacity-60'} rounded-2xl p-5 flex flex-col justify-between hover:border-slate-750 transition-all`}
-            >
-              <div>
-                <div className="flex justify-between items-start gap-2">
-                  <h4 className="font-bold text-sm text-slate-200 tracking-tight leading-snug">{h.name}</h4>
-                  {h.is_active ? (
-                    <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/10 flex-shrink-0">Activo</span>
-                  ) : (
-                    <span className="text-[8px] font-bold bg-slate-950 text-slate-500 px-2 py-0.5 rounded border border-slate-800 flex-shrink-0">Inactivo</span>
+              return (
+                <React.Fragment key={h.id}>
+                  <tr className={`hover:bg-slate-800/30 transition-colors ${!h.is_active ? 'opacity-60' : ''}`}>
+                    <td className="px-4 py-3 align-middle">
+                      <div className="font-bold text-sm text-slate-200">{h.name}</div>
+                      <div className="text-[10px] text-slate-500 mt-0.5">Casos: {caseCount}</div>
+                    </td>
+                    <td className="px-4 py-3 align-middle">
+                      <div className="flex flex-col gap-1 items-start">
+                        {h.short_name && <span className="text-xs text-slate-300">{h.short_name}</span>}
+                        <span className="text-[9px] font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/20">{h.code}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 align-middle text-center">
+                      {h.is_active ? (
+                        <span className="text-[9px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/20">ACTIVO</span>
+                      ) : (
+                        <span className="text-[9px] font-bold bg-slate-900 text-slate-500 px-2 py-0.5 rounded border border-slate-700">INACTIVO</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 align-middle">
+                      <div className="flex flex-col gap-0.5 text-[10px] text-slate-400">
+                        <span><strong className="text-slate-300">{userCount}</strong> usuarios</span>
+                        <span><strong className="text-slate-300">{invCount}</strong> investigadores</span>
+                        <span><strong className="text-slate-300">{opCount}</strong> operadores</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 align-middle text-xs text-slate-400">
+                      <div>{h.city || 'N/A'}</div>
+                      <div className="text-[10px] text-slate-500">{h.province || 'N/A'}</div>
+                    </td>
+                    <td className="px-4 py-3 align-middle text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleEditClick(h)}
+                          className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded transition-colors"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => {
+                            setDeleteConfirmId(h.id);
+                            setShowForm(false);
+                            setEditingId(null);
+                          }}
+                          disabled={!canDelete}
+                          title={!canDelete ? 'No se puede eliminar un centro con casos.' : 'Eliminar centro'}
+                          className="px-2.5 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {isConfirmingDelete && (
+                    <tr>
+                      <td colSpan={6} className="px-4 py-3 bg-red-950/10 border-b border-slate-800/60">
+                        <div className="flex items-center justify-between p-3 bg-red-950/30 border border-red-900/50 rounded-xl">
+                          <p className="text-[10px] text-red-300">
+                            ¿Eliminar <strong>{h.name}</strong>?
+                            {userCount > 0 && <span className="ml-1 text-amber-400">⚠ Tiene {userCount} usuario(s) asignado(s).</span>}
+                          </p>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => setDeleteConfirmId(null)}
+                              className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
+                            >
+                              Cancelar
+                            </button>
+                            <button
+                              onClick={() => handleDeleteConfirm(h.id)}
+                              disabled={isPending}
+                              className="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-[10px] font-bold rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              {isPending ? 'Eliminando...' : 'Sí, eliminar'}
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
                   )}
-                </div>
-                <span className="text-[9px] font-mono text-cyan-400 font-bold bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/20 inline-block mt-2">{h.code}</span>
-
-                <div className="grid grid-cols-2 gap-4 mt-6 text-xs border-t border-b border-slate-850 py-3 font-mono">
-                  <div>
-                    <span className="text-[9px] text-slate-500 block mb-0.5 uppercase tracking-wider">Usuarios</span>
-                    <span className="font-bold text-slate-350">{userCount}</span>
-                  </div>
-                  <div>
-                    <span className="text-[9px] text-slate-500 block mb-0.5 uppercase tracking-wider">Casos</span>
-                    <span className="font-bold text-slate-350">{caseCount}</span>
-                  </div>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between text-[10px] text-slate-500">
-                  <span>{h.city || 'Ciudad N/A'}{h.province && `, ${h.province}`}</span>
-                </div>
-              </div>
-
-              {/* Delete confirmation panel */}
-              {isConfirmingDelete && (
-                <div className="mt-4 p-3 bg-red-950/20 border border-red-900/40 rounded-xl">
-                  <p className="text-[10px] text-red-300 mb-3">
-                    ¿Eliminar <strong>{h.name}</strong>?
-                    {userCount > 0 && (
-                      <span className="block mt-1 text-amber-400">⚠ Tiene {userCount} usuario(s) asignado(s). Considera marcarlo como <strong>Inactivo</strong> en su lugar.</span>
-                    )}
-                  </p>
-                  <div className="flex gap-2 justify-end">
-                    <button
-                      onClick={() => setDeleteConfirmId(null)}
-                      className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      onClick={() => handleDeleteConfirm(h.id)}
-                      disabled={isPending}
-                      className="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-[10px] font-bold rounded-lg transition-colors disabled:opacity-50"
-                    >
-                      {isPending ? 'Eliminando...' : 'Sí, eliminar'}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="mt-5 flex justify-end gap-2 border-t border-slate-850/60 pt-4">
-                {!isConfirmingDelete && (
-                  <>
-                    <button
-                      onClick={() => {
-                        setDeleteConfirmId(h.id);
-                        setShowForm(false);
-                        setEditingId(null);
-                      }}
-                      disabled={!canDelete}
-                      title={!canDelete ? 'No se puede eliminar un centro con casos clínicos asociados. Márcalo como Inactivo.' : 'Eliminar centro'}
-                      className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      Eliminar
-                    </button>
-                    <button
-                      onClick={() => handleEditClick(h)}
-                      className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-350 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
-                    >
-                      Editar
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          );
-        })}
+                </React.Fragment>
+              );
+            })}
+            
+            {localHospitals.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-slate-500 text-xs">
+                  No se encontraron hospitales.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
     </div>

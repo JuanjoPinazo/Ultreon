@@ -1,7 +1,7 @@
 // app/admin/users/UsersFormClient.tsx
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useMemo } from 'react';
 import { createUserAction, updateUserAction, deleteUserAction } from '@/lib/supabase/actions';
 
 interface Profile {
@@ -45,6 +45,9 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
   const [isActive, setIsActive] = useState(true);
   const [password, setPassword] = useState('OpstarPassword2026!');
   const [formError, setFormError] = useState<string | null>(null);
+  
+  // Search
+  const [searchQuery, setSearchQuery] = useState('');
 
   const resetForm = () => {
     setEmail('');
@@ -68,6 +71,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
     setEditingId(u.id);
     setFormError(null);
     setShowForm(true);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   };
 
   const handleDeleteConfirm = (userId: string) => {
@@ -120,7 +124,6 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
         setFormError(res.error);
       } else {
         resetForm();
-        // Reload to get updated list from server
         setTimeout(() => window.location.reload(), 400);
       }
     });
@@ -140,6 +143,16 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
         return <span className="px-2 py-0.5 bg-slate-900 text-slate-500 border border-slate-800 rounded text-[9px] font-mono font-bold">{role}</span>;
     }
   };
+
+  const filteredUsers = useMemo(() => {
+    return localUsers.filter(u => {
+      const q = searchQuery.toLowerCase();
+      return (
+        (u.full_name?.toLowerCase().includes(q)) ||
+        (u.email?.toLowerCase().includes(q))
+      );
+    });
+  }, [localUsers, searchQuery]);
 
   return (
     <div className="space-y-6">
@@ -307,92 +320,144 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
         </div>
       )}
 
-      {/* Grid of User cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {localUsers.map((u) => {
-          const isSelf = currentUserId === u.id;
-          const isConfirmingDelete = deleteConfirmId === u.id;
+      {/* Filters and Search */}
+      <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="relative w-full md:w-80">
+          <svg
+            className="w-4 h-4 text-slate-500 absolute left-3.5 top-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Buscar por nombre o email..."
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/40 text-xs outline-none text-slate-300 placeholder-slate-600"
+          />
+        </div>
+        <div className="text-xs text-slate-500 font-mono">
+          {filteredUsers.length} usuario(s) encontrado(s)
+        </div>
+      </div>
 
-          return (
-            <div
-              key={u.id}
-              className={`bg-slate-900 border ${u.is_active ? 'border-slate-800' : 'border-slate-850 opacity-60'} rounded-2xl p-5 flex flex-col justify-between hover:border-slate-750 transition-all`}
-            >
-              <div>
-                <div className="flex justify-between items-start gap-2">
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-200 tracking-tight leading-snug">{u.full_name || 'Sin nombre asignado'}</h4>
-                    <span className="text-[10px] font-mono text-slate-500 leading-none">{u.email}</span>
-                  </div>
-                  {u.is_active ? (
-                    <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/10">Activo</span>
-                  ) : (
-                    <span className="text-[8px] font-bold bg-slate-950 text-slate-550 px-2 py-0.5 rounded border border-slate-800">Inactivo</span>
+      {/* List / Table of Users */}
+      <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-slate-950/50 border-b border-slate-800 text-[10px] uppercase font-mono text-slate-400">
+              <th className="px-4 py-3 font-bold tracking-wider">Usuario</th>
+              <th className="px-4 py-3 font-bold tracking-wider">Rol</th>
+              <th className="px-4 py-3 font-bold tracking-wider">Centro / Hospital</th>
+              <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
+              <th className="px-4 py-3 font-bold tracking-wider text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-800/60">
+            {filteredUsers.map((u) => {
+              const isSelf = currentUserId === u.id;
+              const isConfirmingDelete = deleteConfirmId === u.id;
+
+              return (
+                <React.Fragment key={u.id}>
+                  <tr className={`hover:bg-slate-800/30 transition-colors ${!u.is_active ? 'opacity-60' : ''}`}>
+                    <td className="px-4 py-3 align-middle">
+                      <div className="flex items-center gap-2">
+                        <div>
+                          <div className="font-bold text-sm text-slate-200">
+                            {u.full_name || 'Sin nombre'}
+                            {isSelf && <span className="ml-2 text-[9px] font-mono text-cyan-500 bg-cyan-950/40 px-1.5 py-0.5 rounded border border-cyan-800/30">(Tú)</span>}
+                          </div>
+                          <div className="text-[10px] font-mono text-slate-500 mt-0.5">{u.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 align-middle">
+                      {getRoleBadge(u.role)}
+                    </td>
+                    <td className="px-4 py-3 align-middle text-xs text-slate-300">
+                      {u.role === 'hospital_user' ? (
+                        <span className="flex items-center gap-1.5">
+                          <span className="text-[10px]">🏥</span> {u.hospitals?.name || 'No asignado'}
+                        </span>
+                      ) : (
+                        <span className="text-slate-600 italic">No aplicable</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 align-middle text-center">
+                      {u.is_active ? (
+                        <span className="text-[9px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/20">ACTIVO</span>
+                      ) : (
+                        <span className="text-[9px] font-bold bg-slate-900 text-slate-500 px-2 py-0.5 rounded border border-slate-700">INACTIVO</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 align-middle text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleEditClick(u)}
+                          className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded transition-colors"
+                        >
+                          Editar
+                        </button>
+                        {!isSelf && (
+                          <button
+                            onClick={() => {
+                              setDeleteConfirmId(u.id);
+                              setShowForm(false);
+                              setEditingId(null);
+                            }}
+                            className="px-2.5 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded transition-colors"
+                          >
+                            Eliminar
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+
+                  {isConfirmingDelete && (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-3 bg-red-950/10 border-b border-slate-800/60">
+                        <div className="flex items-center justify-between p-3 bg-red-950/30 border border-red-900/50 rounded-xl">
+                          <p className="text-[10px] text-red-300">
+                            ¿Eliminar a <strong>{u.full_name || u.email}</strong>? Esta acción es irreversible y eliminará su acceso.
+                          </p>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => setDeleteConfirmId(null)}
+                              className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
+                            >
+                              Cancelar
+                            </button>
+                            <button
+                              onClick={() => handleDeleteConfirm(u.id)}
+                              disabled={isPending}
+                              className="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-[10px] font-bold rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              {isPending ? 'Eliminando...' : 'Sí, eliminar'}
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
                   )}
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2 items-center">
-                  {getRoleBadge(u.role)}
-                  {isSelf && (
-                    <span className="text-[9px] font-mono text-slate-500">(Tú)</span>
-                  )}
-                  {u.role === 'hospital_user' && (
-                    <span className="text-[9px] font-mono text-slate-400 truncate max-w-[150px]" title={u.hospitals?.name || 'Ninguno'}>
-                      🏢 {u.hospitals?.name || 'Hospital no asignado'}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Delete confirmation panel */}
-              {isConfirmingDelete && (
-                <div className="mt-4 p-3 bg-red-950/20 border border-red-900/40 rounded-xl">
-                  <p className="text-[10px] text-red-300 mb-3">
-                    ¿Eliminar a <strong>{u.full_name || u.email}</strong>? Esta acción es irreversible y eliminará su acceso al sistema.
-                  </p>
-                  <div className="flex gap-2 justify-end">
-                    <button
-                      onClick={() => setDeleteConfirmId(null)}
-                      className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      onClick={() => handleDeleteConfirm(u.id)}
-                      disabled={isPending}
-                      className="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-[10px] font-bold rounded-lg transition-colors disabled:opacity-50"
-                    >
-                      {isPending ? 'Eliminando...' : 'Sí, eliminar'}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="mt-5 flex justify-end gap-2 border-t border-slate-850/60 pt-4">
-                {!isSelf && !isConfirmingDelete && (
-                  <button
-                    onClick={() => {
-                      setDeleteConfirmId(u.id);
-                      setShowForm(false);
-                      setEditingId(null);
-                    }}
-                    className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
-                  >
-                    Eliminar
-                  </button>
-                )}
-                {!isConfirmingDelete && (
-                  <button
-                    onClick={() => handleEditClick(u)}
-                    className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-350 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
-                  >
-                    Editar
-                  </button>
-                )}
-              </div>
-            </div>
-          );
-        })}
+                </React.Fragment>
+              );
+            })}
+            
+            {filteredUsers.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 text-xs">
+                  No se encontraron usuarios que coincidan con la búsqueda.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
     </div>
