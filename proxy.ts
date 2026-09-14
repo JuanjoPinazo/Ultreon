@@ -65,6 +65,15 @@ export async function proxy(request: NextRequest) {
   const isProtected = path.startsWith('/dashboard') || path.startsWith('/admin') || path.startsWith('/registry') || path === '/';
 
   if (isProtected) {
+    // DEV BYPASS EXCLUSIVELY FOR V3
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      process.env.ULTREON_V3_DEV_BYPASS === 'true' &&
+      path.startsWith('/registry/v3')
+    ) {
+      return supabaseResponse;
+    }
+
     if (!user) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
