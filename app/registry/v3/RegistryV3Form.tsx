@@ -19,23 +19,22 @@ export default function RegistryV3Form() {
   const totalSteps = 7;
 
   const methods = useForm<UltreonRegistryV3Form>({
-    resolver: zodResolver(ultreonRegistryV3Schema),
+    resolver: zodResolver(ultreonRegistryV3Schema) as any,
     mode: 'onChange',
     defaultValues: {
       status: 'DRAFT',
       core_data: {
-        operator_experience_oct: '<1_year',
-        operator_experience_ultreon: 'first_use',
+        operator_experience_oct: '<1 año',
+        operator_experience_ultreon: 'Primeras utilizaciones',
         clinical_presentation: 'Stable Angina',
-        lesion_type: 'De novo',
+        lesion_type: ['De novo'],
         oct_indication: 'Pre-PCI Assessment',
         planned_strategy_angio: 'Direct Stenting',
       },
       acquisition_data: { pullbacks: [] },
       findings_data: { oct_findings: [] },
       global_assessment: {
-        global_usability: 5,
-        comparison_with_previous: 4
+        global_usability: 5
       }
     }
   });
@@ -58,7 +57,7 @@ export default function RegistryV3Form() {
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border">
         <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
         
-        <form onSubmit={methods.handleSubmit(onSubmit)} className="mt-8">
+        <form onSubmit={methods.handleSubmit(onSubmit as any)} className="mt-8">
           {currentStep === 1 && <CaseContextStep />}
           {currentStep === 2 && <OctAcquisitionStep />}
           {currentStep === 3 && <OctFindingsStep />}

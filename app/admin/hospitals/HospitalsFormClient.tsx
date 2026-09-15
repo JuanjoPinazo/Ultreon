@@ -128,8 +128,8 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
       {/* Page Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-50 font-sans">Gestión de Hospitales</h2>
-          <p className="text-xs text-slate-500">Añada, modifique y configure los centros de hemodinámica del registro.</p>
+          <h2 className="text-xl font-bold tracking-tight text-foreground font-sans">Gestión de Hospitales</h2>
+          <p className="text-xs text-muted-foreground">Añada, modifique y configure los centros de hemodinámica del registro.</p>
         </div>
         {!showForm && (
           <button
@@ -153,10 +153,10 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
 
       {/* Editor / Form Card */}
       {showForm && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 relative overflow-hidden animate-fade-slide">
+        <div className="bg-card border border-border rounded-3xl p-6 relative overflow-hidden animate-fade-slide">
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
           
-          <h3 className="text-sm font-bold text-slate-350 tracking-wider uppercase font-mono mb-4">
+          <h3 className="text-sm font-bold text-muted-foreground tracking-wider uppercase font-mono mb-4">
             {editingId ? 'Editar Hospital' : 'Registrar Nuevo Hospital'}
           </h3>
 
@@ -165,62 +165,62 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
               
               {/* Name */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Nombre del Centro</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Nombre del Centro</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ej: Hospital de San Juan"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                   required
                 />
               </div>
 
               {/* Short name */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Nombre Corto / Siglas</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Nombre Corto / Siglas</label>
                 <input
                   type="text"
                   value={shortName}
                   onChange={(e) => setShortName(e.target.value)}
                   placeholder="Ej: HSJ"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                 />
               </div>
 
               {/* City */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Ciudad</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Ciudad</label>
                 <input
                   type="text"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="Ej: San Juan de Alicante"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                 />
               </div>
 
               {/* Province */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Provincia</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Provincia</label>
                 <input
                   type="text"
                   value={province}
                   onChange={(e) => setProvince(e.target.value)}
                   placeholder="Ej: Alicante"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                 />
               </div>
 
               {/* Code */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Código Interno Único</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Código Interno Único</label>
                 <input
                   type="text"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   placeholder="Ej: HOSP-SANJUAN"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={editingId !== null}
                   required
                 />
@@ -231,15 +231,15 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
 
               {/* Active Toggle */}
               <div className="flex items-center gap-4 py-3">
-                <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Estado Activo</span>
+                <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Estado Activo</span>
                 <button
                   type="button"
                   onClick={() => setIsActive(!isActive)}
-                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${isActive ? 'bg-cyan-500' : 'bg-slate-800'}`}
+                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${isActive ? 'bg-cyan-500' : 'bg-slate-100 dark:bg-slate-800'}`}
                 >
-                  <div className={`w-5 h-5 rounded-full bg-slate-900 absolute top-0.5 transition-transform shadow ${isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+                  <div className={`w-5 h-5 rounded-full bg-card absolute top-0.5 transition-transform shadow ${isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
                 </button>
-                <span className="text-[10px] text-slate-400">{isActive ? 'Activo' : 'Inactivo'}</span>
+                <span className="text-[10px] text-muted-foreground">{isActive ? 'Activo' : 'Inactivo'}</span>
               </div>
 
             </div>
@@ -254,7 +254,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 border border-slate-800 hover:bg-slate-950 rounded-xl text-xs font-bold text-slate-450 hover:text-slate-200 transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-450 hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>
@@ -271,10 +271,10 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
       )}
 
       {/* List / Table of Hospitals */}
-      <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden overflow-x-auto">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-950/50 border-b border-slate-800 text-[10px] uppercase font-mono text-slate-400">
+            <tr className="bg-background/50 border-b border-border text-[10px] uppercase font-mono text-muted-foreground">
               <th className="px-4 py-3 font-bold tracking-wider">Centro</th>
               <th className="px-4 py-3 font-bold tracking-wider">Acrónimo/Código</th>
               <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
@@ -295,14 +295,14 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
 
               return (
                 <React.Fragment key={h.id}>
-                  <tr className={`hover:bg-slate-800/30 transition-colors ${!h.is_active ? 'opacity-60' : ''}`}>
+                  <tr className={`hover:bg-slate-200 dark:hover:bg-slate-800/30 transition-colors ${!h.is_active ? 'opacity-60' : ''}`}>
                     <td className="px-4 py-3 align-middle">
-                      <div className="font-bold text-sm text-slate-200">{h.name}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Casos: {caseCount}</div>
+                      <div className="font-bold text-sm text-foreground">{h.name}</div>
+                      <div className="text-[10px] text-muted-foreground mt-0.5">Casos: {caseCount}</div>
                     </td>
                     <td className="px-4 py-3 align-middle">
                       <div className="flex flex-col gap-1 items-start">
-                        {h.short_name && <span className="text-xs text-slate-300">{h.short_name}</span>}
+                        {h.short_name && <span className="text-xs text-muted-foreground">{h.short_name}</span>}
                         <span className="text-[9px] font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/20">{h.code}</span>
                       </div>
                     </td>
@@ -310,25 +310,25 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                       {h.is_active ? (
                         <span className="text-[9px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/20">ACTIVO</span>
                       ) : (
-                        <span className="text-[9px] font-bold bg-slate-900 text-slate-500 px-2 py-0.5 rounded border border-slate-700">INACTIVO</span>
+                        <span className="text-[9px] font-bold bg-card text-muted-foreground px-2 py-0.5 rounded border border-border dark:border-slate-700">INACTIVO</span>
                       )}
                     </td>
                     <td className="px-4 py-3 align-middle">
-                      <div className="flex flex-col gap-0.5 text-[10px] text-slate-400">
-                        <span><strong className="text-slate-300">{userCount}</strong> usuarios</span>
-                        <span><strong className="text-slate-300">{invCount}</strong> investigadores</span>
-                        <span><strong className="text-slate-300">{opCount}</strong> operadores</span>
+                      <div className="flex flex-col gap-0.5 text-[10px] text-muted-foreground">
+                        <span><strong className="text-muted-foreground">{userCount}</strong> usuarios</span>
+                        <span><strong className="text-muted-foreground">{invCount}</strong> investigadores</span>
+                        <span><strong className="text-muted-foreground">{opCount}</strong> operadores</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 align-middle text-xs text-slate-400">
+                    <td className="px-4 py-3 align-middle text-xs text-muted-foreground">
                       <div>{h.city || 'N/A'}</div>
-                      <div className="text-[10px] text-slate-500">{h.province || 'N/A'}</div>
+                      <div className="text-[10px] text-muted-foreground">{h.province || 'N/A'}</div>
                     </td>
                     <td className="px-4 py-3 align-middle text-right">
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => handleEditClick(h)}
-                          className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded transition-colors"
+                          className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-muted-foreground text-[10px] font-bold rounded transition-colors"
                         >
                           Editar
                         </button>
@@ -350,7 +350,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                   
                   {isConfirmingDelete && (
                     <tr>
-                      <td colSpan={6} className="px-4 py-3 bg-red-950/10 border-b border-slate-800/60">
+                      <td colSpan={6} className="px-4 py-3 bg-red-950/10 border-b border-border/60">
                         <div className="flex items-center justify-between p-3 bg-red-950/30 border border-red-900/50 rounded-xl">
                           <p className="text-[10px] text-red-300">
                             ¿Eliminar <strong>{h.name}</strong>?
@@ -359,7 +359,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                           <div className="flex gap-2">
                             <button
                               onClick={() => setDeleteConfirmId(null)}
-                              className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
+                              className="px-3 py-1.5 border border-border dark:border-slate-700 rounded-lg text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                             >
                               Cancelar
                             </button>
@@ -381,7 +381,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
             
             {localHospitals.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-slate-500 text-xs">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground text-xs">
                   No se encontraron hospitales.
                 </td>
               </tr>

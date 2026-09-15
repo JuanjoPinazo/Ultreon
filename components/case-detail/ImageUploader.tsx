@@ -26,7 +26,7 @@ const CATEGORY_LABELS: Record<MediaCategory, string> = {
   angiography: 'Angiografía',
   ultreon_screenshot: 'Screenshot ULTREON',
   report_pdf: 'Informe PDF',
-  zero_contrast_image: 'Zero-Contrast',
+  zero_contrast_image: 'Suero / No-Contraste',
   other: 'Otro',
 };
 
@@ -150,16 +150,16 @@ export default function ImageUploader({
             className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer ${
               isDragging
                 ? 'border-cyan-500 bg-cyan-950/20'
-                : 'border-slate-700 bg-slate-950/60 hover:border-slate-600'
+                : 'border-border dark:border-slate-700 bg-background/60 hover:border-slate-600'
             }`}
             onClick={() => fileInputRef.current?.click()}
           >
             <div className="flex flex-col items-center gap-3">
               <span className="text-3xl">📤</span>
-              <h3 className="text-sm font-bold text-slate-200">
+              <h3 className="text-sm font-bold text-foreground">
                 Arrastra imágenes aquí o haz clic para seleccionar
               </h3>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-xs text-muted-foreground font-mono">
                 JPG, PNG, WebP, PDF • Máx 25 MB
               </p>
             </div>
@@ -176,16 +176,16 @@ export default function ImageUploader({
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Archivo seleccionado */}
-          <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-            <p className="text-xs font-mono text-slate-500 mb-1 uppercase">
+          <div className="bg-card border border-border rounded-2xl p-4">
+            <p className="text-xs font-mono text-muted-foreground mb-1 uppercase">
               Archivo seleccionado
             </p>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-200">
+                <p className="text-sm font-semibold text-foreground">
                   {selectedFile?.name}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {(selectedFile?.size || 0) / 1024 / 1024 > 0
                     ? `${((selectedFile?.size || 0) / 1024 / 1024).toFixed(1)} MB`
                     : 'Cargando...'}
@@ -206,13 +206,13 @@ export default function ImageUploader({
 
           {/* Categoría */}
           <div>
-            <label className="text-xs font-bold text-slate-400 uppercase block mb-2">
+            <label className="text-xs font-bold text-muted-foreground uppercase block mb-2">
               Categoría
             </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value as MediaCategory)}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 text-sm outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground text-sm outline-none focus:border-cyan-500"
             >
               {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
                 <option key={key} value={key}>
@@ -224,13 +224,13 @@ export default function ImageUploader({
 
           {/* Fase de adquisición */}
           <div>
-            <label className="text-xs font-bold text-slate-400 uppercase block mb-2">
+            <label className="text-xs font-bold text-muted-foreground uppercase block mb-2">
               Fase de Adquisición
             </label>
             <select
               value={selectedPhase}
               onChange={(e) => setSelectedPhase(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 text-sm outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground text-sm outline-none focus:border-cyan-500"
             >
               {Object.entries(PHASE_LABELS).map(([key, label]) => (
                 <option key={key} value={key}>
@@ -242,7 +242,7 @@ export default function ImageUploader({
 
           {/* Descripción */}
           <div>
-            <label className="text-xs font-bold text-slate-400 uppercase block mb-2">
+            <label className="text-xs font-bold text-muted-foreground uppercase block mb-2">
               Descripción (opcional)
             </label>
             <textarea
@@ -250,7 +250,7 @@ export default function ImageUploader({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Notas adicionales sobre la imagen..."
               rows={2}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 text-sm outline-none focus:border-cyan-500 resize-none"
+              className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground text-sm outline-none focus:border-cyan-500 resize-none"
             />
           </div>
 
@@ -268,9 +268,9 @@ export default function ImageUploader({
                 type="checkbox"
                 checked={hasConfirmedAnonymous}
                 onChange={(e) => setHasConfirmedAnonymous(e.target.checked)}
-                className="h-4 w-4 rounded bg-slate-900 border border-slate-700 accent-cyan-500"
+                className="h-4 w-4 rounded bg-card border border-border dark:border-slate-700 accent-cyan-500"
               />
-              <span className="text-xs font-semibold text-slate-300">
+              <span className="text-xs font-semibold text-muted-foreground">
                 Confirmo que esta imagen ha sido anonimizada
               </span>
             </label>
@@ -297,7 +297,7 @@ export default function ImageUploader({
                 setShowForm(false);
                 setSelectedFile(null);
               }}
-              className="flex-1 px-4 py-2 bg-slate-950 border border-slate-800 text-slate-300 rounded-lg text-xs font-semibold hover:bg-slate-850 transition-all"
+              className="flex-1 px-4 py-2 bg-background border border-border text-muted-foreground rounded-lg text-xs font-semibold hover:bg-muted transition-all"
             >
               Cancelar
             </button>

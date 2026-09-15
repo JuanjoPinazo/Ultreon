@@ -31,13 +31,13 @@ export default function OctEvidencePanel({
   canUpload,
 }: OctEvidencePanelProps) {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-      <div className="flex items-center justify-between pb-4 border-b border-slate-850">
+    <div className="bg-card border border-border rounded-3xl p-6 space-y-4">
+      <div className="flex items-center justify-between pb-4 border-b border-border">
         <div>
-          <h3 className="text-xs font-bold text-slate-400 tracking-wider uppercase font-mono">
+          <h3 className="text-xs font-bold text-muted-foreground tracking-wider uppercase font-mono">
             OCT Evidence
           </h3>
-          <p className="text-sm font-bold text-slate-50 mt-1">
+          <p className="text-sm font-bold text-foreground mt-1">
             {stats.totalEvidence} evidencias cargadas
           </p>
         </div>
@@ -51,20 +51,20 @@ export default function OctEvidencePanel({
 
       {/* Evidence Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-slate-950/50 border border-slate-800 rounded-lg p-3 text-center">
-          <span className="text-[10px] font-mono text-slate-400 uppercase block">Total</span>
-          <span className="text-lg font-bold text-slate-100 mt-1">{stats.totalEvidence}</span>
+        <div className="bg-background/50 border border-border rounded-lg p-3 text-center">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase block">Total</span>
+          <span className="text-lg font-bold text-foreground mt-1">{stats.totalEvidence}</span>
         </div>
 
-        <div className="bg-slate-950/50 border border-slate-800 rounded-lg p-3 text-center">
-          <span className="text-[10px] font-mono text-slate-400 uppercase block">Key</span>
+        <div className="bg-background/50 border border-border rounded-lg p-3 text-center">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase block">Key</span>
           <span className="text-lg font-bold text-emerald-400 mt-1">
             {stats.keyEvidenceCount}
           </span>
         </div>
 
-        <div className="bg-slate-950/50 border border-slate-800 rounded-lg p-3 text-center">
-          <span className="text-[10px] font-mono text-slate-400 uppercase block">
+        <div className="bg-background/50 border border-border rounded-lg p-3 text-center">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase block">
             Strategy
           </span>
           <span className="text-lg font-bold text-purple-400 mt-1">
@@ -72,8 +72,8 @@ export default function OctEvidencePanel({
           </span>
         </div>
 
-        <div className="bg-slate-950/50 border border-slate-800 rounded-lg p-3 text-center">
-          <span className="text-[10px] font-mono text-slate-400 uppercase block">Core Lab</span>
+        <div className="bg-background/50 border border-border rounded-lg p-3 text-center">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase block">Core Lab</span>
           <span
             className={`text-lg font-bold mt-1 ${
               stats.pendingCorelab === 0 ? 'text-emerald-400' : 'text-yellow-400'

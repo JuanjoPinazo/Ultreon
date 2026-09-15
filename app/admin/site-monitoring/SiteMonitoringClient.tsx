@@ -243,69 +243,69 @@ export default function SiteMonitoringClient({
     <div className="space-y-6">
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+          <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">
             Casos Totales
           </span>
           <span className="text-2xl font-bold text-cyan-400">
             {summaryStats.totalCases}
           </span>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             {summaryStats.totalCompleted} completados
           </p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+          <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">
             Centros Green
           </span>
           <span className="text-2xl font-bold text-emerald-400">
             {summaryStats.greenCenters}
           </span>
-          <p className="text-xs text-slate-500">En objetivo</p>
+          <p className="text-xs text-muted-foreground">En objetivo</p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+          <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">
             Centros Amber
           </span>
           <span className="text-2xl font-bold text-yellow-400">
             {summaryStats.amberCenters}
           </span>
-          <p className="text-xs text-slate-500">En riesgo</p>
+          <p className="text-xs text-muted-foreground">En riesgo</p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+          <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">
             Centros Red
           </span>
           <span className="text-2xl font-bold text-red-400">
             {summaryStats.redCenters}
           </span>
-          <p className="text-xs text-slate-500">Bajo objetivo</p>
+          <p className="text-xs text-muted-foreground">Bajo objetivo</p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+          <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">
             Calidad Promedio
           </span>
           <span className="text-2xl font-bold text-purple-400">
             {summaryStats.avgQuality}
           </span>
-          <p className="text-xs text-slate-500">Data quality score</p>
+          <p className="text-xs text-muted-foreground">Data quality score</p>
         </div>
       </div>
 
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
-          <label className="text-xs font-bold text-slate-400 block mb-2 uppercase tracking-wider">
+          <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase tracking-wider">
             Centro
           </label>
           <select
             value={selectedHospital}
             onChange={(e) => setSelectedHospital(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
           >
             <option value="all">Todos los centros</option>
             {hospitals.map((h) => (
@@ -317,7 +317,7 @@ export default function SiteMonitoringClient({
         </div>
 
         <div>
-          <label className="text-xs font-bold text-slate-400 block mb-2 uppercase tracking-wider">
+          <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase tracking-wider">
             Estado
           </label>
           <select
@@ -325,7 +325,7 @@ export default function SiteMonitoringClient({
             onChange={(e) =>
               setSelectedStatus(e.target.value as 'all' | 'green' | 'amber' | 'red')
             }
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
           >
             <option value="all">Todos los estados</option>
             <option value="green">✓ Green</option>
@@ -340,7 +340,7 @@ export default function SiteMonitoringClient({
               setSelectedHospital('all');
               setSelectedStatus('all');
             }}
-            className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 rounded-xl px-3 py-2 text-sm font-medium transition-all"
+            className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 border border-border dark:border-slate-700 text-foreground rounded-xl px-3 py-2 text-sm font-medium transition-all"
           >
             Resetear filtros
           </button>
@@ -349,12 +349,12 @@ export default function SiteMonitoringClient({
 
       {/* Alerts Panel */}
       {allAlerts.length > 0 && (
-        <div className="bg-slate-900 border border-red-800/40 rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="bg-card border border-red-800/40 rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-border">
             <h3 className="text-sm font-bold text-red-400">
               ⚠ {summaryStats.totalAlerts} Alertas Activas
             </h3>
-            <span className="text-[10px] font-mono text-slate-500">
+            <span className="text-[10px] font-mono text-muted-foreground">
               {allAlerts.length} mostradas
             </span>
           </div>
@@ -362,13 +362,13 @@ export default function SiteMonitoringClient({
             {allAlerts.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-start justify-between p-3 bg-slate-950/50 border border-slate-800 rounded-lg"
+                className="flex items-start justify-between p-3 bg-background/50 border border-border rounded-lg"
               >
                 <div>
-                  <span className="text-sm font-bold text-slate-100">
+                  <span className="text-sm font-bold text-foreground">
                     {item.hospitalName}
                   </span>
-                  <p className="text-xs text-slate-400 mt-1">{item.alert}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{item.alert}</p>
                 </div>
                 <span
                   className={`text-[10px] font-bold px-2 py-1 rounded ${
@@ -393,15 +393,15 @@ export default function SiteMonitoringClient({
           {filteredMetrics.map((metric) => (
             <div
               key={metric.hospitalId}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6"
+              className="bg-card border border-border rounded-2xl p-6 space-y-6"
             >
               {/* Header con semáforo */}
-              <div className="flex items-start justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-start justify-between pb-4 border-b border-border">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-50">
+                  <h3 className="text-lg font-bold text-foreground">
                     {metric.hospitalName}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-muted-foreground mt-1">
                     {metric.casesRegistered} casos registrados
                   </p>
                 </div>
@@ -421,7 +421,7 @@ export default function SiteMonitoringClient({
                         ? '●'
                         : '●'}
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-muted-foreground mt-1">
                     {metric.status.toUpperCase()} STATUS
                   </p>
                 </div>
@@ -430,34 +430,34 @@ export default function SiteMonitoringClient({
               {/* Metrics Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 {/* Completion */}
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">
                     Cumplimiento
                   </span>
                   <span className="text-xl font-bold text-cyan-400">
                     {metric.completionPercentage.toFixed(0)}%
                   </span>
                   {metric.targetCases && (
-                    <p className="text-[10px] text-slate-500 mt-1">
+                    <p className="text-[10px] text-muted-foreground mt-1">
                       {metric.casesRegistered}/{metric.targetCases}
                     </p>
                   )}
                 </div>
 
                 {/* Quality Score */}
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">
                     Data Quality
                   </span>
                   <span className="text-xl font-bold text-purple-400">
                     {metric.dataQualityScore}
                   </span>
-                  <p className="text-[10px] text-slate-500 mt-1">/100</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">/100</p>
                 </div>
 
                 {/* Follow-up 30 */}
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">
                     FU 30d
                   </span>
                   <span
@@ -469,12 +469,12 @@ export default function SiteMonitoringClient({
                   >
                     {metric.followup30Pending}
                   </span>
-                  <p className="text-[10px] text-slate-500 mt-1">pendiente</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">pendiente</p>
                 </div>
 
                 {/* Follow-up 6m */}
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">
                     FU 6m
                   </span>
                   <span
@@ -486,12 +486,12 @@ export default function SiteMonitoringClient({
                   >
                     {metric.followup6mPending}
                   </span>
-                  <p className="text-[10px] text-slate-500 mt-1">pendiente</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">pendiente</p>
                 </div>
 
                 {/* Images */}
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">
                     Imágenes
                   </span>
                   <span
@@ -501,12 +501,12 @@ export default function SiteMonitoringClient({
                   >
                     {metric.imagesPending}
                   </span>
-                  <p className="text-[10px] text-slate-500 mt-1">sin cargar</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">sin cargar</p>
                 </div>
 
                 {/* Core Lab */}
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">
                     Core Lab
                   </span>
                   <span
@@ -516,17 +516,17 @@ export default function SiteMonitoringClient({
                   >
                     {metric.coreLabPending}
                   </span>
-                  <p className="text-[10px] text-slate-500 mt-1">sin validar</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">sin validar</p>
                 </div>
               </div>
 
               {/* Activity Info */}
-              <div className="flex items-center justify-between bg-slate-950/40 border border-slate-800/50 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-background/40 border border-border/50 rounded-lg p-4">
                 <div>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase block">
+                  <span className="text-[10px] font-mono text-muted-foreground uppercase block">
                     Última actividad
                   </span>
-                  <span className="text-sm font-bold text-slate-100 mt-1">
+                  <span className="text-sm font-bold text-foreground mt-1">
                     {metric.daysSinceLastCase === 999
                       ? 'Sin casos'
                       : `${metric.daysSinceLastCase} días atrás`}
@@ -544,7 +544,7 @@ export default function SiteMonitoringClient({
           ))}
         </div>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+        <div className="bg-card border border-border rounded-2xl p-12 text-center">
           <svg
             className="w-12 h-12 mx-auto text-slate-600 mb-4"
             fill="none"
@@ -558,23 +558,23 @@ export default function SiteMonitoringClient({
               d="M7 12a3 3 0 100-6 3 3 0 000 6zM7 6h.01M17 12a3 3 0 100-6 3 3 0 000 6zM17 6h.01M7 18a3 3 0 100-6 3 3 0 000 6zM7 12h.01M17 18a3 3 0 100-6 3 3 0 000 6zM17 12h.01"
             />
           </svg>
-          <p className="text-slate-400 text-sm">
+          <p className="text-muted-foreground text-sm">
             No hay centros que coincidan con los filtros seleccionados.
           </p>
         </div>
       )}
 
       {/* Export Section */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+      <div className="bg-card border border-border rounded-2xl p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-100">Exportar Datos</h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <h3 className="text-sm font-bold text-foreground">Exportar Datos</h3>
+            <p className="text-xs text-muted-foreground mt-1">
               Descarga reportes de monitoreo y casos pendientes
             </p>
           </div>
           <div className="flex gap-3">
-            <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 px-4 py-2 rounded-xl text-sm font-bold transition-all">
+            <button className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 border border-border dark:border-slate-700 text-foreground px-4 py-2 rounded-xl text-sm font-bold transition-all">
               CSV Monitoreo
             </button>
             <button className="bg-cyan-950 hover:bg-cyan-900 border border-cyan-800 text-cyan-400 px-4 py-2 rounded-xl text-sm font-bold transition-all">

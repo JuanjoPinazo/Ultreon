@@ -3,6 +3,13 @@
 BEGIN;
 
 -- 1. Configuration Table for Anonymous Code Prefixes
+CREATE TABLE IF NOT EXISTS public.hospital_case_counters (
+    hospital_id UUID PRIMARY KEY REFERENCES public.hospitals(id) ON DELETE CASCADE,
+    counter_value BIGINT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS public.ultreon_registry_hospital_settings (
     hospital_id UUID PRIMARY KEY REFERENCES public.hospitals(id) ON DELETE CASCADE,
     code_prefix TEXT NOT NULL UNIQUE CHECK (code_prefix ~ '^[A-Z0-9]{2,10}$'),
@@ -26,9 +33,10 @@ CREATE TABLE IF NOT EXISTS public.ultreon_registry_cases (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     
     hospital_id UUID NOT NULL REFERENCES public.hospitals(id) ON DELETE CASCADE,
-    operator_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    operator_id UUID NOT NULL REFERENCES public.operators(id) ON DELETE CASCADE,
     procedure_date DATE NOT NULL,
     anonymous_code TEXT NOT NULL,
+    is_demo BOOLEAN NOT NULL DEFAULT false,
     
     status TEXT NOT NULL CHECK (status IN ('DRAFT', 'COMPLETED')),
     schema_version TEXT NOT NULL DEFAULT '3.0',

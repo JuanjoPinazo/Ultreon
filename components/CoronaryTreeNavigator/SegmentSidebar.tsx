@@ -11,9 +11,9 @@ export function SegmentSidebar({ selectedSegmentId, onSelectSegment }: SegmentSi
   const groups = ['TCI', 'DA', 'CX', 'CD', 'RAMAS'] as const;
 
   return (
-    <div className="h-full flex flex-col border-l border-slate-800 bg-slate-900/40 w-64 flex-shrink-0 overflow-y-auto">
-      <div className="p-4 border-b border-slate-800 sticky top-0 bg-slate-900/90 backdrop-blur-md z-10">
-        <h3 className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">
+    <div className="h-full flex flex-col border-l border-border bg-card/40 w-64 flex-shrink-0 overflow-y-auto">
+      <div className="p-4 border-b border-border sticky top-0 bg-card/90 backdrop-blur-md z-10">
+        <h3 className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
           Selección Manual
         </h3>
       </div>
@@ -38,7 +38,7 @@ export function SegmentSidebar({ selectedSegmentId, onSelectSegment }: SegmentSi
                       className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 cursor-pointer flex items-center justify-between ${
                         isSelected
                           ? 'bg-cyan-950/60 text-cyan-400 font-bold border border-cyan-500/30'
-                          : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent'
+                          : 'text-muted-foreground hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-foreground border border-transparent'
                       }`}
                     >
                       <span>{seg.label}</span>

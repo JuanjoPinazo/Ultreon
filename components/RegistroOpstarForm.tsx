@@ -747,7 +747,7 @@ export default function RegistroOpstarForm() {
                         <div className={`absolute w-32 h-32 rounded-full border border-dashed transition-all duration-700 ${
                           formData.deteccionEEL 
                             ? 'border-indigo-400 scale-100 opacity-100 ring-2 ring-indigo-500/10' 
-                            : 'border-slate-700 scale-90 opacity-40'
+                            : 'border-border dark:border-slate-700 scale-90 opacity-40'
                         }`} />
                         
                         {/* Inner Lumen circle */}

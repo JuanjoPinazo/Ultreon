@@ -91,16 +91,16 @@ export default function CoreLabDashboardClient({
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:p-8 sticky top-0 z-40">
+      <header className="bg-card border-b border-border p-4 md:p-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
             <Link href="/dashboard" className="text-cyan-400 hover:text-cyan-300 text-sm font-semibold mb-2 inline-block">
               ← Volver al dashboard
             </Link>
-            <h1 className="text-base font-bold text-slate-50">Core Lab — Revisión Centralizada</h1>
-            <p className="text-xs text-slate-400 mt-1">
+            <h1 className="text-base font-bold text-foreground">Core Lab — Revisión Centralizada</h1>
+            <p className="text-xs text-muted-foreground mt-1">
               Validación de imágenes y calidad de procedimientos
             </p>
           </div>
@@ -112,29 +112,29 @@ export default function CoreLabDashboardClient({
         <div className="space-y-8">
           {/* KPIs */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">
                 Casos Totales
               </p>
               <p className="text-2xl font-bold text-cyan-400">{kpis.totalCases}</p>
             </div>
 
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">
                 Pendientes
               </p>
               <p className="text-2xl font-bold text-yellow-400">⚠️ {kpis.pendingReview}</p>
             </div>
 
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">
                 Imágenes Total
               </p>
-              <p className="text-2xl font-bold text-slate-300">{kpis.totalImages}</p>
+              <p className="text-2xl font-bold text-muted-foreground">{kpis.totalImages}</p>
             </div>
 
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">
                 Revisadas
               </p>
               <p className="text-2xl font-bold text-emerald-400">
@@ -145,17 +145,17 @@ export default function CoreLabDashboardClient({
 
           {/* Filters */}
           <div className="space-y-4">
-            <h2 className="text-sm font-bold text-slate-50">Filtros</h2>
+            <h2 className="text-sm font-bold text-foreground">Filtros</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Hospital Filter */}
               <div>
-                <label className="text-xs font-semibold text-slate-400 mb-2 block">
+                <label className="text-xs font-semibold text-muted-foreground mb-2 block">
                   Centro
                 </label>
                 <select
                   value={filterHospital}
                   onChange={(e) => setFilterHospital(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 text-slate-200 rounded-lg text-sm outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 bg-card border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500"
                 >
                   <option value="all">Todos los centros</option>
                   {hospitals.map((h) => (
@@ -168,13 +168,13 @@ export default function CoreLabDashboardClient({
 
               {/* Status Filter */}
               <div>
-                <label className="text-xs font-semibold text-slate-400 mb-2 block">
+                <label className="text-xs font-semibold text-muted-foreground mb-2 block">
                   Estado
                 </label>
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 text-slate-200 rounded-lg text-sm outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 bg-card border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500"
                 >
                   <option value="pending">Pendiente de revisión</option>
                   <option value="suboptimal">Calidad subóptima detectada</option>
@@ -185,30 +185,30 @@ export default function CoreLabDashboardClient({
           </div>
 
           {/* Cases Table */}
-          <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-slate-950/50">
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400">
+                  <tr className="border-b border-border bg-background/50">
+                    <th className="px-4 py-3 text-left text-xs font-bold text-muted-foreground">
                       Caso
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400">
+                    <th className="px-4 py-3 text-left text-xs font-bold text-muted-foreground">
                       Centro
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400">
+                    <th className="px-4 py-3 text-left text-xs font-bold text-muted-foreground">
                       Vaso
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-bold text-slate-400">
+                    <th className="px-4 py-3 text-center text-xs font-bold text-muted-foreground">
                       Imágenes
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-bold text-slate-400">
+                    <th className="px-4 py-3 text-center text-xs font-bold text-muted-foreground">
                       Revisadas
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-bold text-slate-400">
+                    <th className="px-4 py-3 text-center text-xs font-bold text-muted-foreground">
                       Estado
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-bold text-slate-400">
+                    <th className="px-4 py-3 text-center text-xs font-bold text-muted-foreground">
                       Acción
                     </th>
                   </tr>
@@ -217,7 +217,7 @@ export default function CoreLabDashboardClient({
                   {filteredCases.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="px-4 py-8 text-center">
-                        <p className="text-slate-400 text-sm">
+                        <p className="text-muted-foreground text-sm">
                           {filterStatus === 'no-images'
                             ? 'Ningún caso sin imágenes'
                             : 'No hay casos pendientes en este filtro'}
@@ -228,7 +228,7 @@ export default function CoreLabDashboardClient({
                     filteredCases.map((c) => (
                       <tr
                         key={c.id}
-                        className="border-b border-slate-800 hover:bg-slate-850/50 transition-all"
+                        className="border-b border-border hover:bg-muted/50 transition-all"
                       >
                         <td className="px-4 py-3">
                           <p className="text-xs font-mono font-semibold text-cyan-400">
@@ -236,7 +236,7 @@ export default function CoreLabDashboardClient({
                           </p>
                         </td>
                         <td className="px-4 py-3">
-                          <p className="text-xs text-slate-300">
+                          <p className="text-xs text-muted-foreground">
                             {Array.isArray(c.hospitals)
                               ? c.hospitals[0]?.name
                               : (c.hospitals as any)?.name || 'N/A'}
@@ -248,7 +248,7 @@ export default function CoreLabDashboardClient({
                           </span>
                         </td>
                         <td className="px-4 py-3 text-center">
-                          <p className="text-xs font-semibold text-slate-300">
+                          <p className="text-xs font-semibold text-muted-foreground">
                             {c.totalMedia}
                           </p>
                         </td>

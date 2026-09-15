@@ -80,16 +80,16 @@ export default function CaseImagesClient({
   const keyImagesCount = media.filter((m) => m.is_key_image).length;
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:p-8 sticky top-0 z-40">
+      <header className="bg-card border-b border-border p-4 md:p-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
             <Link href={`/cases/${caseId}`} className="text-cyan-400 hover:text-cyan-300 text-sm font-semibold mb-2 inline-block">
               ← Volver al caso
             </Link>
-            <h1 className="text-base font-bold text-slate-50">Galería de Imágenes</h1>
-            <p className="text-xs text-slate-400 mt-1">
+            <h1 className="text-base font-bold text-foreground">Galería de Imágenes</h1>
+            <p className="text-xs text-muted-foreground mt-1">
               Caso {patientId} • {segment} • {hospitalName}
             </p>
           </div>
@@ -101,31 +101,31 @@ export default function CaseImagesClient({
         <div className="space-y-8">
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">Total Imágenes</p>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">Total Imágenes</p>
               <p className="text-2xl font-bold text-cyan-400">{media.length}</p>
             </div>
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">Key Images</p>
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">Key Images</p>
               <p className="text-2xl font-bold text-emerald-400">⭐ {keyImagesCount}</p>
             </div>
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">Anonimizadas</p>
-              <p className="text-2xl font-bold text-slate-300">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">Anonimizadas</p>
+              <p className="text-2xl font-bold text-muted-foreground">
                 {media.filter((m) => m.is_anonymized).length}
               </p>
             </div>
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4">
-              <p className="text-[10px] font-mono text-slate-500 uppercase mb-1">Revisadas</p>
-              <p className="text-2xl font-bold text-slate-300">
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-[10px] font-mono text-muted-foreground uppercase mb-1">Revisadas</p>
+              <p className="text-2xl font-bold text-muted-foreground">
                 {media.filter((m) => m.corelab_quality).length}
               </p>
             </div>
           </div>
 
           {/* Upload Section */}
-          <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8">
-            <h2 className="text-base font-bold text-slate-50 mb-6">Subir Nueva Imagen</h2>
+          <div className="bg-card border border-border rounded-3xl p-6 md:p-8">
+            <h2 className="text-base font-bold text-foreground mb-6">Subir Nueva Imagen</h2>
             <ImageUploader
               caseId={caseId}
               hospitalId={hospitalId}
@@ -147,7 +147,7 @@ export default function CaseImagesClient({
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
                   selectedFilter === filter.id
                     ? 'bg-cyan-500/20 border border-cyan-500 text-cyan-400'
-                    : 'bg-slate-900 border border-slate-800 text-slate-300 hover:border-slate-700'
+                    : 'bg-card border border-border text-muted-foreground hover:border-slate-700'
                 }`}
               >
                 {filter.label}
@@ -156,8 +156,8 @@ export default function CaseImagesClient({
           </div>
 
           {/* Gallery */}
-          <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8">
-            <h2 className="text-base font-bold text-slate-50 mb-6">
+          <div className="bg-card border border-border rounded-3xl p-6 md:p-8">
+            <h2 className="text-base font-bold text-foreground mb-6">
               {filteredMedia.length} imagen{filteredMedia.length !== 1 ? 'es' : ''}
             </h2>
             <ImageGallery

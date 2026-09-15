@@ -37,6 +37,7 @@ interface FollowUp {
 
 interface CaseRecord {
   id: string;
+  is_demo?: boolean;
   id_paciente: string;
   centro: string;
   vaso_diana: string;
@@ -85,14 +86,14 @@ export default function CaseDetailClient({ caseRecord, followups, keyImages }: C
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased font-sans">
+    <main className="min-h-screen bg-background text-foreground flex flex-col antialiased font-sans">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:px-8 sticky top-0 z-40">
+      <header className="bg-card border-b border-border p-4 md:px-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
               href="/dashboard"
-              className="h-8 w-8 rounded-lg bg-slate-950 hover:bg-slate-850 border border-slate-800 flex items-center justify-center text-slate-300 font-bold transition-all"
+              className="h-8 w-8 rounded-lg bg-background hover:bg-muted border border-border flex items-center justify-center text-muted-foreground font-bold transition-all"
             >
               ←
             </Link>
@@ -100,13 +101,13 @@ export default function CaseDetailClient({ caseRecord, followups, keyImages }: C
               <span className="text-[8px] font-mono font-bold text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/40">
                 CASE DETAIL
               </span>
-              <h1 className="text-base font-bold text-slate-50 mt-0.5">Revisión de Caso Clínico</h1>
+              <h1 className="text-base font-bold text-foreground mt-0.5">Revisión de Caso Clínico</h1>
             </div>
           </div>
 
           <Link
             href="/dashboard"
-            className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-xl text-xs font-medium transition-all"
+            className="px-3 py-1.5 bg-background hover:bg-muted border border-border rounded-xl text-xs font-medium transition-all"
           >
             Volver
           </Link>
@@ -127,6 +128,7 @@ export default function CaseDetailClient({ caseRecord, followups, keyImages }: C
             opstarScore={optimization?.opstar_score}
             opstarScoreCategory={optimization?.opstar_score_category}
             followupStatus={getFollowupStatus()}
+            isDemo={caseRecord.is_demo}
           />
 
           {/* 2. PROCEDURAL TIMELINE */}

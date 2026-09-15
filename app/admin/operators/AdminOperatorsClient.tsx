@@ -181,8 +181,8 @@ export default function AdminOperatorsClient({
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-50 font-sans">Gestión de Operadores Clínicos</h2>
-          <p className="text-xs text-slate-500">Maneje los operadores de sala y técnicos asociados a cada centro.</p>
+          <h2 className="text-xl font-bold tracking-tight text-foreground font-sans">Gestión de Operadores Clínicos</h2>
+          <p className="text-xs text-muted-foreground">Maneje los operadores de sala y técnicos asociados a cada centro.</p>
         </div>
         {!showAdd && !editingId && (
           <button
@@ -198,8 +198,8 @@ export default function AdminOperatorsClient({
       </div>
 
       {(showAdd || editingId) && (
-        <Card className="p-6 border-cyan-500/30 bg-slate-900 animate-fade-slide">
-          <h3 className="text-sm font-bold text-slate-350 tracking-wider uppercase font-mono mb-4">
+        <Card className="p-6 border-cyan-500/30 bg-card animate-fade-slide">
+          <h3 className="text-sm font-bold text-muted-foreground tracking-wider uppercase font-mono mb-4">
             {editingId ? 'Editar Operador' : 'Añadir Operador'}
           </h3>
           <div className="space-y-4 max-w-2xl">
@@ -211,63 +211,63 @@ export default function AdminOperatorsClient({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono block mb-1">Nombre Completo</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono block mb-1">Nombre Completo</label>
                 <input
                   type="text"
                   value={formData.fullName}
                   onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:border-cyan-500/50 outline-none"
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-xs text-foreground focus:border-cyan-500/50 outline-none"
                   placeholder="Ej: Dra. Elena García"
                 />
               </div>
               <div>
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono block mb-1">Email (Opcional)</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono block mb-1">Email (Opcional)</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:border-cyan-500/50 outline-none"
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-xs text-foreground focus:border-cyan-500/50 outline-none"
                   placeholder="Ej: elena@hospital.com"
                 />
               </div>
             </div>
 
             <div className="flex items-center gap-4 py-2">
-              <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Estado Cuenta</span>
+              <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Estado Cuenta</span>
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
-                className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${formData.isActive ? 'bg-cyan-500' : 'bg-slate-800'}`}
+                className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${formData.isActive ? 'bg-cyan-500' : 'bg-slate-100 dark:bg-slate-800'}`}
               >
-                <div className={`w-5 h-5 rounded-full bg-slate-900 absolute top-0.5 transition-transform shadow ${formData.isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+                <div className={`w-5 h-5 rounded-full bg-card absolute top-0.5 transition-transform shadow ${formData.isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
               </button>
-              <span className="text-[10px] text-slate-400">{formData.isActive ? 'Activo' : 'Inactivo'}</span>
+              <span className="text-[10px] text-muted-foreground">{formData.isActive ? 'Activo' : 'Inactivo'}</span>
             </div>
 
             <div>
-              <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono block mb-2">
+              <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono block mb-2">
                 Hospitales Asociados (Puede seleccionar múltiples)
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-3 bg-slate-950 border border-slate-800 rounded-xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-3 bg-background border border-border rounded-xl">
                 {allHospitals.map(h => (
-                  <label key={h.id} className="flex items-start gap-2 cursor-pointer p-1.5 hover:bg-slate-900 rounded transition-colors group">
+                  <label key={h.id} className="flex items-start gap-2 cursor-pointer p-1.5 hover:bg-card rounded transition-colors group">
                     <input
                       type="checkbox"
                       checked={formData.hospitalIds.includes(h.id)}
                       onChange={() => toggleHospital(h.id)}
-                      className="mt-0.5 w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-cyan-500/20 cursor-pointer"
+                      className="mt-0.5 w-4 h-4 rounded bg-card border-border dark:border-slate-700 text-cyan-500 focus:ring-cyan-500/20 cursor-pointer"
                     />
-                    <span className="text-xs text-slate-300 group-hover:text-slate-100 transition-colors leading-tight">{h.name}</span>
+                    <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors leading-tight">{h.name}</span>
                   </label>
                 ))}
               </div>
             </div>
 
-            <div className="flex gap-2 justify-end pt-4 border-t border-slate-800/60 mt-6">
+            <div className="flex gap-2 justify-end pt-4 border-t border-border/60 mt-6">
               <button
                 onClick={cancel}
                 disabled={isSubmitting}
-                className="px-4 py-2 border border-slate-800 hover:bg-slate-950 rounded-xl text-xs font-bold text-slate-450 hover:text-slate-200 transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-450 hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>
@@ -284,10 +284,10 @@ export default function AdminOperatorsClient({
       )}
 
       {/* Filters and Search Bar */}
-      <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-card border border-border rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-80">
           <svg
-            className="w-4 h-4 text-slate-500 absolute left-3.5 top-3"
+            className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -300,16 +300,16 @@ export default function AdminOperatorsClient({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar operador por nombre o email..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/40 text-xs outline-none text-slate-300 placeholder-slate-600"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
           />
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <label className="text-[10px] font-bold text-slate-500 uppercase font-mono tracking-wider whitespace-nowrap">Filtrar por hospital:</label>
+          <label className="text-[10px] font-bold text-muted-foreground uppercase font-mono tracking-wider whitespace-nowrap">Filtrar por hospital:</label>
           <select
             value={selectedHospitalFilter}
             onChange={(e) => setSelectedHospitalFilter(e.target.value)}
-            className="w-full md:w-64 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/40 text-xs outline-none text-slate-350"
+            className="w-full md:w-64 px-3 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground"
           >
             <option value="all">Todos los Hospitales</option>
             {allHospitals.map((h) => (
@@ -322,10 +322,10 @@ export default function AdminOperatorsClient({
       </div>
 
       {/* List / Table View of Operators */}
-      <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden overflow-x-auto">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-950/50 border-b border-slate-800 text-[10px] uppercase font-mono text-slate-400">
+            <tr className="bg-background/50 border-b border-border text-[10px] uppercase font-mono text-muted-foreground">
               <th className="px-4 py-3 font-bold tracking-wider">Operador</th>
               <th className="px-4 py-3 font-bold tracking-wider">Hospitales Asociados</th>
               <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
@@ -338,15 +338,15 @@ export default function AdminOperatorsClient({
               
               return (
                 <React.Fragment key={op.id}>
-                  <tr className={`hover:bg-slate-800/30 transition-colors ${!op.is_active ? 'opacity-60' : ''}`}>
+                  <tr className={`hover:bg-slate-200 dark:hover:bg-slate-800/30 transition-colors ${!op.is_active ? 'opacity-60' : ''}`}>
                     <td className="px-4 py-3 align-middle">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0 text-cyan-500 font-bold text-xs uppercase border border-slate-700">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 text-cyan-500 font-bold text-xs uppercase border border-border dark:border-slate-700">
                           {op.full_name.substring(0, 2)}
                         </div>
                         <div>
-                          <div className="font-bold text-sm text-slate-200">{op.full_name}</div>
-                          {op.email && <div className="text-[10px] font-mono text-slate-500 mt-0.5">{op.email}</div>}
+                          <div className="font-bold text-sm text-foreground">{op.full_name}</div>
+                          {op.email && <div className="text-[10px] font-mono text-muted-foreground mt-0.5">{op.email}</div>}
                         </div>
                       </div>
                     </td>
@@ -354,27 +354,27 @@ export default function AdminOperatorsClient({
                       {op.hospital_operators.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5 max-w-sm">
                           {op.hospital_operators.map(ho => (
-                            <span key={ho.hospital_id} className="text-[9px] font-medium bg-slate-950 text-slate-300 px-2 py-0.5 rounded border border-slate-800 flex items-center gap-1">
+                            <span key={ho.hospital_id} className="text-[9px] font-medium bg-background text-muted-foreground px-2 py-0.5 rounded border border-border flex items-center gap-1">
                               <span className="text-[8px]">🏥</span> {ho.hospitals.name}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-[10px] text-slate-500 italic">No asignado a ningún hospital</span>
+                        <span className="text-[10px] text-muted-foreground italic">No asignado a ningún hospital</span>
                       )}
                     </td>
                     <td className="px-4 py-3 align-middle text-center">
                       {op.is_active ? (
                         <span className="text-[9px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/20">ACTIVO</span>
                       ) : (
-                        <span className="text-[9px] font-bold bg-slate-900 text-slate-500 px-2 py-0.5 rounded border border-slate-700">INACTIVO</span>
+                        <span className="text-[9px] font-bold bg-card text-muted-foreground px-2 py-0.5 rounded border border-border dark:border-slate-700">INACTIVO</span>
                       )}
                     </td>
                     <td className="px-4 py-3 align-middle text-right">
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => openEdit(op)}
-                          className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded transition-colors"
+                          className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-muted-foreground text-[10px] font-bold rounded transition-colors"
                         >
                           Editar
                         </button>
@@ -390,7 +390,7 @@ export default function AdminOperatorsClient({
                   
                   {isConfirmingDelete && (
                     <tr>
-                      <td colSpan={4} className="px-4 py-3 bg-red-950/10 border-b border-slate-800/60">
+                      <td colSpan={4} className="px-4 py-3 bg-red-950/10 border-b border-border/60">
                         <div className="flex items-center justify-between p-3 bg-red-950/30 border border-red-900/50 rounded-xl">
                           <p className="text-[10px] text-red-300">
                             ¿Eliminar permanentemente a <strong>{op.full_name}</strong>? Esta acción no se puede deshacer.
@@ -398,7 +398,7 @@ export default function AdminOperatorsClient({
                           <div className="flex gap-2">
                             <button
                               onClick={() => setDeleteConfirmId(null)}
-                              className="px-3 py-1.5 border border-slate-700 rounded-lg text-[10px] text-slate-400 hover:text-slate-200 transition-colors"
+                              className="px-3 py-1.5 border border-border dark:border-slate-700 rounded-lg text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                             >
                               Cancelar
                             </button>
@@ -420,7 +420,7 @@ export default function AdminOperatorsClient({
 
             {sortedOperators.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-slate-500 text-xs">
+                <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground text-xs">
                   No se encontraron operadores.
                 </td>
               </tr>

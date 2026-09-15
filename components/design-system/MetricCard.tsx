@@ -23,21 +23,21 @@ export default function MetricCard({
 }: MetricCardProps) {
   return (
     <Card active={active} glowColor={glowColor} className={`p-4 ${className}`}>
-      <span className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block">
+      <span className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest block">
         {label}
       </span>
       <div className="flex items-baseline gap-1 mt-2">
-        <span className="text-2xl md:text-3xl font-black text-slate-100 tracking-tight leading-none">
+        <span className="text-2xl md:text-3xl font-black text-foreground tracking-tight leading-none">
           {value}
         </span>
         {unit && (
-          <span className="text-xs font-mono font-bold text-slate-500 uppercase">
+          <span className="text-xs font-mono font-bold text-muted-foreground uppercase">
             {unit}
           </span>
         )}
       </div>
       {subText && (
-        <span className="text-[9px] text-slate-400 mt-2 block font-medium">
+        <span className="text-[9px] text-muted-foreground mt-2 block font-medium">
           {subText}
         </span>
       )}

@@ -8,9 +8,9 @@ interface StrategyModificationPanelProps {
 export default function StrategyModificationPanel({ strategyChanges }: StrategyModificationPanelProps) {
   if (!strategyChanges || !strategyChanges.modified_strategy) {
     return (
-      <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8">
-        <h2 className="text-base font-bold text-slate-50 mb-1">Modificación de Estrategia</h2>
-        <p className="text-xs text-slate-400 mt-2">Sin cambios de estrategia en este caso</p>
+      <div className="bg-card border border-border rounded-3xl p-6 md:p-8">
+        <h2 className="text-base font-bold text-foreground mb-1">Modificación de Estrategia</h2>
+        <p className="text-xs text-muted-foreground mt-2">Sin cambios de estrategia en este caso</p>
       </div>
     );
   }
@@ -19,7 +19,7 @@ export default function StrategyModificationPanel({ strategyChanges }: StrategyM
     if (mag === 'minor') return 'bg-blue-950/60 text-blue-400 border-blue-800/40';
     if (mag === 'moderate') return 'bg-yellow-950/60 text-yellow-400 border-yellow-800/40';
     if (mag === 'major') return 'bg-red-950/60 text-red-400 border-red-800/40';
-    return 'bg-slate-850 text-slate-400 border-slate-750';
+    return 'bg-muted text-muted-foreground border-slate-750';
   };
 
   const getMagnitudeLabel = (mag?: string | null) => {
@@ -57,17 +57,17 @@ export default function StrategyModificationPanel({ strategyChanges }: StrategyM
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-base font-bold text-slate-50 mb-1">Modificación de Estrategia ULTREON™</h2>
-        <p className="text-xs text-slate-400">Cambios de procedimiento recomendados e implementados</p>
+        <h2 className="text-base font-bold text-foreground mb-1">Modificación de Estrategia ULTREON™</h2>
+        <p className="text-xs text-muted-foreground">Cambios de procedimiento recomendados e implementados</p>
       </div>
 
       {/* Main Impact Card */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-850 border border-slate-800 rounded-2xl p-6">
+      <div className="bg-gradient-to-r from-slate-900 to-slate-850 border border-border rounded-2xl p-6">
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
-            <h3 className="text-sm font-bold text-slate-100 mb-1">ULTREON™ modificó la estrategia</h3>
+            <h3 className="text-sm font-bold text-foreground mb-1">ULTREON™ modificó la estrategia</h3>
             {strategyChanges.change_description && (
-              <p className="text-xs text-slate-400 font-mono mt-2">{strategyChanges.change_description}</p>
+              <p className="text-xs text-muted-foreground font-mono mt-2">{strategyChanges.change_description}</p>
             )}
           </div>
           <span
@@ -84,10 +84,10 @@ export default function StrategyModificationPanel({ strategyChanges }: StrategyM
           {modifications.map((mod, idx) => (
             <div
               key={idx}
-              className="bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-2"
+              className="bg-card border border-border rounded-xl p-3 flex items-center gap-2"
             >
               <span className="text-cyan-400 font-bold text-lg">✓</span>
-              <span className="text-xs font-semibold text-slate-300">{mod}</span>
+              <span className="text-xs font-semibold text-muted-foreground">{mod}</span>
             </div>
           ))}
         </div>
@@ -98,9 +98,9 @@ export default function StrategyModificationPanel({ strategyChanges }: StrategyM
         strategyChanges.used_scoring_cutting_balloon ||
         strategyChanges.used_ivl ||
         strategyChanges.used_atherectomy) && (
-        <div className="bg-slate-950/60 border border-slate-850 rounded-2xl p-4">
-          <p className="text-xs font-bold text-slate-300 mb-3">Técnicas de Preparación Utilizadas</p>
-          <div className="space-y-2 text-xs font-mono text-slate-400">
+        <div className="bg-background/60 border border-border rounded-2xl p-4">
+          <p className="text-xs font-bold text-muted-foreground mb-3">Técnicas de Preparación Utilizadas</p>
+          <div className="space-y-2 text-xs font-mono text-muted-foreground">
             {strategyChanges.used_nc_balloon && (
               <p>• Balón No-Compliant (NC) - Preparación inicial y dilatación</p>
             )}
@@ -119,9 +119,9 @@ export default function StrategyModificationPanel({ strategyChanges }: StrategyM
 
       {/* Post-PCI Interventions */}
       {(strategyChanges.treated_edge || strategyChanges.additional_postdilatation) && (
-        <div className="bg-slate-950/60 border border-slate-850 rounded-2xl p-4">
-          <p className="text-xs font-bold text-slate-300 mb-3">Intervenciones Post-PCI</p>
-          <div className="space-y-2 text-xs font-mono text-slate-400">
+        <div className="bg-background/60 border border-border rounded-2xl p-4">
+          <p className="text-xs font-bold text-muted-foreground mb-3">Intervenciones Post-PCI</p>
+          <div className="space-y-2 text-xs font-mono text-muted-foreground">
             {strategyChanges.treated_edge && (
               <p>• Borde tratado para optimizar aposición y cobertura</p>
             )}

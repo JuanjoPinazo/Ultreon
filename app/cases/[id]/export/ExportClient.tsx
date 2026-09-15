@@ -73,9 +73,9 @@ export default function ExportClient({
     : null;
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:p-8 sticky top-0 z-40">
+      <header className="bg-card border-b border-border p-4 md:p-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
             <Link
@@ -84,10 +84,10 @@ export default function ExportClient({
             >
               ← Volver al caso
             </Link>
-            <h1 className="text-base font-bold text-slate-50">
+            <h1 className="text-base font-bold text-foreground">
               Congress Summary Export
             </h1>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Genera un resumen científico anonimizado para presentación en congresos
             </p>
           </div>
@@ -116,39 +116,39 @@ export default function ExportClient({
           )}
 
           {/* Preview */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-8">
+          <div className="bg-card border border-border rounded-3xl p-8 space-y-8">
             <div>
               <span className="text-[9px] font-black font-mono tracking-[0.35em] text-cyan-400 uppercase">
                 Vista Previa
               </span>
-              <h2 className="text-2xl font-bold text-slate-50 mt-2">
+              <h2 className="text-2xl font-bold text-foreground mt-2">
                 OPSTAR-AI Levante Registry
               </h2>
-              <p className="text-lg font-semibold text-slate-300">Congress Case Summary</p>
+              <p className="text-lg font-semibold text-muted-foreground">Congress Case Summary</p>
             </div>
 
-            <div className="border-t border-slate-800 pt-8 space-y-8">
+            <div className="border-t border-border pt-8 space-y-8">
               {/* Case Overview */}
               <section>
-                <h3 className="text-sm font-bold text-slate-50 uppercase mb-4">Case Overview</h3>
+                <h3 className="text-sm font-bold text-foreground uppercase mb-4">Case Overview</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                    <p className="text-xs text-slate-500 mb-1">Center</p>
-                    <p className="text-sm font-semibold text-slate-200">{caseData.centro}</p>
+                  <div className="bg-background border border-border rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground mb-1">Center</p>
+                    <p className="text-sm font-semibold text-foreground">{caseData.centro}</p>
                   </div>
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                    <p className="text-xs text-slate-500 mb-1">Vessel/Segment</p>
-                    <p className="text-sm font-semibold text-slate-200">{caseData.vaso_diana || 'Not specified'}</p>
+                  <div className="bg-background border border-border rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground mb-1">Vessel/Segment</p>
+                    <p className="text-sm font-semibold text-foreground">{caseData.vaso_diana || 'Not specified'}</p>
                   </div>
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                    <p className="text-xs text-slate-500 mb-1">Procedure Date</p>
-                    <p className="text-sm font-semibold text-slate-200">
+                  <div className="bg-background border border-border rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground mb-1">Procedure Date</p>
+                    <p className="text-sm font-semibold text-foreground">
                       {new Date(caseData.created_at).toLocaleDateString('es-ES')}
                     </p>
                   </div>
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                    <p className="text-xs text-slate-500 mb-1">Zero-Contrast Protocol</p>
-                    <p className={`text-sm font-semibold ${caseData.zero_contrast_completed ? 'text-emerald-400' : 'text-slate-300'}`}>
+                  <div className="bg-background border border-border rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground mb-1">Zero-Contrast Protocol</p>
+                    <p className={`text-sm font-semibold ${caseData.zero_contrast_completed ? 'text-emerald-400' : 'text-muted-foreground'}`}>
                       {caseData.zero_contrast_completed ? '✓ Completed' : '✗ Not completed'}
                     </p>
                   </div>
@@ -157,23 +157,23 @@ export default function ExportClient({
 
               {/* Pre-PCI Assessment */}
               <section>
-                <h3 className="text-sm font-bold text-slate-50 uppercase mb-4">Pre-PCI Assessment</h3>
+                <h3 className="text-sm font-bold text-foreground uppercase mb-4">Pre-PCI Assessment</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {caseData.ffr_oct !== null && (
-                    <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                      <p className="text-xs text-slate-500 mb-1">FFR-OCT</p>
-                      <p className="text-sm font-semibold text-slate-200">{caseData.ffr_oct.toFixed(2)}</p>
+                    <div className="bg-background border border-border rounded-lg p-4">
+                      <p className="text-xs text-muted-foreground mb-1">FFR-OCT</p>
+                      <p className="text-sm font-semibold text-foreground">{caseData.ffr_oct.toFixed(2)}</p>
                     </div>
                   )}
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                    <p className="text-xs text-slate-500 mb-1">Severe Calcium</p>
-                    <p className="text-sm font-semibold text-slate-200">
+                  <div className="bg-background border border-border rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground mb-1">Severe Calcium</p>
+                    <p className="text-sm font-semibold text-foreground">
                       {caseData.calcio_ia ? 'Yes' : caseData.calcio_ia === false ? 'No' : 'Not assessed'}
                     </p>
                   </div>
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                    <p className="text-xs text-slate-500 mb-1">Lipid Plaque</p>
-                    <p className="text-sm font-semibold text-slate-200">
+                  <div className="bg-background border border-border rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground mb-1">Lipid Plaque</p>
+                    <p className="text-sm font-semibold text-foreground">
                       {caseData.placa_lipida_ia ? 'Yes' : caseData.placa_lipida_ia === false ? 'No' : 'Not assessed'}
                     </p>
                   </div>
@@ -183,19 +183,19 @@ export default function ExportClient({
               {/* Strategy Modification */}
               {strategyChanges && (
                 <section>
-                  <h3 className="text-sm font-bold text-slate-50 uppercase mb-4">Strategy Modification</h3>
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
+                  <h3 className="text-sm font-bold text-foreground uppercase mb-4">Strategy Modification</h3>
+                  <div className="bg-background border border-border rounded-lg p-4">
                     <div className="space-y-2 text-sm">
                       <div>
-                        <span className="text-slate-500">Modified by ULTREON™:</span>
-                        <span className="ml-2 font-semibold text-slate-200">
+                        <span className="text-muted-foreground">Modified by ULTREON™:</span>
+                        <span className="ml-2 font-semibold text-foreground">
                           {strategyChanges.cambio_estrategia ? 'Yes' : 'No'}
                         </span>
                       </div>
                       {strategyChanges.change_magnitude && (
                         <div>
-                          <span className="text-slate-500">Magnitude:</span>
-                          <span className="ml-2 font-semibold text-slate-200">{strategyChanges.change_magnitude}</span>
+                          <span className="text-muted-foreground">Magnitude:</span>
+                          <span className="ml-2 font-semibold text-foreground">{strategyChanges.change_magnitude}</span>
                         </div>
                       )}
                     </div>
@@ -206,23 +206,23 @@ export default function ExportClient({
               {/* Post-PCI Optimization */}
               {optimization && (
                 <section>
-                  <h3 className="text-sm font-bold text-slate-50 uppercase mb-4">Post-PCI Optimization (Tríada ULTREON™)</h3>
+                  <h3 className="text-sm font-bold text-foreground uppercase mb-4">Post-PCI Optimization (Tríada ULTREON™)</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {optimization.msa !== undefined && (
-                      <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                        <p className="text-xs text-slate-500 mb-1">Minimum Stent Area (mm²)</p>
-                        <p className="text-sm font-semibold text-slate-200">{optimization.msa.toFixed(2)}</p>
+                      <div className="bg-background border border-border rounded-lg p-4">
+                        <p className="text-xs text-muted-foreground mb-1">Minimum Stent Area (mm²)</p>
+                        <p className="text-sm font-semibold text-foreground">{optimization.msa.toFixed(2)}</p>
                       </div>
                     )}
                     {optimization.stent_expansion_percent !== undefined && (
-                      <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                        <p className="text-xs text-slate-500 mb-1">Stent Expansion (%)</p>
-                        <p className="text-sm font-semibold text-slate-200">{optimization.stent_expansion_percent.toFixed(1)}</p>
+                      <div className="bg-background border border-border rounded-lg p-4">
+                        <p className="text-xs text-muted-foreground mb-1">Stent Expansion (%)</p>
+                        <p className="text-sm font-semibold text-foreground">{optimization.stent_expansion_percent.toFixed(1)}</p>
                       </div>
                     )}
                     {optimization.opstar_score !== undefined && (
-                      <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                        <p className="text-xs text-slate-500 mb-1">OPSTAR Score</p>
+                      <div className="bg-background border border-border rounded-lg p-4">
+                        <p className="text-xs text-muted-foreground mb-1">OPSTAR Score</p>
                         <p className="text-sm font-semibold text-cyan-400">{optimization.opstar_score.toFixed(1)}/100</p>
                       </div>
                     )}
@@ -233,18 +233,18 @@ export default function ExportClient({
               {/* Contrast Metrics */}
               {contrastReduction && (
                 <section>
-                  <h3 className="text-sm font-bold text-slate-50 uppercase mb-4">Contrast Utilization</h3>
+                  <h3 className="text-sm font-bold text-foreground uppercase mb-4">Contrast Utilization</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                      <p className="text-xs text-slate-500 mb-1">Expected (mL)</p>
-                      <p className="text-sm font-semibold text-slate-200">{caseData.expected_contrast_ml?.toFixed(1)}</p>
+                    <div className="bg-background border border-border rounded-lg p-4">
+                      <p className="text-xs text-muted-foreground mb-1">Expected (mL)</p>
+                      <p className="text-sm font-semibold text-foreground">{caseData.expected_contrast_ml?.toFixed(1)}</p>
                     </div>
-                    <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                      <p className="text-xs text-slate-500 mb-1">Actual Used (mL)</p>
-                      <p className="text-sm font-semibold text-slate-200">{caseData.actual_contrast_ml?.toFixed(1)}</p>
+                    <div className="bg-background border border-border rounded-lg p-4">
+                      <p className="text-xs text-muted-foreground mb-1">Actual Used (mL)</p>
+                      <p className="text-sm font-semibold text-foreground">{caseData.actual_contrast_ml?.toFixed(1)}</p>
                     </div>
-                    <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                      <p className="text-xs text-slate-500 mb-1">Reduction (%)</p>
+                    <div className="bg-background border border-border rounded-lg p-4">
+                      <p className="text-xs text-muted-foreground mb-1">Reduction (%)</p>
                       <p className="text-sm font-semibold text-emerald-400">{contrastReduction}%</p>
                     </div>
                   </div>
@@ -254,11 +254,11 @@ export default function ExportClient({
               {/* Follow-up */}
               {followups.length > 0 && (
                 <section>
-                  <h3 className="text-sm font-bold text-slate-50 uppercase mb-4">Clinical Follow-up</h3>
+                  <h3 className="text-sm font-bold text-foreground uppercase mb-4">Clinical Follow-up</h3>
                   <div className="space-y-2">
                     {followups.map((fu, idx) => (
-                      <div key={idx} className="bg-slate-950 border border-slate-800 rounded-lg p-4 flex justify-between items-center">
-                        <span className="text-sm text-slate-300">{fu.followup_type}</span>
+                      <div key={idx} className="bg-background border border-border rounded-lg p-4 flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">{fu.followup_type}</span>
                         <span className={`text-sm font-semibold ${fu.mace ? 'text-red-400' : 'text-emerald-400'}`}>
                           {fu.mace ? '⚠ MACE' : '✓ No MACE'}
                         </span>
@@ -271,9 +271,9 @@ export default function ExportClient({
               {/* Key Images */}
               {keyImages.length > 0 && (
                 <section>
-                  <h3 className="text-sm font-bold text-slate-50 uppercase mb-4">Key Images</h3>
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                    <p className="text-xs text-slate-400 italic">
+                  <h3 className="text-sm font-bold text-foreground uppercase mb-4">Key Images</h3>
+                  <div className="bg-background border border-border rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground italic">
                       ✓ {keyImages.length} key image{keyImages.length !== 1 ? 's' : ''} available in clinical platform
                     </p>
                   </div>
@@ -281,8 +281,8 @@ export default function ExportClient({
               )}
 
               {/* Disclaimer */}
-              <div className="border-t border-slate-800 pt-6">
-                <p className="text-xs text-slate-500 italic text-center">
+              <div className="border-t border-border pt-6">
+                <p className="text-xs text-muted-foreground italic text-center">
                   Anonymized scientific summary for congress presentation. All clinical decisions remain under the responsibility of the interventional cardiologist. Data generated from OPSTAR-AI Levante Registry.
                 </p>
               </div>
@@ -294,7 +294,7 @@ export default function ExportClient({
             <h3 className="text-sm font-bold text-cyan-400">
               ℹ Anonimización y Privacidad
             </h3>
-            <ul className="text-xs text-slate-300 space-y-2 list-disc list-inside">
+            <ul className="text-xs text-muted-foreground space-y-2 list-disc list-inside">
               <li>Nombre del paciente: NO incluido</li>
               <li>NHC / SIP: NO incluido</li>
               <li>Datos personales: NO incluidos</li>

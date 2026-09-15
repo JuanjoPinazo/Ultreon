@@ -22,7 +22,7 @@ export default function Card({
     cyan: 'shadow-[0_8px_24px_rgba(0,229,255,0.12)] border-[#00E5FF]/45 bg-[#0F1524]',
     emerald: 'shadow-[0_8px_24px_rgba(34,197,94,0.12)] border-[#22C55E]/45 bg-[#0F1524]',
     red: 'shadow-[0_8px_24px_rgba(239,68,68,0.12)] border-red-500/45 bg-[#0F1524]',
-    slate: 'shadow-[0_8px_24px_rgba(148,163,184,0.05)] border-slate-700/50 bg-[#0F1524]',
+    slate: 'shadow-[0_8px_24px_rgba(148,163,184,0.05)] border-border dark:border-slate-700/50 bg-[#0F1524]',
   };
 
   return (

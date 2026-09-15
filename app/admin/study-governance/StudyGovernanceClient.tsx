@@ -74,8 +74,8 @@ export default function StudyGovernanceClient({
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:p-8 sticky top-0 z-40">
+    <main className="min-h-screen bg-background text-foreground">
+      <header className="bg-card border-b border-border p-4 md:p-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto">
           <Link
             href="/admin"
@@ -83,10 +83,10 @@ export default function StudyGovernanceClient({
           >
             ← Volver a Admin
           </Link>
-          <h1 className="text-base font-bold text-slate-50">
+          <h1 className="text-base font-bold text-foreground">
             Gestión de Gobernanza del Estudio
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Edita la información sobre comité científico, core lab, gestión de datos, plataforma y privacidad.
           </p>
         </div>
@@ -97,33 +97,33 @@ export default function StudyGovernanceClient({
           {governance.map((item) => (
             <div
               key={item.id}
-              className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden"
+              className="bg-card border border-border rounded-2xl overflow-hidden"
             >
               {editingId === item.id ? (
                 // Edit Mode
                 <div className="p-6 space-y-4">
                   <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase block mb-2">
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-2">
                       Sección: {SECTION_LABELS[item.section] || item.section}
                     </label>
                     <input
                       type="text"
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 text-slate-200 rounded-lg text-sm outline-none focus:border-cyan-500"
+                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500"
                       placeholder="Título"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase block mb-2">
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-2">
                       Contenido
                     </label>
                     <textarea
                       value={editBody}
                       onChange={(e) => setEditBody(e.target.value)}
                       rows={8}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 text-slate-200 rounded-lg text-sm outline-none focus:border-cyan-500 resize-none"
+                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500 resize-none"
                       placeholder="Contenido detallado..."
                     />
                   </div>
@@ -138,7 +138,7 @@ export default function StudyGovernanceClient({
                     </button>
                     <button
                       onClick={handleCancel}
-                      className="flex-1 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-lg text-sm transition-all"
+                      className="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-muted-foreground font-bold rounded-lg text-sm transition-all"
                     >
                       Cancelar
                     </button>
@@ -149,7 +149,7 @@ export default function StudyGovernanceClient({
                 <div className="p-6 space-y-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-sm font-bold text-slate-50">
+                      <h3 className="text-sm font-bold text-foreground">
                         {SECTION_LABELS[item.section] || item.section}
                       </h3>
                       <p className="text-xs text-slate-600 mt-1 font-mono">
@@ -158,24 +158,24 @@ export default function StudyGovernanceClient({
                     </div>
                     <button
                       onClick={() => handleEdit(item)}
-                      className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-slate-100 rounded-lg text-xs font-semibold transition-all"
+                      className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 border border-border dark:border-slate-700 text-muted-foreground hover:text-foreground rounded-lg text-xs font-semibold transition-all"
                     >
                       Editar
                     </button>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-800">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">
+                  <div className="pt-3 border-t border-border">
+                    <h4 className="text-xs font-bold text-muted-foreground uppercase mb-2">
                       Título Actual
                     </h4>
-                    <p className="text-sm text-slate-300">{item.title}</p>
+                    <p className="text-sm text-muted-foreground">{item.title}</p>
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">
+                    <h4 className="text-xs font-bold text-muted-foreground uppercase mb-2">
                       Contenido
                     </h4>
-                    <p className="text-sm text-slate-350 whitespace-pre-wrap max-h-40 overflow-y-auto">
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap max-h-40 overflow-y-auto">
                       {item.body}
                     </p>
                   </div>

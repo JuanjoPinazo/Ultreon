@@ -45,7 +45,7 @@ export default function FinalResultVisual({
       case 'SUBOPTIMAL_MILD': return { text: 'text-emerald-400', stroke: '#10b981', glow: 'shadow-[0_0_80px_rgba(16,185,129,0.25)]', bg: 'bg-emerald-950/40' };
       case 'SUBOPTIMAL_MODERATE': return { text: 'text-amber-400', stroke: '#fbbf24', glow: 'shadow-[0_0_80px_rgba(251,191,36,0.25)]', bg: 'bg-amber-950/40' };
       case 'HIGH_RISK': return { text: 'text-rose-400', stroke: '#f43f5e', glow: 'shadow-[0_0_80px_rgba(244,63,94,0.25)]', bg: 'bg-rose-950/40' };
-      default: return { text: 'text-slate-400', stroke: '#94a3b8', glow: '', bg: 'bg-slate-900/40' };
+      default: return { text: 'text-muted-foreground', stroke: '#94a3b8', glow: '', bg: 'bg-card/40' };
     }
   };
 
@@ -61,7 +61,7 @@ export default function FinalResultVisual({
       {/* Central Visual: Animated Score Ring */}
       <div className={`relative w-72 h-72 rounded-full flex flex-col items-center justify-center mb-12 ${colors.glow} transition-all duration-1000`}>
         {/* Background glow layers */}
-        <div className="absolute inset-0 bg-slate-950 rounded-full" />
+        <div className="absolute inset-0 bg-background rounded-full" />
         <div className={`absolute inset-2 rounded-full ${colors.bg} opacity-50 blur-xl`} />
         
         <svg className="absolute inset-0 w-full h-full transform -rotate-90">
@@ -92,7 +92,7 @@ export default function FinalResultVisual({
         
         {/* Content inside ring */}
         <div className="relative z-10 flex flex-col items-center">
-          <span className="text-[10px] font-black font-mono tracking-[0.3em] text-slate-500 uppercase mb-2">SCORE OPSTAR</span>
+          <span className="text-[10px] font-black font-mono tracking-[0.3em] text-muted-foreground uppercase mb-2">SCORE OPSTAR</span>
           <div className="flex items-baseline gap-1">
             <span className={`text-7xl font-black tracking-tighter ${colors.text}`}>{animatedScore}</span>
             <span className="text-xl font-bold text-slate-600">/100</span>
@@ -107,23 +107,23 @@ export default function FinalResultVisual({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
         
         {/* Zero Contrast Card */}
-        <div className={`p-5 rounded-2xl border flex flex-col gap-2 ${zeroContrast ? 'bg-emerald-950/20 border-emerald-900/50' : 'bg-slate-900/50 border-slate-800'}`}>
+        <div className={`p-5 rounded-2xl border flex flex-col gap-2 ${zeroContrast ? 'bg-emerald-950/20 border-emerald-900/50' : 'bg-card/50 border-border'}`}>
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${zeroContrast ? 'bg-emerald-950 border border-emerald-800/50 text-emerald-400' : 'bg-slate-950 border border-slate-800 text-slate-500'}`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${zeroContrast ? 'bg-emerald-950 border border-emerald-800/50 text-emerald-400' : 'bg-background border border-border text-muted-foreground'}`}>
               💧
             </div>
             <div>
-              <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Protocolo</div>
-              <div className={`text-sm font-bold ${zeroContrast ? 'text-emerald-400' : 'text-slate-300'}`}>Sin Contraste</div>
+              <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">Protocolo</div>
+              <div className={`text-sm font-bold ${zeroContrast ? 'text-emerald-400' : 'text-muted-foreground'}`}>Sin Contraste</div>
             </div>
           </div>
-          <div className="mt-2 text-xs text-slate-400 font-mono">
+          <div className="mt-2 text-xs text-muted-foreground font-mono">
             {zeroContrast ? '✓ Completado (0 mL)' : 'Contraste estándar utilizado'}
           </div>
         </div>
 
         {/* Center Card */}
-        <div className="p-5 rounded-2xl border bg-slate-900/50 border-slate-800 flex flex-col gap-2">
+        <div className="p-5 rounded-2xl border bg-card/50 border-border flex flex-col gap-2">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-cyan-950 border border-cyan-800/50 flex items-center justify-center text-cyan-400">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -131,17 +131,17 @@ export default function FinalResultVisual({
               </svg>
             </div>
             <div>
-              <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Centro</div>
-              <div className="text-sm font-bold text-slate-200 truncate max-w-[120px]">{hospitalName || 'Local'}</div>
+              <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">Centro</div>
+              <div className="text-sm font-bold text-foreground truncate max-w-[120px]">{hospitalName || 'Local'}</div>
             </div>
           </div>
-          <div className="mt-2 text-xs text-slate-400 font-mono">
+          <div className="mt-2 text-xs text-muted-foreground font-mono">
             Sincronizado con BD
           </div>
         </div>
 
         {/* Patient Card */}
-        <div className="p-5 rounded-2xl border bg-slate-900/50 border-slate-800 flex flex-col gap-2">
+        <div className="p-5 rounded-2xl border bg-card/50 border-border flex flex-col gap-2">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-violet-950 border border-violet-800/50 flex items-center justify-center text-violet-400">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -149,11 +149,11 @@ export default function FinalResultVisual({
               </svg>
             </div>
             <div>
-              <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">ID de Sujeto</div>
-              <div className="text-sm font-bold text-slate-200">{patientId || 'Pendiente'}</div>
+              <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">ID de Sujeto</div>
+              <div className="text-sm font-bold text-foreground">{patientId || 'Pendiente'}</div>
             </div>
           </div>
-          <div className="mt-2 text-xs text-slate-400 font-mono">
+          <div className="mt-2 text-xs text-muted-foreground font-mono">
             Anonimizado para investigación (RGPD)
           </div>
         </div>

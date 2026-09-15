@@ -6,8 +6,8 @@ import { createClient as createServerClient } from '@/lib/supabase/server';
 import AnalyticsClient from './AnalyticsClient';
 
 export const metadata: Metadata = {
-  title: 'Analítica Científica — OPSTAR-AI Levante Registry',
-  description: 'Análisis multicéntrico en tiempo real e inteligencia procedimental del registro clínico OPSTAR-AI.',
+  title: 'Resultados y Análisis — Registro Clínico ULTREON 3.0',
+  description: 'Análisis multicéntrico en tiempo real e inteligencia procedimental del registro clínico.',
 };
 
 export default async function AnalyticsPage() {

@@ -8,7 +8,7 @@ interface SelectedSegmentCardProps {
 export function SelectedSegmentCard({ segment }: SelectedSegmentCardProps) {
   if (!segment) {
     return (
-      <div className="flex flex-col items-center justify-center h-24 rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 text-slate-500 font-mono text-[10px] uppercase tracking-widest mt-4">
+      <div className="flex flex-col items-center justify-center h-24 rounded-2xl border border-dashed border-border bg-card/40 text-muted-foreground font-mono text-[10px] uppercase tracking-widest mt-4">
         Ningún segmento seleccionado
       </div>
     );
@@ -20,10 +20,10 @@ export function SelectedSegmentCard({ segment }: SelectedSegmentCardProps) {
         {segment.shortLabel}
       </div>
       <div className="flex flex-col">
-        <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+        <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
           Segmento Activo
         </span>
-        <span className="text-lg font-black text-slate-50">
+        <span className="text-lg font-black text-foreground">
           {segment.label}
         </span>
         <span className="text-xs font-mono text-cyan-500/80">

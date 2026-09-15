@@ -33,7 +33,7 @@ export default async function NewRegistryPage() {
   const hospitals = await getActiveHospitalsWithInvestigators();
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 md:p-8 antialiased font-sans">
+    <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 md:p-8 antialiased font-sans">
       {/* Inject custom styles for clean transitions and scrollbar */}
       <style>{`
         @keyframes fadeSlideIn {

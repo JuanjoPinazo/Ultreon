@@ -70,15 +70,15 @@ export default function KeyImagesSection({
   return (
     <>
       {/* Key Images Grid */}
-      <section className="bg-slate-900 border border-slate-850 rounded-2xl p-6 space-y-4">
-        <h2 className="text-sm font-bold text-slate-50">⭐ Imágenes Clave</h2>
+      <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
+        <h2 className="text-sm font-bold text-foreground">⭐ Imágenes Clave</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {keyImages.map((image) => (
             <button
               key={image.id}
               onClick={() => handleImageClick(image)}
-              className="group relative bg-slate-950 border border-slate-800 rounded-xl overflow-hidden hover:border-cyan-700 transition-all hover:shadow-[0_0_15px_rgba(34,211,238,0.15)]"
+              className="group relative bg-background border border-border rounded-xl overflow-hidden hover:border-cyan-700 transition-all hover:shadow-[0_0_15px_rgba(34,211,238,0.15)]"
             >
               {/* Thumbnail Placeholder */}
               <div className="aspect-video bg-gradient-to-br from-slate-900 to-slate-950 flex items-center justify-center relative overflow-hidden">
@@ -94,27 +94,27 @@ export default function KeyImagesSection({
                   ) : (
                     <div className="text-3xl">🖼️</div>
                   )}
-                  <span className="text-[10px] text-slate-400 font-mono">
+                  <span className="text-[10px] text-muted-foreground font-mono">
                     {image.file_type?.split('/')[1]?.toUpperCase() || 'FILE'}
                   </span>
                 </div>
               </div>
 
               {/* Metadata Overlay */}
-              <div className="p-3 bg-slate-950 border-t border-slate-800 space-y-2">
-                <p className="text-xs font-semibold text-slate-300 truncate group-hover:text-cyan-400 transition-colors">
+              <div className="p-3 bg-background border-t border-border space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground truncate group-hover:text-cyan-400 transition-colors">
                   {image.file_name.substring(0, 20)}
                   {image.file_name.length > 20 ? '...' : ''}
                 </p>
 
                 <div className="space-y-1 text-[9px]">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">
+                    <span className="text-muted-foreground">
                       {CATEGORY_LABELS[image.media_category] || image.media_category}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">
+                    <span className="text-muted-foreground">
                       {PHASE_LABELS[image.acquisition_phase]}
                     </span>
                   </div>
@@ -125,7 +125,7 @@ export default function KeyImagesSection({
                   <div
                     className={`px-2 py-0.5 rounded border text-[9px] font-bold text-center ${
                       QUALITY_BADGE_COLOR[image.corelab_quality] ||
-                      'bg-slate-800 text-slate-300 border-slate-700'
+                      'bg-slate-100 dark:bg-slate-800 text-muted-foreground border-border dark:border-slate-700'
                     }`}
                   >
                     {image.corelab_quality === 'excellent' && '🟢 Excelente'}
@@ -142,7 +142,7 @@ export default function KeyImagesSection({
           ))}
         </div>
 
-        <p className="text-[10px] text-slate-500 mt-4">
+        <p className="text-[10px] text-muted-foreground mt-4">
           {keyImages.length} imagen{keyImages.length !== 1 ? 'es' : ''} marcada{keyImages.length !== 1 ? 's' : ''} como clave
         </p>
       </section>
@@ -154,24 +154,24 @@ export default function KeyImagesSection({
           onClick={handleCloseModal}
         >
           <div
-            className="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+            className="bg-card border border-border rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950">
-              <h3 className="text-sm font-bold text-slate-50">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-background">
+              <h3 className="text-sm font-bold text-foreground">
                 {selectedImage.file_name}
               </h3>
               <button
                 onClick={handleCloseModal}
-                className="p-1 hover:bg-slate-800 rounded-lg transition-all text-slate-400 hover:text-slate-100"
+                className="p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all text-muted-foreground hover:text-foreground"
               >
                 ✕
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="flex-1 flex flex-col items-center justify-center bg-slate-950 min-h-[300px]">
+            <div className="flex-1 flex flex-col items-center justify-center bg-background min-h-[300px]">
               {previewUrl ? (
                 selectedImage.file_type?.includes('pdf') ? (
                   <a
@@ -192,39 +192,39 @@ export default function KeyImagesSection({
                   </div>
                 )
               ) : (
-                <div className="text-slate-400 text-sm">
+                <div className="text-muted-foreground text-sm">
                   {isPending ? 'Cargando imagen...' : 'No se pudo cargar la imagen'}
                 </div>
               )}
             </div>
 
             {/* Modal Footer - Metadata */}
-            <div className="p-4 border-t border-slate-800 bg-slate-950/50 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-4 border-t border-border bg-background/50 grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <p className="text-[9px] text-slate-500 mb-1">Categoría</p>
-                <p className="text-xs font-semibold text-slate-300">
+                <p className="text-[9px] text-muted-foreground mb-1">Categoría</p>
+                <p className="text-xs font-semibold text-muted-foreground">
                   {CATEGORY_LABELS[selectedImage.media_category]}
                 </p>
               </div>
               <div>
-                <p className="text-[9px] text-slate-500 mb-1">Fase</p>
-                <p className="text-xs font-semibold text-slate-300">
+                <p className="text-[9px] text-muted-foreground mb-1">Fase</p>
+                <p className="text-xs font-semibold text-muted-foreground">
                   {PHASE_LABELS[selectedImage.acquisition_phase]}
                 </p>
               </div>
               <div>
-                <p className="text-[9px] text-slate-500 mb-1">Tipo</p>
-                <p className="text-xs font-semibold text-slate-300">
+                <p className="text-[9px] text-muted-foreground mb-1">Tipo</p>
+                <p className="text-xs font-semibold text-muted-foreground">
                   {selectedImage.file_type?.split('/')[1]?.toUpperCase() || 'N/A'}
                 </p>
               </div>
               {selectedImage.corelab_quality && (
                 <div>
-                  <p className="text-[9px] text-slate-500 mb-1">Calidad</p>
+                  <p className="text-[9px] text-muted-foreground mb-1">Calidad</p>
                   <p
                     className={`text-xs font-bold px-2 py-0.5 rounded w-fit ${
                       QUALITY_BADGE_COLOR[selectedImage.corelab_quality] ||
-                      'bg-slate-800 text-slate-300'
+                      'bg-slate-100 dark:bg-slate-800 text-muted-foreground'
                     }`}
                   >
                     {selectedImage.corelab_quality === 'excellent' && 'Excelente'}

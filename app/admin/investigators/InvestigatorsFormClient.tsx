@@ -48,7 +48,7 @@ const ROLE_COLORS: Record<string, string> = {
   coordinator: 'text-violet-400 bg-violet-950/30 border-violet-800/40',
   data_manager: 'text-amber-400 bg-amber-950/30 border-amber-800/40',
   monitor: 'text-pink-400 bg-pink-950/30 border-pink-800/40',
-  other: 'text-slate-400 bg-slate-900 border-slate-800',
+  other: 'text-muted-foreground bg-card border-border',
 };
 
 export default function InvestigatorsFormClient({
@@ -205,8 +205,8 @@ export default function InvestigatorsFormClient({
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-50 font-sans">Gestión de Investigadores</h2>
-          <p className="text-xs text-slate-500">Administre el directorio científico de médicos e investigadores clínicos.</p>
+          <h2 className="text-xl font-bold tracking-tight text-foreground font-sans">Gestión de Investigadores</h2>
+          <p className="text-xs text-muted-foreground">Administre el directorio científico de médicos e investigadores clínicos.</p>
         </div>
         {!showForm && (
           <button
@@ -226,10 +226,10 @@ export default function InvestigatorsFormClient({
 
       {/* Form Card */}
       {showForm && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 relative overflow-hidden animate-fade-slide">
+        <div className="bg-card border border-border rounded-3xl p-6 relative overflow-hidden animate-fade-slide">
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
-          <h3 className="text-sm font-bold text-slate-350 tracking-wider uppercase font-mono mb-4">
+          <h3 className="text-sm font-bold text-muted-foreground tracking-wider uppercase font-mono mb-4">
             {editingId ? 'Editar Investigador' : 'Registrar Nuevo Investigador'}
           </h3>
 
@@ -237,24 +237,24 @@ export default function InvestigatorsFormClient({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Full Name */}
               <div className="flex flex-col gap-1 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Nombre Completo</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Nombre Completo</label>
                 <input
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Ej: Dr. Salvador Almenar"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                   required
                 />
               </div>
 
               {/* Hospital */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Hospital de Afiliación</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Hospital de Afiliación</label>
                 <select
                   value={hospitalId}
                   onChange={(e) => setHospitalId(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                   required
                 >
                   <option value="">Seleccione un hospital...</option>
@@ -268,11 +268,11 @@ export default function InvestigatorsFormClient({
 
               {/* Role */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Rol Científico</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Rol Científico</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                   required
                 >
                   {Object.entries(ROLE_LABELS).map(([k, label]) => (
@@ -285,50 +285,50 @@ export default function InvestigatorsFormClient({
 
               {/* Specialty */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Especialidad médica</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Especialidad médica</label>
                 <input
                   type="text"
                   value={specialty}
                   onChange={(e) => setSpecialty(e.target.value)}
                   placeholder="Ej: Cardiología Intervencionista"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                 />
               </div>
 
               {/* Display Order */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Orden de Visualización</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Orden de Visualización</label>
                 <input
                   type="number"
                   value={displayOrder}
                   onChange={(e) => setDisplayOrder(Number(e.target.value))}
                   placeholder="Ej: 0"
                   min="0"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200 font-mono"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground font-mono"
                 />
               </div>
 
               {/* Email */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Email (Opcional)</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Email (Opcional)</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Ej: doctor@hospital.com"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                 />
               </div>
 
               {/* Phone */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Teléfono (Opcional)</label>
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Teléfono (Opcional)</label>
                 <input
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Ej: +34 600 000 000"
-                  className="px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs outline-none text-slate-200"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
                 />
               </div>
 
@@ -340,9 +340,9 @@ export default function InvestigatorsFormClient({
                     type="checkbox"
                     checked={isPrincipalInvestigator}
                     onChange={(e) => setIsPrincipalInvestigator(e.target.checked)}
-                    className="w-4 h-4 rounded bg-slate-950 border-slate-800 text-cyan-500 focus:ring-0 cursor-pointer"
+                    className="w-4 h-4 rounded bg-background border-border text-cyan-500 focus:ring-0 cursor-pointer"
                   />
-                  <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">¿Investigador Principal (IP)?</span>
+                  <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">¿Investigador Principal (IP)?</span>
                 </label>
 
                 {/* Active status */}
@@ -351,9 +351,9 @@ export default function InvestigatorsFormClient({
                     type="checkbox"
                     checked={isActive}
                     onChange={(e) => setIsActive(e.target.checked)}
-                    className="w-4 h-4 rounded bg-slate-950 border-slate-800 text-cyan-500 focus:ring-0 cursor-pointer"
+                    className="w-4 h-4 rounded bg-background border-border text-cyan-500 focus:ring-0 cursor-pointer"
                   />
-                  <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-mono">Estado Activo</span>
+                  <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Estado Activo</span>
                 </label>
               </div>
             </div>
@@ -368,7 +368,7 @@ export default function InvestigatorsFormClient({
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 border border-slate-800 hover:bg-slate-950 rounded-xl text-xs font-bold text-slate-450 hover:text-slate-200 transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-450 hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>
@@ -385,10 +385,10 @@ export default function InvestigatorsFormClient({
       )}
 
       {/* Filters and Search Bar */}
-      <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-card border border-border rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-80">
           <svg
-            className="w-4 h-4 text-slate-500 absolute left-3.5 top-3"
+            className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -401,16 +401,16 @@ export default function InvestigatorsFormClient({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, especialidad o email..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/40 text-xs outline-none text-slate-300 placeholder-slate-600"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
           />
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <label className="text-[10px] font-bold text-slate-500 uppercase font-mono tracking-wider whitespace-nowrap">Filtrar por hospital:</label>
+          <label className="text-[10px] font-bold text-muted-foreground uppercase font-mono tracking-wider whitespace-nowrap">Filtrar por hospital:</label>
           <select
             value={selectedHospitalFilter}
             onChange={(e) => setSelectedHospitalFilter(e.target.value)}
-            className="w-full md:w-64 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/40 text-xs outline-none text-slate-350"
+            className="w-full md:w-64 px-3 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground"
           >
             <option value="all">Todos los Hospitales</option>
             {hospitals.map((h) => (
@@ -423,10 +423,10 @@ export default function InvestigatorsFormClient({
       </div>
 
       {/* List / Table View of Investigators */}
-      <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden overflow-x-auto">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-950/50 border-b border-slate-800 text-[10px] uppercase font-mono text-slate-400">
+            <tr className="bg-background/50 border-b border-border text-[10px] uppercase font-mono text-muted-foreground">
               <th className="px-4 py-3 font-bold tracking-wider">Investigador</th>
               <th className="px-4 py-3 font-bold tracking-wider">Centro</th>
               <th className="px-4 py-3 font-bold tracking-wider">Rol / Posición</th>
@@ -438,23 +438,23 @@ export default function InvestigatorsFormClient({
             {flatOrderedInvestigators.map((inv) => {
               const roleBadgeColor = ROLE_COLORS[inv.role] || ROLE_COLORS.other;
               return (
-                <tr key={inv.id} className={`hover:bg-slate-800/30 transition-colors ${!inv.is_active ? 'opacity-60' : ''}`}>
+                <tr key={inv.id} className={`hover:bg-slate-200 dark:hover:bg-slate-800/30 transition-colors ${!inv.is_active ? 'opacity-60' : ''}`}>
                   <td className="px-4 py-3 align-middle">
                     <div className="flex items-center gap-2">
                       <div>
-                        <div className="font-bold text-sm text-slate-200">
+                        <div className="font-bold text-sm text-foreground">
                           {inv.is_principal_investigator && <span className="mr-1.5 text-cyan-400">★</span>}
                           {inv.full_name}
                         </div>
-                        {inv.email && <div className="text-[10px] font-mono text-slate-500 mt-0.5">{inv.email}</div>}
-                        {inv.specialty && <div className="text-[10px] text-slate-400 mt-0.5">{inv.specialty}</div>}
+                        {inv.email && <div className="text-[10px] font-mono text-muted-foreground mt-0.5">{inv.email}</div>}
+                        {inv.specialty && <div className="text-[10px] text-muted-foreground mt-0.5">{inv.specialty}</div>}
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-3 align-middle">
                     <div className="flex items-center gap-1.5">
                       <span className="text-[12px]">🏥</span>
-                      <span className="text-xs text-slate-300 font-medium">
+                      <span className="text-xs text-muted-foreground font-medium">
                         {inv.hospitalObj.name}
                       </span>
                     </div>
@@ -468,14 +468,14 @@ export default function InvestigatorsFormClient({
                     {inv.is_active ? (
                       <span className="text-[9px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/20">ACTIVO</span>
                     ) : (
-                      <span className="text-[9px] font-bold bg-slate-900 text-slate-500 px-2 py-0.5 rounded border border-slate-700">INACTIVO</span>
+                      <span className="text-[9px] font-bold bg-card text-muted-foreground px-2 py-0.5 rounded border border-border dark:border-slate-700">INACTIVO</span>
                     )}
                   </td>
                   <td className="px-4 py-3 align-middle text-right">
                     <div className="flex justify-end gap-2">
                       <button
                         onClick={() => handleEditClick(inv)}
-                        className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded transition-colors"
+                        className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-muted-foreground text-[10px] font-bold rounded transition-colors"
                       >
                         Editar
                       </button>
@@ -497,7 +497,7 @@ export default function InvestigatorsFormClient({
             
             {flatOrderedInvestigators.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 text-xs">
+                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground text-xs">
                   No se encontraron investigadores.
                 </td>
               </tr>

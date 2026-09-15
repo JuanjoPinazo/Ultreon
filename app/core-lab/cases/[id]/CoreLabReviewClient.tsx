@@ -134,9 +134,9 @@ export default function CoreLabReviewClient({
   const postOctImages = media.filter((m) => m.acquisition_phase === 'post_pci');
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:p-8 sticky top-0 z-40">
+      <header className="bg-card border-b border-border p-4 md:p-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto">
           <Link
             href="/core-lab"
@@ -144,10 +144,10 @@ export default function CoreLabReviewClient({
           >
             ← Volver al dashboard
           </Link>
-          <h1 className="text-base font-bold text-slate-50">
+          <h1 className="text-base font-bold text-foreground">
             Revisión Core Lab — {patientId}
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             {segment} • {hospitalName}
           </p>
         </div>
@@ -159,10 +159,10 @@ export default function CoreLabReviewClient({
           {/* Left: Image List */}
           <div className="lg:col-span-1 space-y-4">
             <div>
-              <h2 className="text-sm font-bold text-slate-50 mb-3">Imágenes ({stats.total})</h2>
+              <h2 className="text-sm font-bold text-foreground mb-3">Imágenes ({stats.total})</h2>
               <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {media.length === 0 ? (
-                  <p className="text-xs text-slate-400">Sin imágenes</p>
+                  <p className="text-xs text-muted-foreground">Sin imágenes</p>
                 ) : (
                   media.map((item) => (
                     <button
@@ -171,13 +171,13 @@ export default function CoreLabReviewClient({
                       className={`w-full text-left p-3 rounded-lg border transition-all ${
                         selectedMedia?.id === item.id
                           ? 'bg-cyan-950/60 border-cyan-700'
-                          : 'bg-slate-900 border-slate-850 hover:border-slate-700'
+                          : 'bg-card border-border hover:border-slate-700'
                       }`}
                     >
-                      <p className="text-xs font-semibold text-slate-300 truncate">
+                      <p className="text-xs font-semibold text-muted-foreground truncate">
                         {item.file_name}
                       </p>
-                      <p className="text-[10px] text-slate-500 mt-1">
+                      <p className="text-[10px] text-muted-foreground mt-1">
                         {PHASE_LABELS[item.acquisition_phase]}
                       </p>
                       {item.reviewed_at && (
@@ -192,23 +192,23 @@ export default function CoreLabReviewClient({
             </div>
 
             {/* Stats */}
-            <div className="bg-slate-900 border border-slate-850 rounded-2xl p-4 space-y-2">
-              <h3 className="text-xs font-bold text-slate-300">Resumen Calidad</h3>
+            <div className="bg-card border border-border rounded-2xl p-4 space-y-2">
+              <h3 className="text-xs font-bold text-muted-foreground">Resumen Calidad</h3>
               <div className="space-y-1 text-[10px]">
                 <p>
-                  <span className="font-mono text-slate-500">🟢 Excelente:</span>
+                  <span className="font-mono text-muted-foreground">🟢 Excelente:</span>
                   <span className="ml-2 font-semibold text-emerald-400">{stats.excellent}</span>
                 </p>
                 <p>
-                  <span className="font-mono text-slate-500">🟦 Diagnóstica:</span>
+                  <span className="font-mono text-muted-foreground">🟦 Diagnóstica:</span>
                   <span className="ml-2 font-semibold text-cyan-400">{stats.diagnostic}</span>
                 </p>
                 <p>
-                  <span className="font-mono text-slate-500">🟨 Subóptima:</span>
+                  <span className="font-mono text-muted-foreground">🟨 Subóptima:</span>
                   <span className="ml-2 font-semibold text-yellow-400">{stats.suboptimal}</span>
                 </p>
                 <p>
-                  <span className="font-mono text-slate-500">🔴 No Usable:</span>
+                  <span className="font-mono text-muted-foreground">🔴 No Usable:</span>
                   <span className="ml-2 font-semibold text-red-400">{stats.notUsable}</span>
                 </p>
               </div>
@@ -220,8 +220,8 @@ export default function CoreLabReviewClient({
             {selectedMedia ? (
               <div className="space-y-6">
                 {/* Image Preview */}
-                <div className="bg-slate-900 border border-slate-850 rounded-2xl overflow-hidden">
-                  <div className="aspect-video bg-slate-950 flex items-center justify-center">
+                <div className="bg-card border border-border rounded-2xl overflow-hidden">
+                  <div className="aspect-video bg-background flex items-center justify-center">
                     {signedUrl ? (
                       selectedMedia.file_type?.includes('pdf') ? (
                         <a
@@ -240,24 +240,24 @@ export default function CoreLabReviewClient({
                         />
                       )
                     ) : (
-                      <span className="text-slate-400">Cargando imagen...</span>
+                      <span className="text-muted-foreground">Cargando imagen...</span>
                     )}
                   </div>
 
                   {/* Image Meta */}
-                  <div className="p-4 border-t border-slate-800 bg-slate-950/50">
-                    <p className="text-xs font-semibold text-slate-300 mb-2">
+                  <div className="p-4 border-t border-border bg-background/50">
+                    <p className="text-xs font-semibold text-muted-foreground mb-2">
                       {selectedMedia.file_name}
                     </p>
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
-                        <span className="text-slate-500">Fase:</span>
-                        <span className="ml-2 font-semibold text-slate-300">
+                        <span className="text-muted-foreground">Fase:</span>
+                        <span className="ml-2 font-semibold text-muted-foreground">
                           {PHASE_LABELS[selectedMedia.acquisition_phase]}
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-500">Anonimizada:</span>
+                        <span className="text-muted-foreground">Anonimizada:</span>
                         <span
                           className={`ml-2 font-semibold ${selectedMedia.is_anonymized ? 'text-emerald-400' : 'text-red-400'}`}
                         >
@@ -266,8 +266,8 @@ export default function CoreLabReviewClient({
                       </div>
                       {selectedMedia.description && (
                         <div className="col-span-2">
-                          <span className="text-slate-500">Descripción:</span>
-                          <p className="text-slate-300 mt-1">{selectedMedia.description}</p>
+                          <span className="text-muted-foreground">Descripción:</span>
+                          <p className="text-muted-foreground mt-1">{selectedMedia.description}</p>
                         </div>
                       )}
                     </div>
@@ -275,12 +275,12 @@ export default function CoreLabReviewClient({
                 </div>
 
                 {/* Review Form */}
-                <div className="bg-slate-900 border border-slate-850 rounded-2xl p-6 space-y-4">
-                  <h3 className="text-sm font-bold text-slate-50">Evaluación Core Lab</h3>
+                <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                  <h3 className="text-sm font-bold text-foreground">Evaluación Core Lab</h3>
 
                   {/* Quality Selection */}
                   <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase block mb-3">
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-3">
                       Calidad de Imagen
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -291,7 +291,7 @@ export default function CoreLabReviewClient({
                           className={`px-3 py-2 rounded-lg border text-xs font-semibold transition-all ${
                             quality === q
                               ? 'bg-cyan-950/60 border-cyan-700 text-cyan-400'
-                              : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                              : 'bg-background border-border text-muted-foreground hover:border-slate-700'
                           }`}
                         >
                           {label}
@@ -302,7 +302,7 @@ export default function CoreLabReviewClient({
 
                   {/* Notes */}
                   <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase block mb-2">
+                    <label className="text-xs font-bold text-muted-foreground uppercase block mb-2">
                       Notas de Revisión
                     </label>
                     <textarea
@@ -310,13 +310,13 @@ export default function CoreLabReviewClient({
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Observaciones clínicas, recomendaciones, hallazgos..."
                       rows={3}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 text-slate-200 rounded-lg text-xs outline-none focus:border-cyan-500 resize-none"
+                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-xs outline-none focus:border-cyan-500 resize-none"
                     />
                   </div>
 
                   {/* Key Image Toggle */}
-                  <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                    <label className="text-xs font-semibold text-slate-300">
+                  <div className="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
+                    <label className="text-xs font-semibold text-muted-foreground">
                       Marcar como Key Image
                     </label>
                     <button
@@ -326,7 +326,7 @@ export default function CoreLabReviewClient({
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                         selectedMedia.is_key_image
                           ? 'bg-cyan-500/20 border border-cyan-700 text-cyan-400'
-                          : 'bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700'
+                          : 'bg-slate-100 dark:bg-slate-800 border border-border dark:border-slate-700 text-muted-foreground hover:bg-slate-700'
                       }`}
                     >
                       {selectedMedia.is_key_image ? '⭐ Sí' : '☆ No'}
@@ -344,8 +344,8 @@ export default function CoreLabReviewClient({
                 </div>
               </div>
             ) : (
-              <div className="bg-slate-900 border border-slate-850 rounded-2xl p-8 text-center">
-                <p className="text-slate-400">Selecciona una imagen para revisar</p>
+              <div className="bg-card border border-border rounded-2xl p-8 text-center">
+                <p className="text-muted-foreground">Selecciona una imagen para revisar</p>
               </div>
             )}
           </div>

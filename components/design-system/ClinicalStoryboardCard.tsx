@@ -79,12 +79,12 @@ export default function ClinicalStoryboardCard({
         className={`flex-1 flex flex-col justify-between p-5 min-h-[360px] relative overflow-hidden transition-all duration-350 select-none border ${
           isPrimary
             ? 'bg-cyan-950/10 border-cyan-500/40 shadow-[0_0_20px_rgba(6,182,212,0.08)]'
-            : 'bg-slate-900/60 border-slate-800/80 hover:border-slate-700'
+            : 'bg-card/60 border-border/80 hover:border-slate-700'
         } ${!file ? 'cursor-pointer' : ''}`}
       >
         {/* Background Preview Image if loaded */}
         {previewUrl && (
-          <div className="absolute inset-0 z-0 bg-slate-950 transition-all group-hover:scale-102 duration-500">
+          <div className="absolute inset-0 z-0 bg-background transition-all group-hover:scale-102 duration-500">
             <img src={previewUrl} alt={label} className="w-full h-full object-cover opacity-20" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/30" />
           </div>
@@ -94,10 +94,10 @@ export default function ClinicalStoryboardCard({
         <div className="relative z-10 w-full space-y-2">
           <div className="flex justify-between items-start gap-2">
             <div className="flex flex-col">
-              <span className="text-xs font-black text-slate-100 uppercase tracking-wide leading-none group-hover:text-cyan-400 transition-colors">
+              <span className="text-xs font-black text-foreground uppercase tracking-wide leading-none group-hover:text-cyan-400 transition-colors">
                 {label}
               </span>
-              <span className="text-[10px] text-slate-400 mt-1 font-medium leading-relaxed">
+              <span className="text-[10px] text-muted-foreground mt-1 font-medium leading-relaxed">
                 {subText}
               </span>
             </div>
@@ -122,7 +122,7 @@ export default function ClinicalStoryboardCard({
                   e.stopPropagation();
                   setShowTooltip(!showTooltip);
                 }}
-                className="w-4 h-4 rounded-full border border-slate-700 bg-slate-950/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-[9px] font-mono flex items-center justify-center cursor-pointer"
+                className="w-4 h-4 rounded-full border border-border dark:border-slate-700 bg-background/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-muted-foreground hover:text-foreground text-[9px] font-mono flex items-center justify-center cursor-pointer"
                 title="Ayuda de imagen"
               >
                 ?
@@ -132,18 +132,18 @@ export default function ClinicalStoryboardCard({
 
           {/* Floating Help Tooltip Context */}
           {showTooltip && (
-            <div className="absolute top-8 right-0 left-0 bg-slate-950 border border-slate-800 p-3 rounded-xl shadow-xl z-20 text-[10px] text-slate-350 leading-relaxed animate-scale-up">
+            <div className="absolute top-8 right-0 left-0 bg-background border border-border p-3 rounded-xl shadow-xl z-20 text-[10px] text-muted-foreground leading-relaxed animate-scale-up">
               <div className="flex justify-between items-start mb-1.5">
                 <span className="font-bold text-cyan-400">Guía Clínica de Imagen</span>
                 <button 
                   onClick={(e) => { e.stopPropagation(); setShowTooltip(false); }}
-                  className="text-slate-500 hover:text-slate-300 text-xs font-mono"
+                  className="text-muted-foreground hover:text-muted-foreground text-xs font-mono"
                 >
                   ×
                 </button>
               </div>
               <p>{tooltipText}</p>
-              <div className="mt-2 text-[8px] text-slate-500 italic">
+              <div className="mt-2 text-[8px] text-muted-foreground italic">
                 (Próximamente: ver ejemplo real)
               </div>
             </div>
@@ -152,13 +152,13 @@ export default function ClinicalStoryboardCard({
 
         {/* Storyboard Content / Checklist */}
         <div className="relative z-10 my-4 space-y-2.5 w-full flex-1">
-          <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-850/60 space-y-1.5">
-            <span className="text-[8px] font-bold text-slate-500 font-mono tracking-wider block uppercase">
+          <div className="p-3 rounded-xl bg-background/40 border border-border/60 space-y-1.5">
+            <span className="text-[8px] font-bold text-muted-foreground font-mono tracking-wider block uppercase">
               ¿QUÉ DEBE VERSE?
             </span>
             <ul className="space-y-1">
               {whatShouldBeSeen.map((item, idx) => (
-                <li key={idx} className="flex items-center gap-1.5 text-[10px] text-slate-300">
+                <li key={idx} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                   <span className="text-cyan-400 text-[8px]">✔</span>
                   <span>{item}</span>
                 </li>
@@ -169,7 +169,7 @@ export default function ClinicalStoryboardCard({
           {icons && icons.length > 0 && (
             <div className="flex gap-2 items-center">
               {icons.map((icon, idx) => (
-                <div key={idx} className="flex items-center gap-1 bg-slate-950/60 border border-slate-850 px-2 py-0.5 rounded text-[8px] font-mono text-slate-400">
+                <div key={idx} className="flex items-center gap-1 bg-background/60 border border-border px-2 py-0.5 rounded text-[8px] font-mono text-muted-foreground">
                   {icon}
                 </div>
               ))}
@@ -177,18 +177,18 @@ export default function ClinicalStoryboardCard({
           )}
 
           {bottomText && (
-            <p className="text-[9px] text-slate-500 leading-normal font-medium">
+            <p className="text-[9px] text-muted-foreground leading-normal font-medium">
               {bottomText}
             </p>
           )}
         </div>
 
         {/* Footer Actions / Drop Zone */}
-        <div className="relative z-10 w-full pt-3 border-t border-slate-850/60">
+        <div className="relative z-10 w-full pt-3 border-t border-border/60">
           {file ? (
             <div className="space-y-2">
               {/* File Info */}
-              <div className="space-y-1 bg-slate-950/50 p-2.5 rounded-xl border border-slate-850">
+              <div className="space-y-1 bg-background/50 p-2.5 rounded-xl border border-border">
                 <div className="flex justify-between items-center text-[9px] font-mono text-cyan-400">
                   <span className="font-bold truncate max-w-[140px]">✓ Imagen recibida</span>
                   <span>100%</span>
@@ -196,7 +196,7 @@ export default function ClinicalStoryboardCard({
                 <div className="w-full h-1 bg-cyan-950/80 rounded-full overflow-hidden">
                   <div className="h-full bg-cyan-500 rounded-full w-full" />
                 </div>
-                <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[8px] font-mono text-slate-500 pt-1">
+                <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[8px] font-mono text-muted-foreground pt-1">
                   <span>Tam: {formattedSize}</span>
                   <span>Res: {dimensions ? `${dimensions.w}x${dimensions.h}` : 'Cargando...'}</span>
                   <span className="col-span-2">Fecha: {formattedDate}</span>
@@ -211,7 +211,7 @@ export default function ClinicalStoryboardCard({
                     e.stopPropagation();
                     fileInputRef.current?.click();
                   }}
-                  className="flex-1 py-1.5 bg-slate-950 border border-slate-800 hover:border-slate-700 hover:text-slate-100 rounded-lg text-[9px] font-bold text-slate-400 text-center transition-all cursor-pointer"
+                  className="flex-1 py-1.5 bg-background border border-border hover:border-slate-700 hover:text-foreground rounded-lg text-[9px] font-bold text-muted-foreground text-center transition-all cursor-pointer"
                 >
                   Cambiar
                 </button>
@@ -230,10 +230,10 @@ export default function ClinicalStoryboardCard({
             </div>
           ) : (
             <div className="space-y-2">
-              <div className="flex flex-col items-center justify-center p-3 border border-dashed border-slate-800 rounded-xl bg-slate-950/30 group-hover:border-slate-700 transition-colors">
+              <div className="flex flex-col items-center justify-center p-3 border border-dashed border-border rounded-xl bg-background/30 group-hover:border-slate-700 transition-colors">
                 <span className="text-lg mb-1">📤</span>
                 <span className="text-[10px] font-bold text-cyan-400 group-hover:text-cyan-300">Seleccionar Imagen</span>
-                <span className="text-[8px] text-slate-500 mt-0.5">PNG, JPG, JPEG · Max 15MB</span>
+                <span className="text-[8px] text-muted-foreground mt-0.5">PNG, JPG, JPEG · Max 15MB</span>
               </div>
             </div>
           )}

@@ -24,7 +24,7 @@ export default async function DemoLayout({ children }: { children: React.ReactNo
 
   return (
     <DemoDataProvider>
-      <div className="min-h-screen bg-black text-slate-200">
+      <div className="min-h-screen bg-black text-foreground">
         {children}
       </div>
     </DemoDataProvider>

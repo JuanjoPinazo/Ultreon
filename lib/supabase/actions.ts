@@ -374,8 +374,8 @@ export async function toggleCaseValidationAction(id: string, validated: boolean)
   }
 }
 
-// 9. SAVE REGISTRY CASE (ZERO-CONTRAST ALIGNED)
-export async function saveRegistryCaseAction(payload: ZeroContrastInsertPayload) {
+// 9. SAVE REGISTRY CASE (ULTREON V3)
+export async function saveRegistryCaseAction(payload: any) {
   try {
     const supabase = await createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -385,34 +385,100 @@ export async function saveRegistryCaseAction(payload: ZeroContrastInsertPayload)
     if (!payload.hospital_id) return { error: 'El campo "hospital_id" es obligatorio.' };
     if (!payload.operator_id) return { error: 'El campo "operator_id" es obligatorio.' };
     if (!payload.procedure_date) return { error: 'El campo "procedure_date" es obligatorio.' };
-    if (!payload.patient_code) return { error: 'El campo "patient_code" es obligatorio.' };
-    if (!payload.coronary_segment) return { error: 'El campo "coronary_segment" es obligatorio.' };
-    if (payload.contrast_during_oct_ml === undefined || payload.contrast_during_oct_ml === null) {
-      return { error: 'El campo "contrast_during_oct_ml" es obligatorio.' };
-    }
-    if (!payload.wash_quality) return { error: 'El campo "wash_quality" es obligatorio.' };
+    
+    // Server-side Hospital Access Validation
+    const { data: userProfile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role, hospital_id')
+      .eq('id', user.id)
+      .single();
 
-    const insertData = {
+    if (profileError || !userProfile) {
+      return { error: 'No se pudo verificar el perfil del usuario.' };
+    }
+
+    if (userProfile.role === 'hospital_user') {
+      // Future-proofing: If we ever have an array of authorized hospitals, check it here.
+      // For now, check the single hospital_id field.
+      if (userProfile.hospital_id !== payload.hospital_id) {
+        return { error: 'No autorizado: 403 Forbidden. El centro no corresponde con tus permisos.' };
+      }
+    }
+    
+    // Server-side Operator Validation
+    const { data: operatorCheck, error: opError } = await supabase
+      .from('operators')
+      .select('id, is_active')
+      .eq('id', payload.operator_id)
+      .single();
+      
+    if (opError || !operatorCheck) {
+      return { error: 'El operador seleccionado no existe o es inválido.' };
+    }
+    if (!operatorCheck.is_active) {
+      return { error: 'El operador seleccionado está inactivo.' };
+    }
+    
+    // Check if operator is authorized for the selected hospital
+    const { data: hospOpCheck, error: hospOpError } = await supabase
+      .from('hospital_operators')
+      .select('is_active')
+      .eq('operator_id', payload.operator_id)
+      .eq('hospital_id', payload.hospital_id)
+      .single();
+      
+    if (hospOpError || !hospOpCheck || !hospOpCheck.is_active) {
+      return { error: 'El operador no está autorizado para el centro seleccionado.' };
+    }
+
+    // Auto-generate anonymous_code if missing or dummy
+    let generatedCode = payload.anonymous_code;
+    let finalId = payload.id;
+    let shouldGenerateCode = false;
+    
+    if (!generatedCode || generatedCode.trim() === '' || generatedCode.includes('(Se generará')) {
+      shouldGenerateCode = true;
+    }
+
+    if (shouldGenerateCode && !finalId) {
+      // Create draft via RPC to safely generate code
+      const { data: draftData, error: rpcError } = await supabase.rpc('create_ultreon_v3_draft_secure', {
+        p_hospital_id: payload.hospital_id,
+        p_operator_id: payload.operator_id,
+        p_is_demo: payload.is_demo,
+        p_procedure_date: payload.procedure_date
+      });
+      if (rpcError || !draftData) {
+        return { error: `Error generando código de caso: ${rpcError?.message}` };
+      }
+      finalId = draftData.case_id;
+      generatedCode = draftData.anonymous_code;
+    }
+
+    const upsertData = {
       ...payload,
-      created_by: user.id,
+      id: finalId,
+      anonymous_code: generatedCode,
       updated_at: new Date().toISOString(),
     };
+    
+    if (!payload.id) {
+      upsertData.created_by = user.id;
+    }
 
-    // Insert into ecrf_opstar_records
-    const { data: insertedCase, error: caseError } = await supabase
-      .from('ecrf_opstar_records')
-      .insert([insertData])
+    const { data: savedCase, error: caseError } = await supabase
+      .from('ultreon_registry_cases')
+      .upsert(upsertData, { onConflict: 'id' })
       .select('id')
       .single();
 
     if (caseError) {
-      console.error("Error inserting zero-contrast case:", caseError.message);
-      return { error: `Error al guardar en Supabase (campo o tabla inexistente): ${caseError.message}` };
+      return { error: `Error al guardar en Supabase: ${caseError.message}` };
     }
 
     revalidatePath('/dashboard');
     revalidatePath('/admin');
-    return { success: true, id: insertedCase.id };
+    return { success: true, id: savedCase?.id };
   } catch (err: any) {
     return { error: err?.message || 'Error de servidor al guardar la ficha clínica.' };
   }
@@ -505,7 +571,7 @@ export async function getActiveHospitalsWithInvestigators() {
     if (hospError) throw hospError;
     if (!hospitals) return [];
     
-    // Fetch active investigators (RLS-aware)
+    // Fetch active investigators (PIs) (RLS-aware)
     const { data: investigators, error: invError } = await supabase
       .from('opstar_investigators')
       .select('*')
@@ -513,8 +579,38 @@ export async function getActiveHospitalsWithInvestigators() {
       .order('is_principal_investigator', { ascending: false })
       .order('display_order', { ascending: true });
       
+    if (invError) {
+      console.error('Error fetching investigators:', invError);
+    }
+      
     const cleanInvestigators = investigators || [];
     
+    // Fetch active operators from hospital_operators (RLS-aware)
+    const { data: hopOps, error: hopError } = await supabase
+      .from('hospital_operators')
+      .select(`
+        hospital_id,
+        operator:operators (
+          id,
+          full_name,
+          is_active
+        )
+      `)
+      .eq('is_active', true);
+      
+    if (hopError) {
+      console.error('Error fetching hospital_operators:', hopError);
+    }
+      
+    // Transform into flat operator objects mapped to hospital_id
+    const operators = (hopOps || [])
+      .filter((ho: any) => ho.operator && ho.operator.is_active)
+      .map((ho: any) => ({
+        id: ho.operator.id, // the true operator_id
+        full_name: ho.operator.full_name,
+        hospital_id: ho.hospital_id,
+        is_active: true
+      }));
     // Fetch case counts per hospital (RLS-aware)
     const { data: casesData } = await supabase
       .from('ecrf_opstar_records')
@@ -529,7 +625,7 @@ export async function getActiveHospitalsWithInvestigators() {
       });
     }
     
-    // Map investigators and cases to hospitals
+    // Map investigators, operators, and cases to hospitals
     return hospitals.map((h) => ({
       id: h.id,
       name: h.name,
@@ -539,6 +635,7 @@ export async function getActiveHospitalsWithInvestigators() {
       code: h.code,
       cases: caseCounts[h.id] || 0,
       investigators: cleanInvestigators.filter((i) => i.hospital_id === h.id),
+      operators: operators.filter((o) => o.hospital_id === h.id),
     }));
   } catch (err) {
     console.error('Error in getActiveHospitalsWithInvestigators:', err);
@@ -1669,6 +1766,9 @@ export async function getOperatorsForHospitalAction(hospitalId: string) {
         .select('id, full_name, email, is_active')
         .eq('hospital_id', hospitalId)
         .eq('is_active', true);
+      if (invError) {
+        console.error('Error fetching investigators fallback:', invError);
+      }
       if (invError) throw invError;
       return { success: true, data: invData || [] };
     }

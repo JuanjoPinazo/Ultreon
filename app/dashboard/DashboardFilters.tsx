@@ -23,6 +23,7 @@ export default function DashboardFilters({
   const currentHospital = searchParams.get('hospital') || '';
   const currentSegment = searchParams.get('segment') || '';
   const currentDateRange = searchParams.get('dateRange') || 'all';
+  const currentCaseType = searchParams.get('caseType') || 'real';
 
   const updateFilters = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -35,16 +36,16 @@ export default function DashboardFilters({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-850 rounded-3xl p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className={`bg-card border border-border rounded-3xl p-5 grid grid-cols-1 ${showHospitalFilter ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-4`}>
       {showHospitalFilter ? (
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider font-mono">
             Filtrar por Hospital
           </label>
           <select
             value={currentHospital}
             onChange={(e) => updateFilters('hospital', e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs text-slate-300 outline-none cursor-pointer"
+            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
           >
             <option value="">Todos los Hospitales</option>
             {hospitals.map((h) => (
@@ -55,20 +56,20 @@ export default function DashboardFilters({
           </select>
         </div>
       ) : (
-        <div className="flex flex-col justify-center px-2 py-1 bg-slate-950/40 border border-slate-850/60 rounded-xl">
-          <span className="text-[9px] font-mono font-bold text-slate-500 tracking-wider uppercase">Filtro de Hospital</span>
-          <span className="text-xs text-slate-400 font-semibold mt-0.5">Limitado a tu Centro Asignado</span>
+        <div className="flex flex-col justify-center px-2 py-1 bg-background/40 border border-border/60 rounded-xl">
+          <span className="text-[9px] font-mono font-bold text-muted-foreground tracking-wider uppercase">Filtro de Hospital</span>
+          <span className="text-xs text-muted-foreground font-semibold mt-0.5">Limitado a tu Centro Asignado</span>
         </div>
       )}
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider font-mono">
           Segmento AHA (Vaso Diana)
         </label>
         <select
           value={currentSegment}
           onChange={(e) => updateFilters('segment', e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs text-slate-300 outline-none cursor-pointer"
+          className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
         >
           <option value="">Todos los Segmentos</option>
           <option value="TCI">TCI (Tronco Común Izquierdo)</option>
@@ -79,13 +80,13 @@ export default function DashboardFilters({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider font-mono">
           Periodo de Auditoría
         </label>
         <select
           value={currentDateRange}
           onChange={(e) => updateFilters('dateRange', e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 text-xs text-slate-300 outline-none cursor-pointer"
+          className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
         >
           <option value="all">Histórico Completo</option>
           <option value="30days">Últimos 30 días</option>
@@ -93,6 +94,23 @@ export default function DashboardFilters({
           <option value="thisyear">Este Año (2026)</option>
         </select>
       </div>
+
+      {showHospitalFilter && (
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider font-mono">
+            Tipo de Registro
+          </label>
+          <select
+            value={currentCaseType}
+            onChange={(e) => updateFilters('caseType', e.target.value)}
+            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
+          >
+            <option value="real">Casos Reales</option>
+            <option value="demo">Casos DEMO</option>
+            <option value="all">Todos (Reales + Demo)</option>
+          </select>
+        </div>
+      )}
     </div>
   );
 }

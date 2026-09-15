@@ -1,0 +1,42 @@
+{
+  "post": {
+    "description": "atómicamente por hospital. Admin puede crear en hospitales activos.\nHospital_user solo puede crear en su propio hospital.\nMonitor, viewer y roles desconocidos permanecen bloqueados.",
+    "parameters": [
+      {
+        "in": "body",
+        "name": "args",
+        "required": true,
+        "schema": {
+          "description": "Crea un borrador OCT-Optimize con código pseudoanonimizado generado\natómicamente por hospital. Admin puede crear en hospitales activos.\nHospital_user solo puede crear en su propio hospital.\nMonitor, viewer y roles desconocidos permanecen bloqueados.",
+          "properties": {
+            "p_hospital_id": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          "required": [
+            "p_hospital_id"
+          ],
+          "type": "object"
+        }
+      },
+      {
+        "$ref": "#/parameters/preferParams"
+      }
+    ],
+    "produces": [
+      "application/json",
+      "application/vnd.pgrst.object+json;nulls=stripped",
+      "application/vnd.pgrst.object+json"
+    ],
+    "responses": {
+      "200": {
+        "description": "OK"
+      }
+    },
+    "summary": "Crea un borrador OCT-Optimize con código pseudoanonimizado generado",
+    "tags": [
+      "(rpc) create_draft_case_secure"
+    ]
+  }
+}

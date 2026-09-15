@@ -273,7 +273,7 @@ export default function CaseFollowUpClient({
       case 'pending':
         return base + 'bg-yellow-950/20 border-yellow-900/40 hover:bg-yellow-950/40 text-yellow-300';
       default:
-        return base + 'bg-slate-900/60 border-slate-800 hover:bg-slate-850 text-slate-400';
+        return base + 'bg-card/60 border-border hover:bg-muted text-muted-foreground';
     }
   };
 
@@ -332,11 +332,11 @@ export default function CaseFollowUpClient({
     });
 
     if (changes.length === 0) {
-      return <span className="text-slate-500">Actualización de notas o metadatos internos.</span>;
+      return <span className="text-muted-foreground">Actualización de notas o metadatos internos.</span>;
     }
 
     return (
-      <ul className="list-disc list-inside space-y-0.5 text-slate-300">
+      <ul className="list-disc list-inside space-y-0.5 text-muted-foreground">
         {changes.map((c, i) => (
           <li key={i}>{c}</li>
         ))}
@@ -355,33 +355,33 @@ export default function CaseFollowUpClient({
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased font-sans">
+    <main className="min-h-screen bg-background text-foreground flex flex-col antialiased font-sans">
       
       {/* Header Bar */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <header className="bg-card border-b border-border p-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3">
-          <Link href="/follow-up" className="h-8 w-8 rounded-lg bg-slate-950 hover:bg-slate-850 border border-slate-800 flex items-center justify-center text-slate-300 font-bold transition-all">
+          <Link href="/follow-up" className="h-8 w-8 rounded-lg bg-background hover:bg-muted border border-border flex items-center justify-center text-muted-foreground font-bold transition-all">
             ←
           </Link>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[8px] font-mono font-bold text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/40">ULTREON™ 3.0</span>
-              <span className="text-[8px] font-mono font-bold text-slate-500 uppercase">EXPEDIENTE INDIVIDUAL</span>
+              <span className="text-[8px] font-mono font-bold text-muted-foreground uppercase">EXPEDIENTE INDIVIDUAL</span>
             </div>
-            <h1 className="text-base font-bold text-slate-50">Seguimiento Clínico de Caso</h1>
+            <h1 className="text-base font-bold text-foreground">Actividad del Caso</h1>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <span className="text-[10px] text-slate-400 uppercase font-mono tracking-wider">
+            <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
               {profile.role === 'admin' ? 'Administrador' : profile.role === 'monitor' ? 'Monitor' : 'Investigador'}
             </span>
           </div>
-          <div className="h-8 w-[1px] bg-slate-800" />
+          <div className="h-8 w-[1px] bg-slate-100 dark:bg-slate-800" />
           <Link
             href="/follow-up"
-            className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-xl text-xs font-medium transition-all"
+            className="px-3 py-1.5 bg-background hover:bg-muted border border-border rounded-xl text-xs font-medium transition-all"
           >
             Volver al Listado
           </Link>
@@ -392,20 +392,20 @@ export default function CaseFollowUpClient({
       <div className="flex-1 p-6 md:p-8 max-w-[1400px] w-full mx-auto space-y-6">
 
         {/* ── CASE CLINICAL INFO HEADER CARD ── */}
-        <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6">
+        <div className="bg-card border border-border rounded-3xl p-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="space-y-1">
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block">ID Paciente</span>
+              <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">ID Paciente</span>
               <p className="text-base font-bold font-mono text-cyan-400">{caseRecord.id_paciente}</p>
             </div>
 
             <div className="space-y-1">
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block">Centro Participante</span>
-              <p className="text-sm font-semibold text-slate-200 truncate">{caseRecord.hospitalName}</p>
+              <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Centro Participante</span>
+              <p className="text-sm font-semibold text-foreground truncate">{caseRecord.hospitalName}</p>
             </div>
 
             <div className="space-y-1">
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block">Vaso Diana (AHA)</span>
+              <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Vaso Diana (AHA)</span>
               <p className="text-sm">
                 <span className="px-2 py-0.5 bg-cyan-950 text-cyan-450 border border-cyan-800/35 rounded font-mono font-bold text-xs">
                   {caseRecord.vaso_diana}
@@ -414,7 +414,7 @@ export default function CaseFollowUpClient({
             </div>
 
             <div className="space-y-1">
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block">Optimización OPSTAR</span>
+              <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Optimización OPSTAR</span>
               <div>
                 {caseRecord.opstar_optimization_results?.[0]?.opstar_score !== undefined &&
                 caseRecord.opstar_optimization_results?.[0]?.opstar_score !== null ? (
@@ -422,18 +422,18 @@ export default function CaseFollowUpClient({
                     <span className={`px-2 py-0.5 rounded font-bold border font-mono text-xs ${getScoreColorClass(caseRecord.opstar_optimization_results[0].opstar_score)}`}>
                       {caseRecord.opstar_optimization_results[0].opstar_score}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-[10px] text-muted-foreground font-mono">
                       ({caseRecord.opstar_optimization_results[0].opstar_score_category})
                     </span>
                   </div>
                 ) : (
-                  <span className="text-xs text-slate-500 font-mono">No evaluado</span>
+                  <span className="text-xs text-muted-foreground font-mono">No evaluado</span>
                 )}
               </div>
             </div>
 
             <div className="space-y-1 col-span-2 md:col-span-1">
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block">Estado de Ficha Base</span>
+              <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Estado de Ficha Base</span>
               <div className="flex items-center gap-1.5 mt-0.5">
                 {caseRecord.locked ? (
                   <span className="px-2 py-0.5 bg-red-950 text-red-400 border border-red-900/40 rounded font-mono font-bold text-[10px]">
@@ -466,7 +466,7 @@ export default function CaseFollowUpClient({
                 }}
                 className={getTimelineNodeStyles(type)}
               >
-                <span className="text-[10px] font-bold font-mono text-slate-500 uppercase block tracking-wider">
+                <span className="text-[10px] font-bold font-mono text-muted-foreground uppercase block tracking-wider">
                   {getLabelForType(type)}
                 </span>
                 
@@ -487,7 +487,7 @@ export default function CaseFollowUpClient({
                     </span>
                   )}
                   {status === 'not_started' && (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-muted-foreground">
                       Sin iniciar
                     </span>
                   )}
@@ -525,12 +525,12 @@ export default function CaseFollowUpClient({
         )}
 
         {/* ── FOLLOW-UP OUTCOMES CAPTURE FORM ── */}
-        <form onSubmit={handleSave} className="bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8 space-y-6">
-          <div className="border-b border-slate-800 pb-4">
-            <h3 className="text-base font-bold text-slate-50">
+        <form onSubmit={handleSave} className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-6">
+          <div className="border-b border-border pb-4">
+            <h3 className="text-base font-bold text-foreground">
               Formulario Científico — {getLabelForType(activeType)}
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Complete los endpoints primarios y secundarios de acuerdo con los protocolos de la iniciativa de optimización.
             </p>
           </div>
@@ -542,8 +542,8 @@ export default function CaseFollowUpClient({
               
               {/* Date of follow-up */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">
-                  Fecha del Seguimiento Clínico *
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-mono">
+                  Fecha de la Actividad *
                 </label>
                 <input
                   type="date"
@@ -551,20 +551,20 @@ export default function CaseFollowUpClient({
                   disabled={isEditingDisabled}
                   value={formData.followup_date}
                   onChange={(e) => handleInputChange('followup_date', e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:border-cyan-500/50 text-xs font-mono outline-none w-full disabled:opacity-50"
+                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-cyan-500/50 text-xs font-mono outline-none w-full disabled:opacity-50"
                 />
               </div>
 
               {/* Clinical Status */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-mono">
                   Estado Clínico del Paciente
                 </label>
                 <select
                   disabled={isEditingDisabled}
                   value={formData.clinical_status}
                   onChange={(e) => handleInputChange('clinical_status', e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:border-cyan-500/50 text-xs outline-none w-full cursor-pointer disabled:opacity-50"
+                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-cyan-500/50 text-xs outline-none w-full cursor-pointer disabled:opacity-50"
                 >
                   <option value="asymptomatic">Asintomático</option>
                   <option value="stable_angina">Angina Estable (Angor)</option>
@@ -576,7 +576,7 @@ export default function CaseFollowUpClient({
 
               {/* Notes */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-mono">
                   Notas de la Investigación y Observaciones Clínicas
                 </label>
                 <textarea
@@ -585,36 +585,36 @@ export default function CaseFollowUpClient({
                   placeholder="Detalles adicionales sobre la evolución del paciente, hospitalizaciones externas, dosis de fármacos, o hallazgos clínicos relevantes..."
                   value={formData.investigator_notes || ''}
                   onChange={(e) => handleInputChange('investigator_notes', e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:border-cyan-500/50 text-xs outline-none w-full resize-none disabled:opacity-50 font-sans"
+                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-cyan-500/50 text-xs outline-none w-full resize-none disabled:opacity-50 font-sans"
                 />
               </div>
 
               {/* Marks as Completed */}
-              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl flex items-center justify-between">
+              <div className="p-4 bg-background/60 border border-border rounded-2xl flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold text-slate-200 font-mono">Completado y Listo para Monitoría</p>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Marcar como finalizado para habilitar la firma del monitor.</p>
+                  <p className="text-xs font-bold text-foreground font-mono">Completado y Listo para Monitoría</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">Marcar como finalizado para habilitar la firma del monitor.</p>
                 </div>
                 <input
                   type="checkbox"
                   disabled={isEditingDisabled}
                   checked={formData.completed}
                   onChange={() => handleCheckboxChange('completed')}
-                  className="h-5 w-5 rounded bg-slate-900 border border-slate-800 accent-cyan-500 cursor-pointer disabled:opacity-55"
+                  className="h-5 w-5 rounded bg-card border border-border accent-cyan-500 cursor-pointer disabled:opacity-55"
                 />
               </div>
 
             </div>
 
             {/* RIGHT COLUMN: Outcomes Checklists */}
-            <div className="space-y-6 bg-slate-950/30 p-6 border border-slate-850 rounded-2xl">
+            <div className="space-y-6 bg-background/30 p-6 border border-border rounded-2xl">
               <h4 className="text-xs font-bold font-mono uppercase text-cyan-400 tracking-wider mb-2">
                 Eventos Cardíacos Adversos Mayores (MACE)
               </h4>
 
               {/* MACE summary badge */}
-              <div className="flex items-center justify-between p-3 rounded-xl border border-slate-800 bg-slate-900">
-                <span className="text-[11px] font-bold text-slate-300 font-mono">ESTADO GENERAL MACE</span>
+              <div className="flex items-center justify-between p-3 rounded-xl border border-border bg-card">
+                <span className="text-[11px] font-bold text-muted-foreground font-mono">ESTADO GENERAL MACE</span>
                 {formData.mace ? (
                   <span className="px-2.5 py-0.5 bg-red-950 text-red-400 border border-red-900/50 rounded-full font-bold text-[10px]">
                     ⚠️ Evento Registrado
@@ -629,9 +629,9 @@ export default function CaseFollowUpClient({
               <div className="space-y-4 pt-2">
                 
                 {/* 1. Death */}
-                <div className="space-y-2 border-b border-slate-850 pb-3">
+                <div className="space-y-2 border-b border-border pb-3">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-350 select-none cursor-pointer" onClick={() => handleInputChange('death_type', formData.death_type ? null : 'cardiovascular')}>
+                    <label className="text-xs font-bold text-muted-foreground select-none cursor-pointer" onClick={() => handleInputChange('death_type', formData.death_type ? null : 'cardiovascular')}>
                       Muerte
                     </label>
                     <input
@@ -639,17 +639,17 @@ export default function CaseFollowUpClient({
                       disabled={isEditingDisabled}
                       checked={formData.death_type !== null}
                       onChange={() => handleInputChange('death_type', formData.death_type ? null : 'cardiovascular')}
-                      className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-red-500 cursor-pointer disabled:opacity-50"
+                      className="h-4.5 w-4.5 rounded bg-card border border-border accent-red-500 cursor-pointer disabled:opacity-50"
                     />
                   </div>
                   {formData.death_type !== null && (
                     <div className="pl-4 flex flex-col gap-1">
-                      <span className="text-[10px] font-mono text-slate-500 font-bold">Clasificación de Muerte (ARC)</span>
+                      <span className="text-[10px] font-mono text-muted-foreground font-bold">Clasificación de Muerte (ARC)</span>
                       <select
                         disabled={isEditingDisabled}
                         value={formData.death_type}
                         onChange={(e) => handleInputChange('death_type', e.target.value)}
-                        className="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-slate-200 outline-none cursor-pointer"
+                        className="px-3 py-1.5 rounded-lg bg-background border border-border text-[11px] text-foreground outline-none cursor-pointer"
                       >
                         <option value="cardiovascular">Cardiovascular</option>
                         <option value="non-cardiovascular">No Cardiovascular</option>
@@ -660,8 +660,8 @@ export default function CaseFollowUpClient({
                 </div>
 
                 {/* 2. Myocardial Infarction */}
-                <div className="flex items-center justify-between border-b border-slate-850 pb-3">
-                  <label htmlFor="mi-chk" className="text-xs font-bold text-slate-350 cursor-pointer select-none">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <label htmlFor="mi-chk" className="text-xs font-bold text-muted-foreground cursor-pointer select-none">
                     Infarto Agudo de Miocardio (IAM)
                   </label>
                   <input
@@ -670,17 +670,17 @@ export default function CaseFollowUpClient({
                     disabled={isEditingDisabled}
                     checked={formData.myocardial_infarction}
                     onChange={() => handleCheckboxChange('myocardial_infarction')}
-                    className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-red-500 cursor-pointer disabled:opacity-50"
+                    className="h-4.5 w-4.5 rounded bg-card border border-border accent-red-500 cursor-pointer disabled:opacity-50"
                   />
                 </div>
 
                 {/* 3. TLR */}
-                <div className="flex items-center justify-between border-b border-slate-850 pb-3">
+                <div className="flex items-center justify-between border-b border-border pb-3">
                   <div>
-                    <label htmlFor="tlr-chk" className="text-xs font-bold text-slate-350 cursor-pointer select-none">
+                    <label htmlFor="tlr-chk" className="text-xs font-bold text-muted-foreground cursor-pointer select-none">
                       Revascularización de la Lesión Diana (TLR)
                     </label>
-                    <p className="text-[9px] text-slate-500 font-mono mt-0.5">Repetición de angioplastia o CABG de la lesión tratada.</p>
+                    <p className="text-[9px] text-muted-foreground font-mono mt-0.5">Repetición de angioplastia o CABG de la lesión tratada.</p>
                   </div>
                   <input
                     id="tlr-chk"
@@ -688,17 +688,17 @@ export default function CaseFollowUpClient({
                     disabled={isEditingDisabled}
                     checked={formData.tlr}
                     onChange={() => handleCheckboxChange('tlr')}
-                    className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-red-500 cursor-pointer disabled:opacity-50"
+                    className="h-4.5 w-4.5 rounded bg-card border border-border accent-red-500 cursor-pointer disabled:opacity-50"
                   />
                 </div>
 
                 {/* 4. TVR */}
-                <div className="flex items-center justify-between border-b border-slate-850 pb-3">
+                <div className="flex items-center justify-between border-b border-border pb-3">
                   <div>
-                    <label htmlFor="tvr-chk" className="text-xs font-bold text-slate-350 cursor-pointer select-none">
+                    <label htmlFor="tvr-chk" className="text-xs font-bold text-muted-foreground cursor-pointer select-none">
                       Revascularización del Vaso Diana (TVR)
                     </label>
-                    <p className="text-[9px] text-slate-500 font-mono mt-0.5">Revascularización de cualquier segmento del vaso tratado.</p>
+                    <p className="text-[9px] text-muted-foreground font-mono mt-0.5">Revascularización de cualquier segmento del vaso tratado.</p>
                   </div>
                   <input
                     id="tvr-chk"
@@ -706,14 +706,14 @@ export default function CaseFollowUpClient({
                     disabled={isEditingDisabled}
                     checked={formData.tvr}
                     onChange={() => handleCheckboxChange('tvr')}
-                    className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-red-500 cursor-pointer disabled:opacity-50"
+                    className="h-4.5 w-4.5 rounded bg-card border border-border accent-red-500 cursor-pointer disabled:opacity-50"
                   />
                 </div>
 
                 {/* 5. Stent Thrombosis */}
-                <div className="space-y-2 border-b border-slate-850 pb-3">
+                <div className="space-y-2 border-b border-border pb-3">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-350 select-none cursor-pointer" onClick={() => handleInputChange('stent_thrombosis_type', formData.stent_thrombosis_type ? null : 'acute')}>
+                    <label className="text-xs font-bold text-muted-foreground select-none cursor-pointer" onClick={() => handleInputChange('stent_thrombosis_type', formData.stent_thrombosis_type ? null : 'acute')}>
                       Trombosis del Stent
                     </label>
                     <input
@@ -721,17 +721,17 @@ export default function CaseFollowUpClient({
                       disabled={isEditingDisabled}
                       checked={formData.stent_thrombosis_type !== null}
                       onChange={() => handleInputChange('stent_thrombosis_type', formData.stent_thrombosis_type ? null : 'acute')}
-                      className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-red-500 cursor-pointer disabled:opacity-50"
+                      className="h-4.5 w-4.5 rounded bg-card border border-border accent-red-500 cursor-pointer disabled:opacity-50"
                     />
                   </div>
                   {formData.stent_thrombosis_type !== null && (
                     <div className="pl-4 flex flex-col gap-1">
-                      <span className="text-[10px] font-mono text-slate-500 font-bold">Temporalidad de Trombosis (ARC)</span>
+                      <span className="text-[10px] font-mono text-muted-foreground font-bold">Temporalidad de Trombosis (ARC)</span>
                       <select
                         disabled={isEditingDisabled}
                         value={formData.stent_thrombosis_type}
                         onChange={(e) => handleInputChange('stent_thrombosis_type', e.target.value)}
-                        className="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-slate-200 outline-none cursor-pointer"
+                        className="px-3 py-1.5 rounded-lg bg-background border border-border text-[11px] text-foreground outline-none cursor-pointer"
                       >
                         <option value="acute">Aguda (0 a 24 horas post-ICP)</option>
                         <option value="subacute">Subaguda (24 horas a 30 días)</option>
@@ -743,8 +743,8 @@ export default function CaseFollowUpClient({
                 </div>
 
                 {/* 6. Rehospitalization */}
-                <div className="flex items-center justify-between border-b border-slate-850 pb-3">
-                  <label htmlFor="reh-chk" className="text-xs font-bold text-slate-350 cursor-pointer select-none">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <label htmlFor="reh-chk" className="text-xs font-bold text-muted-foreground cursor-pointer select-none">
                     Rehospitalización por Causa Cardíaca
                   </label>
                   <input
@@ -753,13 +753,13 @@ export default function CaseFollowUpClient({
                     disabled={isEditingDisabled}
                     checked={formData.rehospitalization}
                     onChange={() => handleCheckboxChange('rehospitalization')}
-                    className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-cyan-500 cursor-pointer disabled:opacity-50"
+                    className="h-4.5 w-4.5 rounded bg-card border border-border accent-cyan-500 cursor-pointer disabled:opacity-50"
                   />
                 </div>
 
                 {/* 7. Repeat PCI */}
-                <div className="flex items-center justify-between border-b border-slate-850 pb-3">
-                  <label htmlFor="pci-chk" className="text-xs font-bold text-slate-350 cursor-pointer select-none">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <label htmlFor="pci-chk" className="text-xs font-bold text-muted-foreground cursor-pointer select-none">
                     Angioplastia Adicional (PCI repetida)
                   </label>
                   <input
@@ -768,13 +768,13 @@ export default function CaseFollowUpClient({
                     disabled={isEditingDisabled}
                     checked={formData.repeat_pci}
                     onChange={() => handleCheckboxChange('repeat_pci')}
-                    className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-cyan-500 cursor-pointer disabled:opacity-50"
+                    className="h-4.5 w-4.5 rounded bg-card border border-border accent-cyan-500 cursor-pointer disabled:opacity-50"
                   />
                 </div>
 
                 {/* 8. CABG */}
-                <div className="flex items-center justify-between border-b border-slate-850 pb-3">
-                  <label htmlFor="cabg-chk" className="text-xs font-bold text-slate-350 cursor-pointer select-none">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <label htmlFor="cabg-chk" className="text-xs font-bold text-muted-foreground cursor-pointer select-none">
                     Bypass Aortocoronario (CABG) de urgencia/electiva
                   </label>
                   <input
@@ -783,33 +783,33 @@ export default function CaseFollowUpClient({
                     disabled={isEditingDisabled}
                     checked={formData.cabg}
                     onChange={() => handleCheckboxChange('cabg')}
-                    className="h-4.5 w-4.5 rounded bg-slate-900 border border-slate-800 accent-cyan-500 cursor-pointer disabled:opacity-50"
+                    className="h-4.5 w-4.5 rounded bg-card border border-border accent-cyan-500 cursor-pointer disabled:opacity-50"
                   />
                 </div>
 
                 {/* 9. Follow-up Angio & OCT */}
                 <div className="grid grid-cols-2 gap-4 pt-1">
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-850">
-                    <label htmlFor="angio-chk" className="text-[10px] font-bold text-slate-400 cursor-pointer select-none">Angio de control</label>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-card border border-border">
+                    <label htmlFor="angio-chk" className="text-[10px] font-bold text-muted-foreground cursor-pointer select-none">Angio de control</label>
                     <input
                       id="angio-chk"
                       type="checkbox"
                       disabled={isEditingDisabled}
                       checked={formData.followup_angio}
                       onChange={() => handleCheckboxChange('followup_angio')}
-                      className="h-4 w-4 rounded bg-slate-950 border border-slate-800 accent-cyan-500 cursor-pointer disabled:opacity-50"
+                      className="h-4 w-4 rounded bg-background border border-border accent-cyan-500 cursor-pointer disabled:opacity-50"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-850">
-                    <label htmlFor="oct-chk" className="text-[10px] font-bold text-slate-400 cursor-pointer select-none">OCT de control</label>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-card border border-border">
+                    <label htmlFor="oct-chk" className="text-[10px] font-bold text-muted-foreground cursor-pointer select-none">OCT de control</label>
                     <input
                       id="oct-chk"
                       type="checkbox"
                       disabled={isEditingDisabled}
                       checked={formData.followup_oct}
                       onChange={() => handleCheckboxChange('followup_oct')}
-                      className="h-4 w-4 rounded bg-slate-950 border border-slate-800 accent-cyan-500 cursor-pointer disabled:opacity-50"
+                      className="h-4 w-4 rounded bg-background border border-border accent-cyan-500 cursor-pointer disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -820,7 +820,7 @@ export default function CaseFollowUpClient({
           </div>
 
           {/* Form Actions */}
-          <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             
             {/* Monitor validation button */}
             <div>
@@ -860,17 +860,17 @@ export default function CaseFollowUpClient({
         </form>
 
         {/* ── AUDIT LOGS TRAIL SECTION (Append-only) ── */}
-        <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="bg-card border border-border rounded-3xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-border pb-3">
             <div>
-              <h3 className="text-sm font-bold text-slate-200">
+              <h3 className="text-sm font-bold text-foreground">
                 Historial de Trazabilidad y Auditoría
               </h3>
-              <p className="text-[10px] text-slate-500 mt-0.5">
+              <p className="text-[10px] text-muted-foreground mt-0.5">
                 Registro inmutable (append-only) de todas las acciones de creación y actualización para cumplimiento científico.
               </p>
             </div>
-            <span className="px-2 py-0.5 bg-slate-950 text-slate-400 border border-slate-850 rounded font-mono text-[9px]">
+            <span className="px-2 py-0.5 bg-background text-muted-foreground border border-border rounded font-mono text-[9px]">
               FDA-compliant log
             </span>
           </div>
@@ -892,22 +892,22 @@ export default function CaseFollowUpClient({
                   });
 
                   return (
-                    <div key={audit.id} className="p-4 bg-slate-950 border border-slate-850 rounded-2xl space-y-2 text-xs font-mono">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-850 pb-2">
+                    <div key={audit.id} className="p-4 bg-background border border-border rounded-2xl space-y-2 text-xs font-mono">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-border pb-2">
                         <div className="flex items-center gap-2">
                           <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                             audit.action === 'insert' ? 'bg-emerald-950 text-emerald-450 border border-emerald-900/50' : 'bg-blue-950 text-blue-450 border border-blue-900/50'
                           }`}>
                             {audit.action.toUpperCase()}
                           </span>
-                          <span className="font-bold text-slate-300">
+                          <span className="font-bold text-muted-foreground">
                             {audit.changed_by_email || 'Sistema (Automatizado)'}
                           </span>
                         </div>
-                        <span className="text-[10px] text-slate-500">{auditDate}</span>
+                        <span className="text-[10px] text-muted-foreground">{auditDate}</span>
                       </div>
                       
-                      <div className="pl-2 border-l border-slate-800">
+                      <div className="pl-2 border-l border-border">
                         {formatAuditChanges(audit)}
                       </div>
                     </div>

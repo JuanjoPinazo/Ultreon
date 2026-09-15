@@ -128,12 +128,12 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
   const formatCurrency = (val: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-slate-200 font-sans selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-[#0a0a0a] text-foreground font-sans selection:bg-cyan-500/30">
       
       {/* HEADER */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0a0a0a]/80 border-b border-white/10 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-slate-500 hover:text-white transition-colors">
+          <Link href="/dashboard" className="text-muted-foreground hover:text-white transition-colors">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -141,11 +141,11 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
           <div className="h-4 w-[1px] bg-white/20" />
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 rounded bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-black tracking-tighter">AI</div>
-            <h1 className="text-sm font-semibold tracking-wide text-white">OPSTAR Intelligence</h1>
+            <h1 className="text-sm font-semibold tracking-wide text-white">Inteligencia ULTREON</h1>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-[10px] uppercase font-mono tracking-widest text-slate-500">Executive Mode</span>
+          <span className="text-[10px] uppercase font-mono tracking-widest text-muted-foreground">Executive Mode</span>
           <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
         </div>
       </header>
@@ -154,7 +154,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
         
         {/* SECTION 1: EXECUTIVE SUMMARY */}
         <section>
-          <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-slate-500 mb-4">1. Resumen Ejecutivo</h2>
+          <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">1. Resumen Ejecutivo</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
             <MetricCard label="Casos Registrados" value={totalCases} />
             <MetricCard label="Casos Completos" value={completedCases} />
@@ -170,18 +170,18 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
           
           {/* SECTION 2: ADOPTION DASHBOARD */}
           <section className="lg:col-span-2">
-            <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-slate-500 mb-4">2. Adoption Dashboard</h2>
+            <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">2. Adoption Dashboard</h2>
             <div className="bg-[#111] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
                     <tr className="border-b border-white/5 bg-white/[0.02]">
-                      <th className="p-4 font-mono font-normal text-slate-400">Hospital</th>
-                      <th className="p-4 font-mono font-normal text-slate-400 text-right">Actuales</th>
-                      <th className="p-4 font-mono font-normal text-slate-400 text-right">Objetivo</th>
-                      <th className="p-4 font-mono font-normal text-slate-400 text-center">Cumplimiento</th>
-                      <th className="p-4 font-mono font-normal text-slate-400 text-right">Variación M/M</th>
-                      <th className="p-4 font-mono font-normal text-slate-400 text-center">Estado</th>
+                      <th className="p-4 font-mono font-normal text-muted-foreground">Hospital</th>
+                      <th className="p-4 font-mono font-normal text-muted-foreground text-right">Actuales</th>
+                      <th className="p-4 font-mono font-normal text-muted-foreground text-right">Objetivo</th>
+                      <th className="p-4 font-mono font-normal text-muted-foreground text-center">Cumplimiento</th>
+                      <th className="p-4 font-mono font-normal text-muted-foreground text-right">Variación M/M</th>
+                      <th className="p-4 font-mono font-normal text-muted-foreground text-center">Estado</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
@@ -193,9 +193,9 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
                         key={h.id} 
                         className="hover:bg-white/[0.02] transition-colors group"
                       >
-                        <td className="p-4 font-semibold text-slate-200">{h.name}</td>
+                        <td className="p-4 font-semibold text-foreground">{h.name}</td>
                         <td className="p-4 text-right font-mono">{h.current}</td>
-                        <td className="p-4 text-right font-mono text-slate-500">{h.goal}</td>
+                        <td className="p-4 text-right font-mono text-muted-foreground">{h.goal}</td>
                         <td className="p-4 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <div className="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
@@ -208,7 +208,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
                           </div>
                         </td>
                         <td className="p-4 text-right font-mono">
-                          <span className={h.variation > 0 ? 'text-emerald-400' : h.variation < 0 ? 'text-red-400' : 'text-slate-500'}>
+                          <span className={h.variation > 0 ? 'text-emerald-400' : h.variation < 0 ? 'text-red-400' : 'text-muted-foreground'}>
                             {h.variation > 0 ? '+' : ''}{h.variation}%
                           </span>
                         </td>
@@ -232,7 +232,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
           <div className="space-y-8">
             {/* SECTION 3: CLINICAL IMPACT */}
             <section>
-              <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-slate-500 mb-4">3. Impacto Clínico</h2>
+              <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">3. Impacto Clínico</h2>
               <div className="bg-[#111] border border-white/10 rounded-2xl p-5 space-y-4">
                 <ImpactRow label="% ULTREON modificó estrategia" value={`${pctStrategyChanges}%`} />
                 <ImpactRow label="% Cambios de diámetro" value="42%" />
@@ -247,13 +247,13 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
 
             {/* SECTION 4: SCIENTIFIC ACTIVITY */}
             <section>
-              <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-slate-500 mb-4">4. Actividad Científica</h2>
+              <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">4. Actividad Científica</h2>
               <div className="bg-[#111] border border-white/10 rounded-2xl p-5">
-                <h3 className="text-[10px] uppercase font-mono text-slate-500 mb-3">Top Operadores</h3>
+                <h3 className="text-[10px] uppercase font-mono text-muted-foreground mb-3">Top Operadores</h3>
                 <div className="space-y-3">
                   {topOperators.map((op, i) => (
                     <div key={i} className="flex justify-between items-center text-sm">
-                      <span className="text-slate-300 flex items-center gap-2">
+                      <span className="text-muted-foreground flex items-center gap-2">
                         <span className="text-slate-600 font-mono text-xs">{i+1}.</span>
                         {op.name}
                       </span>
@@ -262,7 +262,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
                   ))}
                 </div>
                 <div className="mt-5 pt-4 border-t border-white/10 flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Casos publicables</span>
+                  <span className="text-xs text-muted-foreground">Casos publicables</span>
                   <span className="font-mono text-emerald-400">{Math.round(totalCases * 0.4)}</span>
                 </div>
               </div>
@@ -275,7 +275,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
           
           {/* SECTION 5: AI PROJECTION */}
           <section>
-            <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-slate-500 mb-4 flex items-center gap-2">
+            <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
               5. Proyección IA
             </h2>
@@ -286,15 +286,15 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
               
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div>
-                  <div className="text-[10px] text-slate-500 font-mono uppercase mb-1">Obj. Anual</div>
+                  <div className="text-[10px] text-muted-foreground font-mono uppercase mb-1">Obj. Anual</div>
                   <div className="text-xl font-mono text-white">{globalAnnualGoal}</div>
                 </div>
                 <div>
-                  <div className="text-[10px] text-slate-500 font-mono uppercase mb-1">Consumo Previsto</div>
+                  <div className="text-[10px] text-muted-foreground font-mono uppercase mb-1">Consumo Previsto</div>
                   <div className="text-xl font-mono text-indigo-400">{predictedConsumption}</div>
                 </div>
                 <div>
-                  <div className="text-[10px] text-slate-500 font-mono uppercase mb-1">Déficit</div>
+                  <div className="text-[10px] text-muted-foreground font-mono uppercase mb-1">Déficit</div>
                   <div className="text-xl font-mono text-rose-400">{deficit}</div>
                 </div>
               </div>
@@ -308,7 +308,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
           {/* SECTION 6: ROI */}
           <section>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-slate-500">6. Análisis ROI (Privado)</h2>
+              <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">6. Análisis ROI (Privado)</h2>
               <button 
                 onClick={() => setRoiExpanded(!roiExpanded)}
                 className="text-[10px] uppercase font-bold text-cyan-500 hover:text-cyan-400 bg-cyan-500/10 px-2 py-1 rounded"
@@ -329,7 +329,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
                   >
                     <div className="bg-white/5 border border-white/10 rounded-xl p-4 grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[10px] text-slate-400 uppercase font-mono block mb-2">Precio Venta Unit. (€)</label>
+                        <label className="text-[10px] text-muted-foreground uppercase font-mono block mb-2">Precio Venta Unit. (€)</label>
                         <input 
                           type="number" 
                           value={unitPrice}
@@ -338,7 +338,7 @@ export default function ExecutiveDashboardClient({ cases, hospitals, investigato
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] text-slate-400 uppercase font-mono block mb-2">Coste Unit. (€)</label>
+                        <label className="text-[10px] text-muted-foreground uppercase font-mono block mb-2">Coste Unit. (€)</label>
                         <input 
                           type="number" 
                           value={unitCost}
@@ -390,12 +390,12 @@ function MetricCard({ label, value, suffix = '', highlight }: { label: string, v
       whileHover={{ y: -2, backgroundColor: 'rgba(255,255,255,0.03)' }}
       className="bg-[#111] border border-white/10 rounded-2xl p-4 flex flex-col justify-between min-h-[100px] transition-colors cursor-default relative overflow-hidden"
     >
-      <span className="text-[9px] uppercase font-mono tracking-widest text-slate-500 z-10 relative">{label}</span>
+      <span className="text-[9px] uppercase font-mono tracking-widest text-muted-foreground z-10 relative">{label}</span>
       <div className="mt-2 flex items-baseline z-10 relative">
         <span className={`text-2xl font-light tracking-tight ${colorClass}`}>
           {value}
         </span>
-        {suffix && <span className="ml-1 text-[10px] text-slate-500 font-mono">{suffix}</span>}
+        {suffix && <span className="ml-1 text-[10px] text-muted-foreground font-mono">{suffix}</span>}
       </div>
       {highlight && (
         <div className={`absolute -bottom-4 -right-4 w-16 h-16 rounded-full blur-2xl opacity-20 ${
@@ -411,7 +411,7 @@ function MetricCard({ label, value, suffix = '', highlight }: { label: string, v
 function ImpactRow({ label, value }: { label: string, value: string | number }) {
   return (
     <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2 last:border-0 last:pb-0">
-      <span className="text-slate-400">{label}</span>
+      <span className="text-muted-foreground">{label}</span>
       <span className="font-mono text-white">{value}</span>
     </div>
   );
@@ -428,7 +428,7 @@ function RoiMetric({ label, value, highlight }: { label: string, value: string, 
 
   return (
     <div>
-      <div className="text-[10px] uppercase font-mono tracking-wider text-slate-500 mb-1">{label}</div>
+      <div className="text-[10px] uppercase font-mono tracking-wider text-muted-foreground mb-1">{label}</div>
       <div className={`text-xl font-light tracking-wide ${colorClass}`}>{value}</div>
     </div>
   );

@@ -6,8 +6,8 @@ import { createClient as createServerClient } from '@/lib/supabase/server';
 import CaseFollowUpClient from './CaseFollowUpClient';
 
 export const metadata: Metadata = {
-  title: 'Seguimiento Clínico de Caso — OPSTAR-AI Levante Registry',
-  description: 'Seguimiento longitudinal y outcomes clínicos (MACE) de un caso clínico.',
+  title: 'Actividad del Caso — Registro Clínico ULTREON 3.0',
+  description: 'Auditoría y actividad de un caso clínico en el registro.',
 };
 
 interface PageProps {

@@ -149,11 +149,11 @@ export default function BusinessIntelligenceClient({
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
         <div>
-          <label className="text-xs font-bold text-slate-400 block mb-2 uppercase tracking-wider">Año</label>
+          <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase tracking-wider">Año</label>
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
           >
             {[currentYear, currentYear - 1, currentYear - 2].map(year => (
               <option key={year} value={year}>{year}</option>
@@ -162,11 +162,11 @@ export default function BusinessIntelligenceClient({
         </div>
 
         <div>
-          <label className="text-xs font-bold text-slate-400 block mb-2 uppercase tracking-wider">Mes</label>
+          <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase tracking-wider">Mes</label>
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
           >
             <option value="all">Todos</option>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(month => (
@@ -178,11 +178,11 @@ export default function BusinessIntelligenceClient({
         </div>
 
         <div>
-          <label className="text-xs font-bold text-slate-400 block mb-2 uppercase tracking-wider">Centro</label>
+          <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase tracking-wider">Centro</label>
           <select
             value={selectedHospital}
             onChange={(e) => setSelectedHospital(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
           >
             <option value="all">Todos los centros</option>
             {hospitals.map(h => (
@@ -198,7 +198,7 @@ export default function BusinessIntelligenceClient({
               setSelectedMonth('all');
               setSelectedHospital('all');
             }}
-            className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 rounded-xl px-3 py-2 text-sm font-medium transition-all"
+            className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 border border-border dark:border-slate-700 text-foreground rounded-xl px-3 py-2 text-sm font-medium transition-all"
           >
             Resetear filtros
           </button>
@@ -208,38 +208,38 @@ export default function BusinessIntelligenceClient({
       {/* KPI Cards Summary */}
       {hospitalKPIs.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-            <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">Ingresos Totales</span>
+          <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+            <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">Ingresos Totales</span>
             <span className="text-2xl font-bold text-cyan-400">
               €{hospitalKPIs.reduce((sum, h) => sum + h.totalRevenue, 0).toLocaleString('es-ES', { maximumFractionDigits: 0 })}
             </span>
-            <p className="text-xs text-slate-500">{hospitalKPIs.length} centros</p>
+            <p className="text-xs text-muted-foreground">{hospitalKPIs.length} centros</p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-            <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">Inversión Total</span>
+          <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+            <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">Inversión Total</span>
             <span className="text-2xl font-bold text-blue-400">
               €{hospitalKPIs.reduce((sum, h) => sum + h.totalInvestment, 0).toLocaleString('es-ES', { maximumFractionDigits: 0 })}
             </span>
-            <p className="text-xs text-slate-500">Operación del registro</p>
+            <p className="text-xs text-muted-foreground">Operación del registro</p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-            <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">Casos Registrados</span>
+          <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+            <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">Casos Registrados</span>
             <span className="text-2xl font-bold text-emerald-400">
               {hospitalKPIs.reduce((sum, h) => sum + h.caseCount, 0)}
             </span>
-            <p className="text-xs text-slate-500">Total de fichas clínicas</p>
+            <p className="text-xs text-muted-foreground">Total de fichas clínicas</p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
-            <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">ROI Promedio</span>
+          <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+            <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">ROI Promedio</span>
             <span className={`text-2xl font-bold ${
               hospitalKPIs.some(h => h.roiEstimated >= 0) ? 'text-emerald-400' : 'text-red-400'
             }`}>
               {(hospitalKPIs.reduce((sum, h) => sum + h.roiEstimated, 0) / hospitalKPIs.length).toFixed(1)}%
             </span>
-            <p className="text-xs text-slate-500">Retorno de inversión</p>
+            <p className="text-xs text-muted-foreground">Retorno de inversión</p>
           </div>
         </div>
       )}
@@ -248,94 +248,94 @@ export default function BusinessIntelligenceClient({
       {hospitalKPIs.length > 0 ? (
         <div className="space-y-4">
           {hospitalKPIs.map(kpi => (
-            <div key={kpi.hospitalId} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+            <div key={kpi.hospitalId} className="bg-card border border-border rounded-2xl p-6 space-y-6">
 
               {/* Hospital Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-4 border-b border-border">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-50">{kpi.hospitalName}</h3>
-                  <p className="text-xs text-slate-500 mt-1">{selectedYear}</p>
+                  <h3 className="text-lg font-bold text-foreground">{kpi.hospitalName}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{selectedYear}</p>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-cyan-400">€{kpi.totalRevenue.toLocaleString('es-ES', { maximumFractionDigits: 0 })}</div>
-                  <p className="text-[10px] text-slate-500 mt-1">Facturación acumulada</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Facturación acumulada</p>
                 </div>
               </div>
 
               {/* KPI Grid for this hospital */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">Casos Registrados</span>
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">Casos Registrados</span>
                   <span className="text-xl font-bold text-emerald-400">{kpi.caseCount}</span>
                   {kpi.objective?.target_cases && (
-                    <p className="text-[10px] text-slate-500 mt-1">{Math.round(kpi.caseCompletion)}% de {kpi.objective.target_cases}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">{Math.round(kpi.caseCompletion)}% de {kpi.objective.target_cases}</p>
                   )}
                 </div>
 
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">Coste/Caso</span>
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">Coste/Caso</span>
                   <span className="text-xl font-bold text-blue-400">€{kpi.costPerCase.toLocaleString('es-ES', { maximumFractionDigits: 0 })}</span>
-                  <p className="text-[10px] text-slate-500 mt-1">Inversión unitaria</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Inversión unitaria</p>
                 </div>
 
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">ROI</span>
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">ROI</span>
                   <span className={`text-xl font-bold ${kpi.roiEstimated >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     {kpi.roiEstimated.toFixed(1)}%
                   </span>
-                  <p className="text-[10px] text-slate-500 mt-1">Retorno estimado</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Retorno estimado</p>
                 </div>
 
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">Compras</span>
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">Compras</span>
                   <span className="text-xl font-bold text-cyan-400">{kpi.totalPurchaseUnits}</span>
                   {kpi.objective?.target_purchase_units && (
-                    <p className="text-[10px] text-slate-500 mt-1">{Math.round(kpi.purchaseCompletion)}% de {kpi.objective.target_purchase_units}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">{Math.round(kpi.purchaseCompletion)}% de {kpi.objective.target_purchase_units}</p>
                   )}
                 </div>
 
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">Inversión</span>
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">Inversión</span>
                   <span className="text-xl font-bold text-purple-400">€{(kpi.totalInvestment / 1000).toFixed(1)}k</span>
-                  <p className="text-[10px] text-slate-500 mt-1">Capital invertido</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Capital invertido</p>
                 </div>
 
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-mono text-slate-400 block mb-2 uppercase">Status Ingresos</span>
+                <div className="bg-background/50 border border-border rounded-xl p-4 text-center">
+                  <span className="text-[10px] font-mono text-muted-foreground block mb-2 uppercase">Status Ingresos</span>
                   <span className={`text-[10px] font-bold inline-block px-2 py-1 rounded border ${getCompletionColor(kpi.revenueCompletion)}`}>
                     {getCompletionLabel(kpi.revenueCompletion)}
                   </span>
-                  <p className="text-[10px] text-slate-500 mt-2">{Math.round(kpi.revenueCompletion)}%</p>
+                  <p className="text-[10px] text-muted-foreground mt-2">{Math.round(kpi.revenueCompletion)}%</p>
                 </div>
               </div>
 
               {/* Objectives Section */}
               {kpi.objective && (
-                <div className="bg-slate-950/40 border border-slate-800/50 rounded-xl p-4">
-                  <h4 className="text-sm font-bold text-slate-100 mb-3">Objetivos de Año</h4>
+                <div className="bg-background/40 border border-border/50 rounded-xl p-4">
+                  <h4 className="text-sm font-bold text-foreground mb-3">Objetivos de Año</h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 text-sm">
                     {kpi.objective.target_cases && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Casos objetivo:</span>
-                        <span className="font-mono text-slate-100">{kpi.objective.target_cases}</span>
+                        <span className="text-muted-foreground">Casos objetivo:</span>
+                        <span className="font-mono text-foreground">{kpi.objective.target_cases}</span>
                       </div>
                     )}
                     {kpi.objective.target_purchase_units && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Compras objetivo:</span>
-                        <span className="font-mono text-slate-100">{kpi.objective.target_purchase_units}</span>
+                        <span className="text-muted-foreground">Compras objetivo:</span>
+                        <span className="font-mono text-foreground">{kpi.objective.target_purchase_units}</span>
                       </div>
                     )}
                     {kpi.objective.target_revenue_eur && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Ingresos objetivo:</span>
-                        <span className="font-mono text-slate-100">€{kpi.objective.target_revenue_eur.toLocaleString('es-ES', { maximumFractionDigits: 0 })}</span>
+                        <span className="text-muted-foreground">Ingresos objetivo:</span>
+                        <span className="font-mono text-foreground">€{kpi.objective.target_revenue_eur.toLocaleString('es-ES', { maximumFractionDigits: 0 })}</span>
                       </div>
                     )}
                     {kpi.objective.target_zero_contrast_rate && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">% Zero-Contrast:</span>
-                        <span className="font-mono text-slate-100">{(kpi.objective.target_zero_contrast_rate * 100).toFixed(0)}%</span>
+                        <span className="text-muted-foreground">% Zero-Contrast:</span>
+                        <span className="font-mono text-foreground">{(kpi.objective.target_zero_contrast_rate * 100).toFixed(0)}%</span>
                       </div>
                     )}
                   </div>
@@ -345,20 +345,20 @@ export default function BusinessIntelligenceClient({
           ))}
         </div>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+        <div className="bg-card border border-border rounded-2xl p-12 text-center">
           <svg className="w-12 h-12 mx-auto text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 12a3 3 0 100-6 3 3 0 000 6zM7 6h.01M17 12a3 3 0 100-6 3 3 0 000 6zM17 6h.01M7 18a3 3 0 100-6 3 3 0 000 6zM7 12h.01M17 18a3 3 0 100-6 3 3 0 000 6zM17 12h.01" />
           </svg>
-          <p className="text-slate-400 text-sm">No hay datos disponibles para los filtros seleccionados.</p>
+          <p className="text-muted-foreground text-sm">No hay datos disponibles para los filtros seleccionados.</p>
         </div>
       )}
 
       {/* Data Import Placeholder */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+      <div className="bg-card border border-border rounded-2xl p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-100">Importar Métricas</h3>
-            <p className="text-xs text-slate-500 mt-1">Carga datos financieros desde CSV o entrada manual</p>
+            <h3 className="text-sm font-bold text-foreground">Importar Métricas</h3>
+            <p className="text-xs text-muted-foreground mt-1">Carga datos financieros desde CSV o entrada manual</p>
           </div>
           <button
             className="bg-cyan-950 hover:bg-cyan-900 border border-cyan-800 text-cyan-400 px-4 py-2 rounded-xl text-sm font-bold transition-all"

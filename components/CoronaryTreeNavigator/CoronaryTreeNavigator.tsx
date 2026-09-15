@@ -29,7 +29,7 @@ export function CoronaryTreeNavigator({
   const activeSegment = hoveredSegment ? CORONARY_SEGMENTS.find(s => s.id === hoveredSegment) : selectedSegment;
 
   return (
-    <div className={`flex w-full h-full rounded-3xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl relative ${className}`}>
+    <div className={`flex w-full h-full rounded-3xl overflow-hidden border border-border bg-background shadow-2xl relative ${className}`}>
       
       {/* Background decorations */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(34,211,238,0.03)_0%,rgba(15,23,42,1)_70%)] pointer-events-none" />
@@ -41,13 +41,13 @@ export function CoronaryTreeNavigator({
         {/* Floating status / active segment label at the top */}
         <div className="absolute top-6 left-6 flex items-center gap-2 z-10 pointer-events-none">
           {activeSegment ? (
-            <div className="animate-fade-in flex items-center gap-2 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-cyan-500/30">
+            <div className="animate-fade-in flex items-center gap-2 bg-card/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-cyan-500/30">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
               <span className="text-xs font-mono font-bold text-cyan-400">{activeSegment.label}</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 bg-slate-900/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-800">
-              <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+            <div className="flex items-center gap-2 bg-card/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-border">
+              <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
                 Interacciona con el modelo para seleccionar
               </span>
             </div>

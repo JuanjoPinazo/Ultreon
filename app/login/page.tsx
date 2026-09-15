@@ -4,6 +4,7 @@
 import React, { useActionState, useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
 import { loginAction } from '@/lib/supabase/actions';
 
 function LoginForm() {
@@ -11,6 +12,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const [state, formAction, isPending] = useActionState(loginAction, null);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const errorParam = searchParams.get('error');
@@ -33,7 +35,7 @@ function LoginForm() {
   const displayedError = state?.error || localError;
 
   return (
-    <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden relative">
+    <div className="w-full max-w-md bg-card border border-border rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden relative">
       {/* Subtle cyan glow top border */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
@@ -49,16 +51,16 @@ function LoginForm() {
           <span className="text-[9px] font-mono font-bold tracking-widest text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/40">
             ULTREON™ 3.0
           </span>
-          <span className="text-[9px] font-mono font-bold tracking-widest text-slate-500 uppercase">
+          <span className="text-[9px] font-mono font-bold tracking-widest text-muted-foreground uppercase">
             SECURE ACCESS
           </span>
         </div>
 
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-50 mt-2">
-          OPSTAR-AI <span className="font-light text-slate-400">Registry</span>
+        <h1 className="text-2xl font-extrabold tracking-tight text-foreground mt-2">
+          ULTREON™ 3.0 <span className="font-light text-muted-foreground">Registro Clínico</span>
         </h1>
-        <p className="text-xs text-slate-500 mt-1 font-mono">
-          Acceso seguro para el Registro de Hemodinámica de Levante
+        <p className="text-xs text-muted-foreground mt-1 font-mono">
+          Post-Market Evaluation & Clinical Utility Registry
         </p>
       </div>
 
@@ -67,7 +69,7 @@ function LoginForm() {
         
         {/* Email Input */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-bold text-slate-400 tracking-wider uppercase font-mono" htmlFor="email">
+          <label className="text-xs font-bold text-muted-foreground tracking-wider uppercase font-mono" htmlFor="email">
             Correo Electrónico
           </label>
           <input
@@ -77,24 +79,34 @@ function LoginForm() {
             required
             placeholder="ejemplo@hospital.com"
             disabled={isPending}
-            className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 transition-all text-sm outline-none text-slate-200 placeholder-slate-650"
+            className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-cyan-500/50 transition-all text-sm outline-none text-foreground placeholder-slate-650"
           />
         </div>
 
         {/* Password Input */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-bold text-slate-400 tracking-wider uppercase font-mono" htmlFor="password">
+          <label className="text-xs font-bold text-muted-foreground tracking-wider uppercase font-mono" htmlFor="password">
             Contraseña
           </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            required
-            placeholder="••••••••"
-            disabled={isPending}
-            className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500/50 transition-all text-sm outline-none text-slate-200 placeholder-slate-650"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              id="password"
+              required
+              placeholder="••••••••"
+              disabled={isPending}
+              className="w-full px-4 py-3 pr-10 rounded-xl bg-background border border-border focus:border-cyan-500/50 transition-all text-sm outline-none text-foreground placeholder-slate-650"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+              aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         </div>
 
         {/* Error Message */}
@@ -131,7 +143,7 @@ function LoginForm() {
       </form>
 
       {/* Card Footer */}
-      <div className="p-6 bg-slate-950 border-t border-slate-850/50 flex flex-col items-center justify-center gap-4">
+      <div className="p-6 bg-background border-t border-border/50 flex flex-col items-center justify-center gap-4">
         <div className="text-center text-[10px] text-slate-600 font-mono">
           🔒 Conexión segura SSL/TLS · Cumple RGPD de datos médicos
         </div>
@@ -142,14 +154,14 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 md:p-8 antialiased font-sans">
+    <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 md:p-8 antialiased font-sans">
       {/* Cyan glow background orb */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
       
       <Suspense fallback={
-        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center flex flex-col items-center gap-4">
+        <div className="w-full max-w-md bg-card border border-border rounded-3xl p-12 text-center flex flex-col items-center gap-4">
           <div className="animate-spin h-6 w-6 border-t-2 border-cyan-400 rounded-full" />
-          <span className="text-xs text-slate-500 font-mono">Cargando consola de seguridad...</span>
+          <span className="text-xs text-muted-foreground font-mono">Cargando consola de seguridad...</span>
         </div>
       }>
         <LoginForm />

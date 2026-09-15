@@ -6,8 +6,8 @@ import { createClient as createServerClient } from '@/lib/supabase/server';
 import FollowUpDashboard from './FollowUpDashboard';
 
 export const metadata: Metadata = {
-  title: 'Seguimiento Clínico y Outcomes — OPSTAR-AI Levante Registry',
-  description: 'Seguimiento longitudinal y outcomes clínicos (MACE) del registro clínico multicéntrico OPSTAR-AI.',
+  title: 'Actividad del Registro — Registro Clínico ULTREON 3.0',
+  description: 'Métricas de actividad, adopción y auditoría del registro clínico multicéntrico.',
 };
 
 export default async function FollowUpPage() {

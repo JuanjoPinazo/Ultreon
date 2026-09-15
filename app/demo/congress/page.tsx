@@ -31,7 +31,7 @@ export default function CongressDemoPage() {
 
       {/* Hidden nav area to exit the fullscreen presentation (top left corner) */}
       <div className="absolute top-4 left-4 z-50 opacity-0 hover:opacity-100 transition-opacity">
-        <Link href="/admin/demo-center" className="bg-slate-900/80 border border-slate-700 text-slate-300 px-4 py-2 rounded-full text-xs font-mono">
+        <Link href="/admin/demo-center" className="bg-card/80 border border-border dark:border-slate-700 text-muted-foreground px-4 py-2 rounded-full text-xs font-mono">
           ← Salir de Congreso (Admin)
         </Link>
       </div>
@@ -80,17 +80,17 @@ export default function CongressDemoPage() {
                 {/* Dynamically render content based on slide type */}
                 {slides[currentSlide].content_type === 'intro' && (
                   <div className="text-center space-y-6">
-                    <p className="text-xl text-slate-300 max-w-3xl mx-auto font-light leading-relaxed">
+                    <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
                       {slides[currentSlide].data.description}
                     </p>
                     <div className="flex justify-center gap-8 mt-12">
                       <div className="text-center">
                         <div className="text-5xl font-light text-cyan-400 mb-2">{slides[currentSlide].data.hospitals}</div>
-                        <div className="text-xs uppercase tracking-widest text-slate-500 font-mono">Hospitales</div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Hospitales</div>
                       </div>
                       <div className="text-center">
                         <div className="text-5xl font-light text-emerald-400 mb-2">{new Intl.NumberFormat('es-ES').format(slides[currentSlide].data.target_cases || 0)}</div>
-                        <div className="text-xs uppercase tracking-widest text-slate-500 font-mono">Objetivo Casos</div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground font-mono">Objetivo Casos</div>
                       </div>
                     </div>
                   </div>
@@ -101,12 +101,12 @@ export default function CongressDemoPage() {
                     <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-sm">
                       <div className="text-6xl font-light text-emerald-400 mb-4">{slides[currentSlide].data.zero_contrast}%</div>
                       <h3 className="text-lg text-white mb-2">Adopción Zero-Contrast</h3>
-                      <p className="text-sm text-slate-400">Pacientes intervenidos con cero mililitros de contraste, protegiendo su función renal.</p>
+                      <p className="text-sm text-muted-foreground">Pacientes intervenidos con cero mililitros de contraste, protegiendo su función renal.</p>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-sm">
                       <div className="text-6xl font-light text-violet-400 mb-4">{slides[currentSlide].data.strategy_change}%</div>
                       <h3 className="text-lg text-white mb-2">Cambios de Estrategia</h3>
-                      <p className="text-sm text-slate-400">Intervenciones donde ULTREON™ detectó hallazgos que modificaron el plan inicial.</p>
+                      <p className="text-sm text-muted-foreground">Intervenciones donde ULTREON™ detectó hallazgos que modificaron el plan inicial.</p>
                     </div>
                   </div>
                 )}
@@ -117,7 +117,7 @@ export default function CongressDemoPage() {
                       <span className="text-4xl text-white font-black">A</span>
                     </div>
                     <h3 className="text-3xl font-light text-white">OPSTAR Intelligence</h3>
-                    <p className="text-slate-400">{slides[currentSlide].data.message}</p>
+                    <p className="text-muted-foreground">{slides[currentSlide].data.message}</p>
                     <div className="mt-8">
                       <Link href="/admin/demo-center" className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-slate-200 transition-colors">
                         Finalizar Presentación

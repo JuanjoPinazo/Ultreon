@@ -3,13 +3,13 @@ export interface ZeroContrastRecord {
   hospital_id: string;
   operator_id: string;
   procedure_date: string;
-  patient_code: string;
+  patient_code?: string | null;
   local_nhc?: string | null;
   local_sip?: string | null;
   anonymous_code?: string | null;
   
   // Anatomy
-  coronary_segment: string;
+  coronary_segment?: string | null;
   coronary_vessel?: string | null;
   coronary_group?: string | null;
   
@@ -22,9 +22,9 @@ export interface ZeroContrastRecord {
   saline_protocol_used?: boolean;
   syringe_size_ml?: number | null;
   fast_pullback_seconds?: number | null;
-  contrast_during_oct_ml: number;
+  contrast_during_oct_ml?: number | null;
   total_contrast_ml?: number | null;
-  wash_quality: string;
+  wash_quality?: string | null;
   
   // Contrast conversion
   contrast_conversion_needed?: boolean;
@@ -50,6 +50,7 @@ export interface ZeroContrastRecord {
   
   // Management
   case_status?: string | null;
+  is_demo?: boolean;
   created_by: string;
   created_at: string;
   updated_at: string;

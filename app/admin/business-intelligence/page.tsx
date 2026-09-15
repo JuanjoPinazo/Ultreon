@@ -14,11 +14,11 @@ export default async function BusinessIntelligencePage() {
     return (
       <div className="space-y-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold text-slate-50">Inteligencia de Negocios</h1>
-          <p className="text-sm text-slate-400">Métricas financieras y operacionales por centro</p>
+          <h1 className="text-2xl font-bold text-foreground">Inteligencia de Negocios</h1>
+          <p className="text-sm text-muted-foreground">Métricas financieras y operacionales por centro</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
-          <p className="text-slate-400">Error al cargar los datos. Intenta nuevamente.</p>
+        <div className="bg-card border border-border rounded-2xl p-8 text-center">
+          <p className="text-muted-foreground">Error al cargar los datos. Intenta nuevamente.</p>
         </div>
       </div>
     );
@@ -27,8 +27,8 @@ export default async function BusinessIntelligencePage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-slate-50">Inteligencia de Negocios</h1>
-        <p className="text-sm text-slate-400">Métricas financieras y operacionales por centro</p>
+        <h1 className="text-2xl font-bold text-foreground">Inteligencia de Negocios</h1>
+        <p className="text-sm text-muted-foreground">Métricas financieras y operacionales por centro</p>
       </div>
 
       <BusinessIntelligenceClient

@@ -45,10 +45,10 @@ export default function Alert({
         <span className="text-[8px] font-black font-mono tracking-wider block">
           {sel.badge}
         </span>
-        <h4 className="text-xs font-bold text-slate-100 mt-1">
+        <h4 className="text-xs font-bold text-foreground mt-1">
           {title}
         </h4>
-        <p className="text-[10px] text-slate-400 leading-relaxed font-mono mt-0.5">
+        <p className="text-[10px] text-muted-foreground leading-relaxed font-mono mt-0.5">
           {description}
         </p>
       </div>

@@ -35,12 +35,12 @@ export default function SimulatorPage() {
   const formatNumber = (val: number) => new Intl.NumberFormat('es-ES').format(val);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-slate-200 p-6 md:p-12 font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#0a0a0a] text-foreground p-6 md:p-12 font-sans selection:bg-emerald-500/30">
       
       <header className="mb-10 flex justify-between items-center">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Link href="/admin/demo-center" className="text-slate-500 hover:text-white transition-colors border border-slate-800 px-3 py-1 rounded flex items-center gap-2">
+            <Link href="/admin/demo-center" className="text-muted-foreground hover:text-white transition-colors border border-border px-3 py-1 rounded flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
@@ -58,7 +58,7 @@ export default function SimulatorPage() {
         <div className="lg:col-span-4 bg-[#111] border border-white/10 rounded-3xl p-8 space-y-8">
           
           <div className="space-y-6">
-            <h3 className="text-xs font-mono uppercase text-slate-500 border-b border-white/10 pb-2">Variables de Red</h3>
+            <h3 className="text-xs font-mono uppercase text-muted-foreground border-b border-white/10 pb-2">Variables de Red</h3>
             
             <SliderControl label="Hospitales Participantes" min={1} max={50} value={hospitals} setValue={setHospitals} />
             <SliderControl label="Operadores Activos" min={1} max={150} value={operators} setValue={setOperators} />
@@ -66,12 +66,12 @@ export default function SimulatorPage() {
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-xs font-mono uppercase text-slate-500 border-b border-white/10 pb-2">Variables Clínicas</h3>
+            <h3 className="text-xs font-mono uppercase text-muted-foreground border-b border-white/10 pb-2">Variables Clínicas</h3>
             <SliderControl label="% Protocolo Zero-Contrast" min={0} max={100} value={zeroContrast} setValue={setZeroContrast} unit="%" />
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-xs font-mono uppercase text-slate-500 border-b border-white/10 pb-2">Económicas</h3>
+            <h3 className="text-xs font-mono uppercase text-muted-foreground border-b border-white/10 pb-2">Económicas</h3>
             <SliderControl label="Precio de Venta (€)" min={500} max={3000} step={50} value={price} setValue={setPrice} />
             <SliderControl label="Coste Unitario (€)" min={200} max={2000} step={50} value={cost} setValue={setCost} />
           </div>
@@ -116,7 +116,7 @@ export default function SimulatorPage() {
             <div className="relative z-10">
               <div className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 mb-2">Impacto Clínico Proyectado</div>
               <h3 className="text-2xl font-light text-white mb-2">Ahorro de {formatNumber(savedContrastMl)} ml de contraste</h3>
-              <p className="text-sm text-slate-400">Protección renal masiva en pacientes vulnerables bajo el protocolo Zero-Contrast ({zeroContrast}% de adopción).</p>
+              <p className="text-sm text-muted-foreground">Protección renal masiva en pacientes vulnerables bajo el protocolo Zero-Contrast ({zeroContrast}% de adopción).</p>
             </div>
             <div className="hidden md:flex relative z-10 w-24 h-24 bg-emerald-950 rounded-full items-center justify-center border border-emerald-800 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
               <span className="text-3xl">🛡️</span>
@@ -135,7 +135,7 @@ function SliderControl({ label, min, max, step = 1, value, setValue, unit = '' }
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <label className="text-xs text-slate-400">{label}</label>
+        <label className="text-xs text-muted-foreground">{label}</label>
         <span className="font-mono text-white text-sm">{value}{unit}</span>
       </div>
       <input 
@@ -164,9 +164,9 @@ function ResultCard({ title, value, subtitle, icon, glow }: any) {
         }`} />
       )}
       <div className="text-3xl mb-4">{icon}</div>
-      <div className="text-[10px] uppercase font-mono tracking-widest text-slate-500 mb-1 z-10">{title}</div>
+      <div className="text-[10px] uppercase font-mono tracking-widest text-muted-foreground mb-1 z-10">{title}</div>
       <div className="text-4xl font-light text-white tracking-tight mb-2 z-10">{value}</div>
-      <div className="text-xs text-slate-400 font-mono z-10">{subtitle}</div>
+      <div className="text-xs text-muted-foreground font-mono z-10">{subtitle}</div>
     </motion.div>
   );
 }

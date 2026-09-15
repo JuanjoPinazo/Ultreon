@@ -82,8 +82,8 @@ export default function AIAnalysisPanel(props: AIAnalysisPanelProps) {
 
   if (cards.length === 0) {
     return (
-      <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8">
-        <p className="text-sm text-slate-400">Sin hallazgos de análisis IA registrados</p>
+      <div className="bg-card border border-border rounded-3xl p-6 md:p-8">
+        <p className="text-sm text-muted-foreground">Sin hallazgos de análisis IA registrados</p>
       </div>
     );
   }
@@ -91,20 +91,20 @@ export default function AIAnalysisPanel(props: AIAnalysisPanelProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-base font-bold text-slate-50 mb-1">Análisis IA Pre-PCI</h2>
-        <p className="text-xs text-slate-400">Hallazgos de análisis inteligente ULTREON™</p>
+        <h2 className="text-base font-bold text-foreground mb-1">Análisis IA Pre-PCI</h2>
+        <p className="text-xs text-muted-foreground">Hallazgos de análisis inteligente ULTREON™</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card, idx) => (
           <div
             key={idx}
-            className="bg-slate-900 border border-slate-850 rounded-2xl p-4 hover:border-slate-750 transition-all"
+            className="bg-card border border-border rounded-2xl p-4 hover:border-slate-750 transition-all"
           >
             {/* Icon + Title */}
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">{card.icon}</span>
-              <h3 className="text-xs font-bold text-slate-200 flex-1">{card.title}</h3>
+              <h3 className="text-xs font-bold text-foreground flex-1">{card.title}</h3>
             </div>
 
             {/* Metrics */}
@@ -112,7 +112,7 @@ export default function AIAnalysisPanel(props: AIAnalysisPanelProps) {
               <div className="space-y-2 mb-3 text-[10px]">
                 {card.metrics.map((m, mIdx) => (
                   <div key={mIdx} className="flex justify-between items-center">
-                    <span className="text-slate-500 font-mono">{m.label}</span>
+                    <span className="text-muted-foreground font-mono">{m.label}</span>
                     <span className="font-bold text-cyan-400">{m.value}</span>
                   </div>
                 ))}

@@ -248,12 +248,12 @@ export default function OctEvidenceClient({
               className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all ${
                 isDragging
                   ? 'border-cyan-400 bg-cyan-950/20'
-                  : 'border-slate-700 bg-slate-900/40'
+                  : 'border-border dark:border-slate-700 bg-card/40'
               }`}
             >
               <div className="flex flex-col items-center gap-4">
                 <svg
-                  className="w-12 h-12 text-slate-500"
+                  className="w-12 h-12 text-muted-foreground"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -266,11 +266,11 @@ export default function OctEvidenceClient({
                   />
                 </svg>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-100">Subir OCT Evidence</h3>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <h3 className="text-sm font-bold text-foreground">Subir OCT Evidence</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
                     Arrastra archivos aquí o haz clic para seleccionar
                   </p>
-                  <p className="text-[10px] text-slate-500 mt-2">
+                  <p className="text-[10px] text-muted-foreground mt-2">
                     JPG, PNG, WebP o PDF (máx 25 MB)
                   </p>
                 </div>
@@ -297,12 +297,12 @@ export default function OctEvidenceClient({
 
           {/* Upload Form */}
           {showUploadForm && selectedFile && (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                <h3 className="text-lg font-bold text-slate-50">Metadata & Upload</h3>
+            <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-border">
+                <h3 className="text-lg font-bold text-foreground">Metadata & Upload</h3>
                 <button
                   onClick={() => resetForm()}
-                  className="text-slate-400 hover:text-slate-200 text-lg"
+                  className="text-muted-foreground hover:text-foreground text-lg"
                 >
                   ✕
                 </button>
@@ -311,9 +311,9 @@ export default function OctEvidenceClient({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Preview */}
                 <div className="space-y-3">
-                  <span className="text-xs font-bold text-slate-400 uppercase">Preview</span>
+                  <span className="text-xs font-bold text-muted-foreground uppercase">Preview</span>
                   {preview ? (
-                    <div className="relative w-full aspect-square bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
+                    <div className="relative w-full aspect-square bg-background border border-border rounded-xl overflow-hidden">
                       <Image
                         src={preview}
                         alt="Preview"
@@ -322,18 +322,18 @@ export default function OctEvidenceClient({
                       />
                     </div>
                   ) : (
-                    <div className="w-full aspect-square bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center">
-                      <p className="text-sm text-slate-500">PDF - No preview</p>
+                    <div className="w-full aspect-square bg-background border border-border rounded-xl flex items-center justify-center">
+                      <p className="text-sm text-muted-foreground">PDF - No preview</p>
                     </div>
                   )}
-                  <p className="text-xs text-slate-500">{selectedFile.name}</p>
+                  <p className="text-xs text-muted-foreground">{selectedFile.name}</p>
                 </div>
 
                 {/* Form */}
                 <div className="space-y-4">
                   {/* Phase */}
                   <div>
-                    <label className="text-xs font-bold text-slate-400 block mb-2 uppercase">
+                    <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase">
                       Fase *
                     </label>
                     <select
@@ -341,7 +341,7 @@ export default function OctEvidenceClient({
                       onChange={(e) =>
                         setFormData({ ...formData, phase: e.target.value as any })
                       }
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
                     >
                       {PHASE_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -353,7 +353,7 @@ export default function OctEvidenceClient({
 
                   {/* Evidence Type */}
                   <div>
-                    <label className="text-xs font-bold text-slate-400 block mb-2 uppercase">
+                    <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase">
                       Tipo de Evidencia *
                     </label>
                     <select
@@ -361,7 +361,7 @@ export default function OctEvidenceClient({
                       onChange={(e) =>
                         setFormData({ ...formData, evidenceType: e.target.value as any })
                       }
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
                     >
                       {EVIDENCE_TYPE_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -373,7 +373,7 @@ export default function OctEvidenceClient({
 
                   {/* Linked Variable */}
                   <div>
-                    <label className="text-xs font-bold text-slate-400 block mb-2 uppercase">
+                    <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase">
                       Variable Clínica Enlazada
                     </label>
                     <select
@@ -381,7 +381,7 @@ export default function OctEvidenceClient({
                       onChange={(e) =>
                         setFormData({ ...formData, linkedVariable: e.target.value })
                       }
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
                     >
                       <option value="">Seleccionar...</option>
                       {LINKED_VARIABLE_OPTIONS.map((opt) => (
@@ -394,7 +394,7 @@ export default function OctEvidenceClient({
 
                   {/* Title */}
                   <div>
-                    <label className="text-xs font-bold text-slate-400 block mb-2 uppercase">
+                    <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase">
                       Título
                     </label>
                     <input
@@ -404,7 +404,7 @@ export default function OctEvidenceClient({
                         setFormData({ ...formData, title: e.target.value })
                       }
                       placeholder="Ej: OCT Pull-back pre-stent"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-slate-600 focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
@@ -420,24 +420,24 @@ export default function OctEvidenceClient({
                           isKeyEvidence: e.target.checked,
                         })
                       }
-                      className="w-4 h-4 rounded border-slate-600 bg-slate-950"
+                      className="w-4 h-4 rounded border-slate-600 bg-background"
                     />
                     <label
                       htmlFor="keyEvidence"
-                      className="text-sm text-slate-300 cursor-pointer"
+                      className="text-sm text-muted-foreground cursor-pointer"
                     >
                       Marcar como Key Evidence
                     </label>
                   </div>
 
                   {/* Anonymization Confirmation */}
-                  <div className="pt-4 border-t border-slate-800">
+                  <div className="pt-4 border-t border-border">
                     <label className="flex items-start gap-3 cursor-pointer p-3 bg-red-950/20 border border-red-800/40 rounded-lg">
                       <input
                         type="checkbox"
                         checked={isAnonymized}
                         onChange={(e) => setIsAnonymized(e.target.checked)}
-                        className="mt-1 w-4 h-4 rounded border-red-600 bg-slate-950"
+                        className="mt-1 w-4 h-4 rounded border-red-600 bg-background"
                       />
                       <span className="text-xs text-red-300">
                         ⚠ Confirmo que esta imagen no contiene datos personales del
@@ -464,13 +464,13 @@ export default function OctEvidenceClient({
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
-          <label className="text-xs font-bold text-slate-400 block mb-2 uppercase">
+          <label className="text-xs font-bold text-muted-foreground block mb-2 uppercase">
             Fase
           </label>
           <select
             value={filterPhase}
             onChange={(e) => setFilterPhase(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
           >
             <option value="all">Todas</option>
             {PHASE_OPTIONS.map((opt) => (
@@ -482,12 +482,12 @@ export default function OctEvidenceClient({
         </div>
 
         <div className="flex items-end gap-2">
-          <label className="flex items-center gap-2 text-sm text-slate-300">
+          <label className="flex items-center gap-2 text-sm text-muted-foreground">
             <input
               type="checkbox"
               checked={filterKeyOnly}
               onChange={(e) => setFilterKeyOnly(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-600 bg-slate-900"
+              className="w-4 h-4 rounded border-slate-600 bg-card"
             />
             Solo Key Evidence
           </label>
@@ -499,7 +499,7 @@ export default function OctEvidenceClient({
               setFilterPhase('all');
               setFilterKeyOnly(false);
             }}
-            className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 rounded-xl px-3 py-2 text-sm font-medium transition-all"
+            className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 border border-border dark:border-slate-700 text-foreground rounded-xl px-3 py-2 text-sm font-medium transition-all"
           >
             Resetear
           </button>
@@ -510,10 +510,10 @@ export default function OctEvidenceClient({
       {filteredEvidence.length > 0 ? (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-100">
+            <h3 className="text-sm font-bold text-foreground">
               {filteredEvidence.length} evidencia{filteredEvidence.length !== 1 ? 's' : ''}
             </h3>
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-muted-foreground">
               {evidence.filter((e) => !e.corelab_quality).length} pendiente core lab
             </span>
           </div>
@@ -526,11 +526,11 @@ export default function OctEvidenceClient({
                   setSelectedEvidence(item);
                   setShowDetailModal(true);
                 }}
-                className="bg-slate-900 border border-slate-800 hover:border-cyan-700 rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:shadow-cyan-500/10"
+                className="bg-card border border-border hover:border-cyan-700 rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:shadow-cyan-500/10"
               >
-                <div className="aspect-square bg-slate-950 relative overflow-hidden group">
+                <div className="aspect-square bg-background relative overflow-hidden group">
                   {item.file_name.endsWith('.pdf') ? (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400">
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                       <svg
                         className="w-12 h-12"
                         fill="none"
@@ -547,7 +547,7 @@ export default function OctEvidenceClient({
                     </div>
                   ) : (
                     <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900">
-                      <span className="absolute inset-0 flex items-center justify-center text-slate-500 text-sm">
+                      <span className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
                         Image
                       </span>
                     </div>
@@ -563,10 +563,10 @@ export default function OctEvidenceClient({
                 <div className="p-4 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h4 className="text-sm font-bold text-slate-100 line-clamp-1">
+                      <h4 className="text-sm font-bold text-foreground line-clamp-1">
                         {item.title || item.evidence_type}
                       </h4>
-                      <p className="text-[10px] text-slate-500 mt-0.5">
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
                         {PHASE_OPTIONS.find((p) => p.value === item.evidence_phase)?.label}
                       </p>
                     </div>
@@ -598,7 +598,7 @@ export default function OctEvidenceClient({
           </div>
         </div>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+        <div className="bg-card border border-border rounded-2xl p-12 text-center">
           <svg
             className="w-12 h-12 mx-auto text-slate-600 mb-4"
             fill="none"
@@ -612,21 +612,21 @@ export default function OctEvidenceClient({
               d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-          <p className="text-slate-400 text-sm">No hay evidencia cargada aún.</p>
+          <p className="text-muted-foreground text-sm">No hay evidencia cargada aún.</p>
         </div>
       )}
 
       {/* Detail Modal */}
       {showDetailModal && selectedEvidence && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-slate-800 sticky top-0 bg-slate-900">
-              <h3 className="text-lg font-bold text-slate-50">
+          <div className="bg-card border border-border rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-card">
+              <h3 className="text-lg font-bold text-foreground">
                 {selectedEvidence.title || selectedEvidence.evidence_type}
               </h3>
               <button
                 onClick={() => setShowDetailModal(false)}
-                className="text-slate-400 hover:text-slate-200 text-2xl"
+                className="text-muted-foreground hover:text-foreground text-2xl"
               >
                 ✕
               </button>
@@ -636,26 +636,26 @@ export default function OctEvidenceClient({
               {/* Metadata */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase block mb-1">
+                  <span className="text-[10px] font-mono text-muted-foreground uppercase block mb-1">
                     Fase
                   </span>
-                  <span className="text-sm font-bold text-slate-100">
+                  <span className="text-sm font-bold text-foreground">
                     {PHASE_OPTIONS.find((p) => p.value === selectedEvidence.evidence_phase)
                       ?.label}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase block mb-1">
+                  <span className="text-[10px] font-mono text-muted-foreground uppercase block mb-1">
                     Tipo
                   </span>
-                  <span className="text-sm font-bold text-slate-100">
+                  <span className="text-sm font-bold text-foreground">
                     {EVIDENCE_TYPE_OPTIONS.find((t) => t.value === selectedEvidence.evidence_type)
                       ?.label}
                   </span>
                 </div>
                 {selectedEvidence.linked_variable && (
                   <div>
-                    <span className="text-[10px] font-mono text-slate-400 uppercase block mb-1">
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase block mb-1">
                       Variable
                     </span>
                     <span className="text-sm font-bold text-cyan-400">
@@ -666,7 +666,7 @@ export default function OctEvidenceClient({
                   </div>
                 )}
                 <div>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase block mb-1">
+                  <span className="text-[10px] font-mono text-muted-foreground uppercase block mb-1">
                     Core Lab
                   </span>
                   <span
@@ -679,7 +679,7 @@ export default function OctEvidenceClient({
                             : selectedEvidence.corelab_quality === 'suboptimal'
                               ? 'text-yellow-400'
                               : 'text-red-400'
-                        : 'text-slate-500'
+                        : 'text-muted-foreground'
                     }`}
                   >
                     {selectedEvidence.corelab_quality || 'Pendiente'}
@@ -689,17 +689,17 @@ export default function OctEvidenceClient({
 
               {selectedEvidence.description && (
                 <div>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase block mb-2">
+                  <span className="text-[10px] font-mono text-muted-foreground uppercase block mb-2">
                     Descripción
                   </span>
-                  <p className="text-sm text-slate-300">{selectedEvidence.description}</p>
+                  <p className="text-sm text-muted-foreground">{selectedEvidence.description}</p>
                 </div>
               )}
 
-              <div className="pt-4 border-t border-slate-800">
+              <div className="pt-4 border-t border-border">
                 <button
                   onClick={() => setShowDetailModal(false)}
-                  className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 px-4 py-2 rounded-lg text-sm font-bold transition-all"
+                  className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 border border-border dark:border-slate-700 text-foreground px-4 py-2 rounded-lg text-sm font-bold transition-all"
                 >
                   Cerrar
                 </button>

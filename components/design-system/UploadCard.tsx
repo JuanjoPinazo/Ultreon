@@ -35,7 +35,7 @@ export default function UploadCard({
     >
       {/* Background Preview Image */}
       {previewUrl && (
-        <div className="absolute inset-0 z-0 bg-slate-950 transition-all group-hover:scale-105 duration-500">
+        <div className="absolute inset-0 z-0 bg-background transition-all group-hover:scale-105 duration-500">
           <img src={previewUrl} alt={label} className="w-full h-full object-cover opacity-50" />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
         </div>
@@ -44,7 +44,7 @@ export default function UploadCard({
       {/* Main Info */}
       <div className="relative z-10 w-full space-y-1">
         <div className="flex justify-between items-start">
-          <span className="text-xs font-bold text-slate-100 block group-hover:text-cyan-400 transition-colors leading-tight">
+          <span className="text-xs font-bold text-foreground block group-hover:text-cyan-400 transition-colors leading-tight">
             {label}
           </span>
           {file && (
@@ -53,7 +53,7 @@ export default function UploadCard({
             </Badge>
           )}
         </div>
-        <span className="text-[9px] text-slate-500 block leading-tight font-medium">
+        <span className="text-[9px] text-muted-foreground block leading-tight font-medium">
           {subText}
         </span>
       </div>
@@ -69,12 +69,12 @@ export default function UploadCard({
             <div className="w-full h-1 bg-cyan-950/80 rounded-full overflow-hidden">
               <div className="h-full bg-cyan-500 rounded-full w-full" />
             </div>
-            <span className="text-[8px] font-mono font-bold text-slate-500 block">
+            <span className="text-[8px] font-mono font-bold text-muted-foreground block">
               🛡️ ANÓNIMO & COMPILADO
             </span>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 text-[9px] font-mono text-slate-500 font-bold group-hover:text-slate-400 transition-colors">
+          <div className="flex items-center gap-1.5 text-[9px] font-mono text-muted-foreground font-bold group-hover:text-muted-foreground transition-colors">
             <span>📤</span>
             <span>SUBIR EVIDENCIA</span>
           </div>

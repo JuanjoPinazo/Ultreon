@@ -96,19 +96,6 @@ export default async function AdminDashboardPage() {
         </svg>
       )
     },
-    {
-      title: 'Dashboard IA',
-      value: 'PRO',
-      description: 'Inteligencia Clínica OPSTAR',
-      link: '/executive',
-      color: 'from-slate-800 to-black',
-      borderColor: 'border-slate-700',
-      icon: (
-        <svg className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      )
-    }
   ];
 
   return (
@@ -117,8 +104,8 @@ export default async function AdminDashboardPage() {
       {/* Welcome banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-50">Resumen del Servidor</h2>
-          <p className="text-xs text-slate-500">Métricas clave e historial de actividades del registro multicéntrico.</p>
+          <h2 className="text-xl font-bold tracking-tight text-foreground">Resumen del Servidor</h2>
+          <p className="text-xs text-muted-foreground">Métricas clave e historial de actividades del registro multicéntrico.</p>
         </div>
       </div>
 
@@ -131,12 +118,12 @@ export default async function AdminDashboardPage() {
             className={`bg-gradient-to-br ${card.color} border ${card.borderColor} rounded-2xl p-5 flex flex-col justify-between hover:scale-[1.02] transition-all cursor-pointer shadow-lg`}
           >
             <div className="flex justify-between items-start">
-              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">{card.title}</span>
+              <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider">{card.title}</span>
               {card.icon}
             </div>
             <div className="mt-4">
-              <span className="text-3xl font-extrabold text-slate-50 font-mono">{card.value}</span>
-              <p className="text-[9px] text-slate-500 mt-1">{card.description}</p>
+              <span className="text-3xl font-extrabold text-foreground font-mono">{card.value}</span>
+              <p className="text-[9px] text-muted-foreground mt-1">{card.description}</p>
             </div>
           </Link>
         ))}
@@ -146,31 +133,31 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Recent Registered Cases List */}
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-850">
-            <h3 className="text-xs font-bold text-slate-400 tracking-wider uppercase font-mono">Últimos casos registrados</h3>
-            <Link href="/dashboard" className="text-[10px] text-cyan-400 font-bold hover:underline">Ver todos</Link>
+        <div className="lg:col-span-2 bg-card border border-border rounded-3xl p-6 space-y-4">
+          <div className="flex justify-between items-center pb-2 border-b border-border">
+            <h3 className="text-xs font-bold text-muted-foreground tracking-wider uppercase font-mono">Últimos casos registrados</h3>
+            <Link href="/dashboard" className="text-[10px] text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Ver todos</Link>
           </div>
 
           {recentCasesList.length === 0 ? (
-            <p className="text-xs text-slate-500 font-mono py-8 text-center">No se han registrado casos clínicos en el sistema.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono py-8 text-center">No se han registrado casos clínicos en el sistema.</p>
           ) : (
             <div className="space-y-3.5">
               {recentCasesList.map((c) => {
                 const dateStr = c.created_at ? new Date(c.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'N/A';
                 return (
-                  <div key={c.id} className="flex justify-between items-center p-3.5 bg-slate-950/40 border border-slate-850 rounded-2xl hover:border-slate-800 transition-all font-mono text-xs">
+                  <div key={c.id} className="flex justify-between items-center p-3.5 bg-background/40 border border-border rounded-2xl hover:border-border transition-all font-mono text-xs">
                     <div>
-                      <div className="font-bold text-slate-200">{c.id_paciente}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{c.hospitals?.name || c.centro} · Vaso: {c.vaso_diana}</div>
+                      <div className="font-bold text-foreground">{c.id_paciente}</div>
+                      <div className="text-[10px] text-muted-foreground mt-0.5">{c.hospitals?.name || c.centro} · Vaso: {c.vaso_diana}</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-[10px] text-slate-500">{dateStr}</div>
+                      <div className="text-[10px] text-muted-foreground">{dateStr}</div>
                       <div className="mt-1 flex items-center justify-end gap-1.5">
                         {c.monitor_validated ? (
                           <span className="text-[8px] font-bold bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/20">Validado</span>
                         ) : (
-                          <span className="text-[8px] font-bold bg-slate-900 text-slate-500 px-2 py-0.5 rounded border border-slate-800">Pendiente</span>
+                          <span className="text-[8px] font-bold bg-card text-muted-foreground px-2 py-0.5 rounded border border-border">Pendiente</span>
                         )}
                         {c.locked && (
                           <span className="text-[8px] font-bold bg-red-950/80 text-red-400 px-2 py-0.5 rounded border border-red-900/20">Locked</span>
@@ -185,28 +172,28 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Database Health Info */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <div className="pb-2 border-b border-slate-850">
-            <h3 className="text-xs font-bold text-slate-400 tracking-wider uppercase font-mono">Estado del Sistema</h3>
+        <div className="bg-card border border-border rounded-3xl p-6 space-y-4">
+          <div className="pb-2 border-b border-border">
+            <h3 className="text-xs font-bold text-muted-foreground tracking-wider uppercase font-mono">Estado del Sistema</h3>
           </div>
           <div className="space-y-4 font-mono text-xs">
             <div className="flex justify-between">
-              <span className="text-slate-500">CONEXIÓN SUPABASE:</span>
-              <span className="text-emerald-400 font-bold">ACTIVA</span>
+              <span className="text-muted-foreground">CONEXIÓN SUPABASE:</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-bold">ACTIVA</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">FILAS DE HOSPITALES:</span>
-              <span className="text-slate-350">{totalHospitals}</span>
+              <span className="text-muted-foreground">FILAS DE HOSPITALES:</span>
+              <span className="text-slate-600 dark:text-slate-400">{totalHospitals}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">FILAS DE USUARIOS:</span>
-              <span className="text-slate-350">{totalUsers}</span>
+              <span className="text-muted-foreground">FILAS DE USUARIOS:</span>
+              <span className="text-slate-600 dark:text-slate-400">{totalUsers}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">ÚLTIMO INTENTO DE COMPILACIÓN:</span>
-              <span className="text-emerald-400 font-bold">EXITOSO</span>
+              <span className="text-muted-foreground">ÚLTIMO INTENTO DE COMPILACIÓN:</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-bold">EXITOSO</span>
             </div>
-            <div className="pt-4 border-t border-slate-850/60 flex items-center justify-between text-[10px] text-slate-500">
+            <div className="pt-4 border-t border-border/60 flex items-center justify-between text-[10px] text-muted-foreground">
               <span>Next.js App Router v16</span>
               <span>Turbopack Engine</span>
             </div>

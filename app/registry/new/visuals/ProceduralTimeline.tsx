@@ -61,10 +61,10 @@ const colorClasses: Record<string, { activeIcon: string; completedLine: string; 
 
 export default function ProceduralTimeline({ currentStep }: ProceduralTimelineProps) {
   return (
-    <div className="w-full bg-slate-950/50 border-b border-slate-800/80 overflow-x-auto">
+    <div className="w-full bg-background/50 border-b border-border/80 overflow-x-auto">
       <div className="min-w-[600px] max-w-4xl mx-auto px-6 py-5 flex items-center justify-between relative">
         {/* Background connecting line */}
-        <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-slate-800 -translate-y-1/2 z-0" />
+        <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-slate-100 dark:bg-slate-800 -translate-y-1/2 z-0" />
 
         {STEPS.map((step, idx) => {
           const isCompleted = currentStep > step.id;
@@ -87,8 +87,8 @@ export default function ProceduralTimeline({ currentStep }: ProceduralTimelinePr
                   isActive
                     ? `${c.activeIcon} ${c.activeGlow} scale-110`
                     : isCompleted
-                    ? 'bg-slate-900 border-slate-700 text-slate-300'
-                    : 'bg-slate-950 border-slate-800 text-slate-600'
+                    ? 'bg-card border-border dark:border-slate-700 text-muted-foreground'
+                    : 'bg-background border-border text-slate-600'
                 }`}
               >
                 {isCompleted ? (
@@ -110,10 +110,10 @@ export default function ProceduralTimeline({ currentStep }: ProceduralTimelinePr
 
               {/* Text */}
               <div className="mt-3 flex flex-col items-center text-center">
-                <span className={`text-[10px] font-black font-mono tracking-widest uppercase transition-colors ${isActive ? 'text-slate-100' : isCompleted ? 'text-slate-400' : 'text-slate-600'}`}>
+                <span className={`text-[10px] font-black font-mono tracking-widest uppercase transition-colors ${isActive ? 'text-foreground' : isCompleted ? 'text-muted-foreground' : 'text-slate-600'}`}>
                   {step.title}
                 </span>
-                <span className={`text-[9px] mt-0.5 transition-colors ${isActive ? 'text-cyan-400' : 'text-slate-500'}`}>
+                <span className={`text-[9px] mt-0.5 transition-colors ${isActive ? 'text-cyan-400' : 'text-muted-foreground'}`}>
                   {step.subtitle}
                 </span>
               </div>

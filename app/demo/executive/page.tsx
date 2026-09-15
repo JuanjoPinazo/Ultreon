@@ -18,7 +18,7 @@ export default function DemoExecutivePage() {
     <div className="relative">
       {/* Back button to Admin */}
       <div className="fixed top-4 left-4 z-50">
-        <Link href="/admin/demo-center" className="bg-slate-900/80 backdrop-blur border border-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider shadow-lg flex items-center gap-2">
+        <Link href="/admin/demo-center" className="bg-card/80 backdrop-blur border border-border dark:border-slate-700 text-muted-foreground hover:text-white px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider shadow-lg flex items-center gap-2">
           ← Volver a Admin
         </Link>
       </div>

@@ -34,14 +34,14 @@ export default function AdminDemoCenterPage() {
       
       <div className="mb-8">
         <h1 className="text-3xl font-light text-white tracking-tight mb-2">OPSTAR AI Demo Center</h1>
-        <p className="text-slate-400">Panel de control exclusivo para administradores. Lanzador de simulaciones.</p>
+        <p className="text-muted-foreground">Panel de control exclusivo para administradores. Lanzador de simulaciones.</p>
       </div>
 
       <div className="bg-amber-950/20 border border-amber-500/30 rounded-xl p-6 mb-10 flex items-start gap-4">
         <div className="text-2xl mt-1">⚠️</div>
         <div>
           <h3 className="text-amber-400 font-bold mb-1">Aviso Crítico de Privacidad</h3>
-          <p className="text-sm text-slate-300">
+          <p className="text-sm text-muted-foreground">
             Las imágenes demo deben estar completamente anonimizadas antes de subirse a las carpetas estáticas (<code className="bg-black/50 px-1 py-0.5 rounded text-amber-200">/public/demo/oct/...</code>). Asegúrate de eliminar cualquier referencia a nombres, fechas o IDs de pacientes en los DICOM/PNG.
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function AdminDemoCenterPage() {
             
             <div className="text-4xl mb-4">{card.icon}</div>
             <h3 className="text-xl font-semibold text-white mb-2">{card.title}</h3>
-            <p className="text-slate-400 text-sm mb-8 flex-grow">{card.description}</p>
+            <p className="text-muted-foreground text-sm mb-8 flex-grow">{card.description}</p>
             
             <Link 
               href={card.href}

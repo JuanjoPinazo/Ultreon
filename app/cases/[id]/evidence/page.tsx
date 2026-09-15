@@ -60,14 +60,14 @@ export default async function OctEvidencePage({ params }: Props) {
   const canReview = ['admin', 'monitor'].includes(profile.role);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased font-sans">
+    <main className="min-h-screen bg-background text-foreground flex flex-col antialiased font-sans">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:px-8 sticky top-0 z-40">
+      <header className="bg-card border-b border-border p-4 md:px-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <a
               href={`/cases/${caseId}`}
-              className="h-8 w-8 rounded-lg bg-slate-950 hover:bg-slate-850 border border-slate-800 flex items-center justify-center text-slate-300 font-bold transition-all"
+              className="h-8 w-8 rounded-lg bg-background hover:bg-muted border border-border flex items-center justify-center text-muted-foreground font-bold transition-all"
             >
               ←
             </a>
@@ -75,7 +75,7 @@ export default async function OctEvidencePage({ params }: Props) {
               <span className="text-[8px] font-mono font-bold text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/40">
                 OCT EVIDENCE
               </span>
-              <h1 className="text-base font-bold text-slate-50 mt-0.5">
+              <h1 className="text-base font-bold text-foreground mt-0.5">
                 Evidencia OCT del Caso
               </h1>
             </div>
@@ -83,7 +83,7 @@ export default async function OctEvidencePage({ params }: Props) {
 
           <a
             href={`/cases/${caseId}`}
-            className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-xl text-xs font-medium transition-all"
+            className="px-3 py-1.5 bg-background hover:bg-muted border border-border rounded-xl text-xs font-medium transition-all"
           >
             Volver
           </a>

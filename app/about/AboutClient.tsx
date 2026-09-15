@@ -33,32 +33,11 @@ interface AboutClientProps {
 }
 
 export default function AboutClient({ profile, hospitals }: AboutClientProps) {
-  // Predefined list of beautiful gradient combinations for UI
-  const colorGradients = [
-    'from-cyan-500 to-blue-600',
-    'from-blue-600 to-indigo-600',
-    'from-cyan-500 to-teal-500',
-    'from-indigo-600 to-purple-600',
-    'from-teal-500 to-emerald-500',
-    'from-cyan-600 to-blue-700',
-  ];
-
-  const centers = hospitals.map((h, i) => ({
-    name: h.name,
-    role: h.code === 'HOSP-SANJUAN' ? 'Centro Coordinador y Promotor' : 'Centro Participante',
-    city: h.city || 'Levante',
-    investigators: h.investigators.map(inv => 
-      `${inv.full_name}${inv.is_principal_investigator ? ' (IP)' : ''}`
-    ),
-    cases: `${h.cases} ${h.cases === 1 ? 'caso' : 'casos'} registrado(s)`,
-    color: colorGradients[i % colorGradients.length],
-  }));
-
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased font-sans">
+    <main className="min-h-screen bg-background text-foreground flex flex-col antialiased font-sans transition-colors">
       
       {/* Header Bar */}
-      <header className="bg-slate-900 border-b border-slate-800 p-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <header className="bg-card border-b border-border p-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 transition-colors">
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="h-8 w-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-black text-xs">
             A
@@ -66,23 +45,23 @@ export default function AboutClient({ profile, hospitals }: AboutClientProps) {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[8px] font-mono font-bold text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/40">ULTREON™ 3.0</span>
-              <span className="text-[8px] font-mono font-bold text-slate-500 uppercase">IDENTIDAD CIENTÍFICA</span>
+              <span className="text-[8px] font-mono font-bold text-muted-foreground uppercase">IDENTIDAD CIENTÍFICA</span>
             </div>
-            <h1 className="text-base font-bold text-slate-50">Sobre el Registro OPSTAR-AI</h1>
+            <h1 className="text-base font-bold text-foreground">Sobre el Registro</h1>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <p className="text-xs font-bold text-slate-200">{profile.fullName}</p>
-            <p className="text-[10px] text-slate-400 uppercase font-mono tracking-wider">
+            <p className="text-xs font-bold text-foreground">{profile.fullName}</p>
+            <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
               {profile.role === 'admin' ? 'Administrador' : profile.role === 'monitor' ? 'Monitor' : 'Investigador'} {profile.role === 'hospital_user' && `· ${profile.hospitalName}`}
             </p>
           </div>
-          <div className="h-8 w-[1px] bg-slate-800" />
+          <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800" />
           <Link
             href="/dashboard"
-            className="px-3 py-1.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-xl text-xs font-medium transition-all"
+            className="px-3 py-1.5 bg-background hover:bg-slate-100 dark:hover:bg-muted border border-border rounded-xl text-xs font-medium transition-all"
           >
             Volver al Panel
           </Link>
@@ -93,199 +72,126 @@ export default function AboutClient({ profile, hospitals }: AboutClientProps) {
       <div className="flex-1 p-6 md:p-8 max-w-[1400px] w-full mx-auto space-y-8">
         
         {/* ── HERO BRANDING SECTION ── */}
-        <div className="relative bg-slate-900 border border-slate-850 rounded-3xl p-8 md:p-12 overflow-hidden shadow-2xl">
+        <div className="relative bg-card border border-border rounded-3xl p-8 md:p-12 overflow-hidden shadow-sm dark:shadow-2xl transition-colors">
           <div className="absolute top-0 right-0 w-[600px] h-[400px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/35 to-transparent" />
           
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-            <div className="lg:col-span-2 space-y-4">
-              <span className="text-[10px] font-black font-mono tracking-[0.3em] text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-800/40 uppercase inline-block">
-                Iniciativa Multicéntrica OPSTAR-AI Levante
+          <div className="relative z-10 grid grid-cols-1 gap-8 items-center">
+            <div className="space-y-4">
+              <span className="text-[10px] font-black font-mono tracking-[0.3em] text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-200 dark:border-cyan-800/40 uppercase inline-block">
+                Post-Market Evaluation & Clinical Utility Registry
               </span>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-50 tracking-tight leading-none">
-                Revolucionando la Optimización Coronaria
+              <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight leading-none">
+                Registro Clínico ULTREON™ 3.0
               </h2>
-              <p className="text-sm md:text-base text-slate-300 font-light leading-relaxed max-w-3xl">
-                OPSTAR-AI Levante Registry es una red científica integrada por los principales laboratorios de hemodinámica de la Comunidad Valenciana. Nuestro objetivo principal es investigar y documentar la eficacia del software de guiado de precisión por Tomografía de Coherencia Óptica (OCT) acoplado a algoritmos de inteligencia artificial, junto a flujos estructurados de contraste mínimo (Zero-Contrast) para mejorar el pronóstico cardiovascular y reducir la nefropatía inducida por contraste.
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed max-w-4xl">
+                El Registro Clínico ULTREON 3.0 es una plataforma estructurada diseñada para evaluar el impacto clínico, diagnóstico y terapéutico del software ULTREON 3.0 en la práctica diaria de los laboratorios de hemodinámica.
               </p>
             </div>
-
-            {/* Interactive Network / Connectivity Graphic */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative w-64 h-64 bg-slate-950/50 border border-slate-800 rounded-full p-4 flex items-center justify-center shadow-inner group">
-                <div className="absolute inset-0 bg-cyan-500/5 rounded-full blur-md group-hover:bg-cyan-500/10 transition-all" />
-                
-                                {/* SVG Connecting Map - 6 participating centers */}
-                <svg className="w-full h-full text-cyan-500/30" viewBox="0 0 100 100">
-                  {/* Connection lines from central Valencia node */}
-                  <line x1="50" y1="50" x2="25" y2="22" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" className="animate-pulse" />
-                  <line x1="50" y1="50" x2="78" y2="22" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <line x1="50" y1="50" x2="12" y2="58" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <line x1="50" y1="50" x2="88" y2="58" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <line x1="50" y1="50" x2="35" y2="84" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <line x1="50" y1="50" x2="68" y2="84" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-
-                  {/* Central Node - Clínico Valencia / Coordinator */}
-                  <circle cx="50" cy="50" r="6" fill="#06b6d4" className="animate-ping opacity-50" />
-                  <circle cx="50" cy="50" r="4.5" fill="#0891b2" />
-
-                  {/* Satellite Nodes */}
-                  <circle cx="25" cy="22" r="3" fill="#3b82f6" />  {/* Castellón */}
-                  <circle cx="78" cy="22" r="3" fill="#3b82f6" />  {/* Arrixaca / Murcia */}
-                  <circle cx="12" cy="58" r="3" fill="#14b8a6" />  {/* San Juan */}
-                  <circle cx="88" cy="58" r="3" fill="#14b8a6" />  {/* Elche */}
-                  <circle cx="35" cy="84" r="3" fill="#6366f1" />  {/* La Ribera */}
-                  <circle cx="68" cy="84" r="3" fill="#6366f1" />  {/* Manises */}
-
-                  {/* Labels */}
-                  <text x="50" y="42" textAnchor="middle" fill="#22d3ee" fontSize="5" fontWeight="bold" className="font-mono">VLC</text>
-                  <text x="25" y="16" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">CST</text>
-                  <text x="78" y="16" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">MNS</text>
-                  <text x="8" y="66" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">SJN</text>
-                  <text x="92" y="66" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">ELC</text>
-                  <text x="35" y="92" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">RIB</text>
-                  <text x="68" y="92" textAnchor="middle" fill="#64748b" fontSize="4" className="font-mono">GEN</text>
-                </svg>
-              </div>
-            </div>
-
-            {/* Network Legend */}
-            <div className="mt-4 grid grid-cols-3 gap-x-4 gap-y-1 text-[9px] font-mono text-slate-500">
-              <span><span className="text-cyan-400 font-bold">VLC</span> Clínico Valencia</span>
-              <span><span className="text-blue-400 font-bold">CST</span> Gral. Castellón</span>
-              <span><span className="text-blue-400 font-bold">MNS</span> Manises</span>
-              <span><span className="text-teal-400 font-bold">SJN</span> San Juan</span>
-              <span><span className="text-teal-400 font-bold">ELC</span> Gral. Elche</span>
-              <span><span className="text-indigo-400 font-bold">RIB</span> La Ribera</span>
-            </div>
-
           </div>
         </div>
 
-        {/* ── SCIENTIFIC DIRECTORY (PARTICIPATING HOSPITALS) ── */}
+        {/* ── OBJECTIVES SECTION ── */}
         <div className="space-y-4">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-            <div>
-              <h3 className="text-lg font-black text-slate-50 tracking-tight">Directorio Científico de Centros y PIs</h3>
-              <p className="text-xs text-slate-400">Centros investigadores activos en el reclutamiento y seguimiento longitudinal.</p>
-            </div>
-            <span className="px-3 py-1 bg-slate-900 border border-slate-800 text-[10px] text-slate-400 font-mono font-bold rounded-lg">
-              Total: {hospitals.length} Centros Activos
-            </span>
+          <div className="flex flex-col justify-between items-start gap-2">
+            <h3 className="text-xl font-black text-foreground tracking-tight">Hipótesis y Objetivos Evaluados</h3>
+            <p className="text-xs text-muted-foreground">El registro documenta de forma sistemática los siguientes aspectos clínicos operativos.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {centers.map((center, index) => (
-              <div
-                key={index}
-                className="bg-slate-900 border border-slate-850 hover:border-cyan-500/30 rounded-3xl p-6 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
-              >
-                {/* Visual Accent */}
-                <div className={`absolute top-0 left-0 w-2 h-full bg-gradient-to-b ${center.color}`} />
-                
-                <div className="space-y-4 pl-3">
-                  <div>
-                    <span className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-wider block">
-                      {center.role}
-                    </span>
-                    <h4 className="text-sm font-bold text-slate-100 mt-1 leading-tight group-hover:text-cyan-400 transition-colors">
-                      {center.name}
-                    </h4>
-                  </div>
+            
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">1. IMPACTO DIAGNÓSTICO</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Información OCT no evidente angiográficamente.</li>
+                <li>Caracterización de lesión.</li>
+                <li>Identificación de landing zones y sizing del stent.</li>
+              </ul>
+            </div>
 
-                  <div className="space-y-1">
-                    <span className="text-[8px] font-mono font-bold text-slate-500 uppercase">Investigadores</span>
-                    <ul className="text-xs space-y-1 text-slate-300">
-                      {center.investigators.map((inv, idx) => (
-                        <li key={idx} className="flex items-center gap-2">
-                          <span className="text-cyan-500 text-[10px]">🩺</span>
-                          {inv}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">2. CAMBIO EN ESTRATEGIA TERAPÉUTICA</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Decision Change Rate (modificación de la decisión inicial).</li>
+                <li>Técnicas de preparación de lesión.</li>
+                <li>Ajuste en diámetro o longitud de stent.</li>
+                <li>Estrategia en bifurcación o indicación de tratamiento.</li>
+              </ul>
+            </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-850 pl-3 flex justify-between items-center text-[10px] font-mono">
-                  <span className="text-slate-500 uppercase">Sede: {center.city}</span>
-                  <span className="px-2 py-0.5 bg-cyan-950/40 text-cyan-400 border border-cyan-800/35 rounded-full font-bold">
-                    {center.cases}
-                  </span>
-                </div>
-              </div>
-            ))}
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">3. DETECCIÓN AUTOMÁTICA DE CALCIO</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Precisión percibida por el operador.</li>
+                <li>Interpretación y utilidad.</li>
+                <li>Cambio en la preparación de la lesión secundaria al diagnóstico.</li>
+              </ul>
+            </div>
+
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">4. DETECCIÓN AUTOMÁTICA DE LÍPIDOS</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Información adicional descubierta.</li>
+                <li>Utilidad clínica de la identificación automática.</li>
+                <li>Impacto directo en la decisión clínica.</li>
+              </ul>
+            </div>
+
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">5. OCT EN TCI (TRONCO COMÚN)</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Factibilidad de evaluación.</li>
+                <li>Calidad de la adquisición con OCT.</li>
+                <li>Impacto terapéutico de los hallazgos en TCI.</li>
+              </ul>
+            </div>
+
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">6. FFR-OCT</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Escenarios de utilización clínica.</li>
+                <li>Confianza en la herramienta.</li>
+                <li>Impacto directo sobre la decisión clínica.</li>
+              </ul>
+            </div>
+
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">7. OPTIMIZACIÓN POST-PCI</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Detección de infraexpansión y malaposición.</li>
+                <li>Detección de disección de bordes.</li>
+                <li>Toma de decisiones de tratamiento adicional (Post-PCI Correction Rate).</li>
+              </ul>
+            </div>
+
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">8. EFICIENCIA OPERATIVA</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Utilización de Fast Pullback.</li>
+                <li>Empleo de Co-registro.</li>
+                <li>Ahorro en tiempo, esfuerzo y volumen de contraste empleado.</li>
+              </ul>
+            </div>
+
+            <div className="bg-card border border-border rounded-3xl p-6 transition-colors shadow-sm dark:shadow-none">
+              <h4 className="text-sm font-bold text-foreground mb-2">9. ADOPCIÓN FUTURA</h4>
+              <ul className="text-xs text-muted-foreground space-y-2 list-disc pl-4">
+                <li>Intención del operador de incrementar el uso de OCT.</li>
+                <li>Funcionalidades percibidas como mayores impulsoras.</li>
+                <li>Identificación de escenarios clínicos de mayor utilidad.</li>
+              </ul>
+            </div>
+
           </div>
         </div>
 
-        {/* ── STEERING COMMITTEE & GOVERNANCE ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          <div className="lg:col-span-2 bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8 space-y-6">
-            <h3 className="text-lg font-black text-slate-50 tracking-tight">Comité de Coordinación y Gobernanza Científica</h3>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs leading-relaxed">
-              <div className="space-y-2">
-                <h4 className="font-bold text-cyan-400 font-mono text-[11px] uppercase tracking-wider">Comité Científico Ejecutor</h4>
-                <p className="text-slate-300">
-                  Presidido por el <span className="font-semibold text-slate-200">Dr. Ramón López-Palop</span> (H. Clínico Univ. Virgen de la Arrixaca, Murcia), asesor científico de referencia en Imagen Intracoronaria, encargado de auditar y autorizar los protocolos de optimización por OCT y la coherencia en las puntuaciones OPSTAR de cada centro participante.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="font-bold text-cyan-400 font-mono text-[11px] uppercase tracking-wider">Core Lab y Gestión de Datos</h4>
-                <p className="text-slate-300">
-                  La adjudicación y centralización de imágenes OCT se realiza de forma ciega en el <span className="font-semibold text-slate-200">Levante Cardiovascular Core Lab</span>, garantizando que no existan discrepancias inter-observador en la categorización del calcio o landing zones.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="font-bold text-cyan-400 font-mono text-[11px] uppercase tracking-wider">Cumplimiento Ético</h4>
-                <p className="text-slate-300">
-                  Aprobado por el <span className="font-semibold text-slate-200">Comité de Ética de la Investigación con Medicamentos (CEIm)</span> autonómico. Cumple con la Declaración de Helsinki, directrices ICH GCP y regulaciones de protección de datos (LOPDGDD/RGPD).
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="font-bold text-cyan-400 font-mono text-[11px] uppercase tracking-wider">Estándares de Outcomes (ARC-2)</h4>
-                <p className="text-slate-300">
-                  Todos los eventos clínicos de seguimiento (MACE, tipos de infarto y trombosis de stent) siguen rigurosamente los consensos definidos por el <span className="font-semibold text-slate-200">Academic Research Consortium (ARC-2)</span>.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Platforms stats card */}
-          <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8 flex flex-col justify-between space-y-6">
-            <div>
-              <h3 className="text-base font-bold text-slate-100">Arquitectura de la Plataforma</h3>
-              <p className="text-xs text-slate-400 mt-1">Detalles de infraestructura y cumplimiento científico de datos.</p>
-            </div>
-
-            <div className="space-y-3 font-mono text-[10px] text-slate-300">
-              <div className="flex justify-between py-1.5 border-b border-slate-850">
-                <span className="text-slate-500 uppercase">Hosting de Datos:</span>
-                <span className="font-bold text-slate-200">Supabase (SSL + TDE)</span>
-              </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-850">
-                <span className="text-slate-500 uppercase">Pseudonimización:</span>
-                <span className="font-bold text-slate-200">Algoritmo SHA-256</span>
-              </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-850">
-                <span className="text-slate-500 uppercase">Trazabilidad de Firma:</span>
-                <span className="font-bold text-slate-200">Audit Trail Append-only</span>
-              </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-850">
-                <span className="text-slate-500 uppercase">Cumplimiento:</span>
-                <span className="font-bold text-cyan-400">FDA 21 CFR Part 11</span>
-              </div>
-            </div>
-
-            <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl text-center">
-              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest block">Licencia Científica</span>
-              <span className="text-xs font-bold text-slate-300 mt-1 block">OPSTAR Levante Research Group</span>
-            </div>
-          </div>
-
+        {/* ── CONCLUSIONS SECTION (FUTURE PROOF) ── */}
+        <div className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-6 transition-colors">
+          <h3 className="text-xl font-black text-foreground tracking-tight">Conclusiones del Registro</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Las conclusiones definitivas se formularán una vez se alcance la meta de reclutamiento establecida y se haya cerrado la base de datos para su análisis estadístico independiente. 
+            Actualmente, las métricas representan una <span className="font-bold">hipótesis y cuestiones que evaluará el Registro</span> en curso. Cuando los datos estén validados de forma completa, esta sección recogerá el impacto clínico demostrado.
+          </p>
         </div>
 
       </div>

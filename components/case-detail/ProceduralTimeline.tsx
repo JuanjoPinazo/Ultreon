@@ -48,10 +48,10 @@ const steps: TimelineStep[] = [
 
 export default function ProceduralTimeline() {
   return (
-    <div className="bg-slate-900 border border-slate-850 rounded-3xl p-6 md:p-8">
+    <div className="bg-card border border-border rounded-3xl p-6 md:p-8">
       <div className="mb-6">
-        <h2 className="text-base font-bold text-slate-50 mb-1">Timeline del Procedimiento</h2>
-        <p className="text-xs text-slate-400">Recorrido desde evaluación inicial hasta seguimiento clínico</p>
+        <h2 className="text-base font-bold text-foreground mb-1">Timeline del Procedimiento</h2>
+        <p className="text-xs text-muted-foreground">Recorrido desde evaluación inicial hasta seguimiento clínico</p>
       </div>
 
       {/* Desktop: Horizontal Timeline */}
@@ -65,7 +65,7 @@ export default function ProceduralTimeline() {
                   ? 'bg-cyan-950/60 border-cyan-700 text-cyan-400'
                   : step.status === 'current'
                     ? 'bg-yellow-950/60 border-yellow-700 text-yellow-400 ring-2 ring-yellow-500/30'
-                    : 'bg-slate-850 border-slate-700 text-slate-500'
+                    : 'bg-muted border-border dark:border-slate-700 text-muted-foreground'
               }`}
             >
               {step.icon}
@@ -73,8 +73,8 @@ export default function ProceduralTimeline() {
 
             {/* Label and Description */}
             <div className="mt-3 text-center">
-              <p className="text-xs font-bold text-slate-300">{step.label}</p>
-              <p className="text-[9px] text-slate-500 mt-0.5 max-w-[90px]">{step.description}</p>
+              <p className="text-xs font-bold text-muted-foreground">{step.label}</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5 max-w-[90px]">{step.description}</p>
             </div>
 
             {/* Connector Line */}
@@ -97,7 +97,7 @@ export default function ProceduralTimeline() {
                     ? 'bg-cyan-950/60 border-cyan-700 text-cyan-400'
                     : step.status === 'current'
                       ? 'bg-yellow-950/60 border-yellow-700 text-yellow-400'
-                      : 'bg-slate-850 border-slate-700 text-slate-500'
+                      : 'bg-muted border-border dark:border-slate-700 text-muted-foreground'
                 }`}
               >
                 {step.icon}
@@ -109,8 +109,8 @@ export default function ProceduralTimeline() {
 
             {/* Content */}
             <div className="pt-1">
-              <p className="text-sm font-bold text-slate-300">{step.label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{step.description}</p>
+              <p className="text-sm font-bold text-muted-foreground">{step.label}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{step.description}</p>
             </div>
           </div>
         ))}

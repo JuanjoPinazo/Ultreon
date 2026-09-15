@@ -14,11 +14,11 @@ export default async function SiteMonitoringPage() {
     return (
       <div className="space-y-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold text-slate-50">Site Monitoring</h1>
-          <p className="text-sm text-slate-400">Monitoreo de avance del registro por centro</p>
+          <h1 className="text-2xl font-bold text-foreground">Site Monitoring</h1>
+          <p className="text-sm text-muted-foreground">Monitoreo de avance del registro por centro</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
-          <p className="text-slate-400">{error || 'Error al cargar los datos.'}</p>
+        <div className="bg-card border border-border rounded-2xl p-8 text-center">
+          <p className="text-muted-foreground">{error || 'Error al cargar los datos.'}</p>
         </div>
       </div>
     );
@@ -27,8 +27,8 @@ export default async function SiteMonitoringPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-slate-50">Site Monitoring</h1>
-        <p className="text-sm text-slate-400">Monitoreo de avance del registro por centro</p>
+        <h1 className="text-2xl font-bold text-foreground">Site Monitoring</h1>
+        <p className="text-sm text-muted-foreground">Monitoreo de avance del registro por centro</p>
       </div>
 
       <SiteMonitoringClient

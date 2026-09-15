@@ -39,7 +39,7 @@ export default function DataQualityPanel({
     emerald: 'text-emerald-400 bg-emerald-950/40 border-emerald-800/40',
     yellow: 'text-yellow-400 bg-yellow-950/40 border-yellow-800/40',
     red: 'text-red-400 bg-red-950/40 border-red-800/40',
-    slate: 'text-slate-400 bg-slate-950/40 border-slate-800/40',
+    slate: 'text-muted-foreground bg-background/40 border-border/40',
   };
 
   const handleMarkComplete = async () => {
@@ -131,7 +131,7 @@ export default function DataQualityPanel({
             Data Quality
           </h3>
           <div className="mt-2 flex items-baseline gap-3">
-            <span className={`text-4xl font-black ${statusColor === 'emerald' ? 'text-emerald-400' : statusColor === 'yellow' ? 'text-yellow-400' : statusColor === 'red' ? 'text-red-400' : 'text-slate-400'}`}>
+            <span className={`text-4xl font-black ${statusColor === 'emerald' ? 'text-emerald-400' : statusColor === 'yellow' ? 'text-yellow-400' : statusColor === 'red' ? 'text-red-400' : 'text-muted-foreground'}`}>
               {completenessScore}
             </span>
             <span className="text-lg font-bold opacity-70">/100</span>
@@ -145,7 +145,7 @@ export default function DataQualityPanel({
             Estado
           </div>
           <div className={`text-sm font-bold px-3 py-1.5 rounded-lg border ${
-            caseStatus === 'draft' ? 'bg-slate-950/60 border-slate-700 text-slate-300' :
+            caseStatus === 'draft' ? 'bg-background/60 border-border dark:border-slate-700 text-muted-foreground' :
             caseStatus === 'incomplete' ? 'bg-yellow-950/60 border-yellow-700 text-yellow-300' :
             caseStatus === 'complete' ? 'bg-blue-950/60 border-blue-700 text-blue-300' :
             caseStatus === 'pending_corelab' ? 'bg-purple-950/60 border-purple-700 text-purple-300' :
@@ -249,8 +249,8 @@ export default function DataQualityPanel({
       )}
 
       {!canEdit && (
-        <div className="bg-black/30 border border-slate-700 rounded-lg p-3 text-center">
-          <span className="text-sm font-bold text-slate-400">
+        <div className="bg-black/30 border border-border dark:border-slate-700 rounded-lg p-3 text-center">
+          <span className="text-sm font-bold text-muted-foreground">
             No tienes permisos para editar este caso
           </span>
         </div>
