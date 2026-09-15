@@ -44,10 +44,10 @@ export default async function DashboardPage(props: {
     hospitals = hospitalsData || [];
   }
 
-  // Fetch cases according to role, including joined strategy changes and optimization results
+  // Fetch cases according to role, using V3 schema
   let query = supabase
-    .from('ecrf_opstar_records')
-    .select('*, hospitals(name), opstar_strategy_changes(*), opstar_optimization_results(*)');
+    .from('ultreon_registry_cases')
+    .select('*, hospitals(name)');
 
   if (profile.role === 'hospital_user') {
     if (profile.hospital_id) {
@@ -59,6 +59,15 @@ export default async function DashboardPage(props: {
   }
 
   const { data: cases, error: casesError } = await query.order('created_at', { ascending: false });
+
+  if (cases) {
+    const total = cases.length;
+    const reales = cases.filter(c => !c.is_demo).length;
+    const demos = cases.filter(c => c.is_demo).length;
+    const drafts = cases.filter(c => c.status === 'DRAFT').length;
+    const completeds = cases.filter(c => c.status === 'COMPLETED').length;
+    console.log(`[DEBUG DASHBOARD] Total V3: ${total} | Reales: ${reales} | Demo: ${demos} | Drafts: ${drafts} | Completeds: ${completeds}`);
+  }
 
   // Get search params for filtering
   const searchParams = await props.searchParams;
@@ -81,8 +90,9 @@ export default async function DashboardPage(props: {
     }
 
     // 2. Segment Filter (AHA Vaso Diana)
-    if (filterSegment && record.vaso_diana !== filterSegment) {
-      return false;
+    if (filterSegment) {
+      const vessel = record.core_data?.vessel?.value || record.core_data?.vessel || record.acquisition_data?.pullbacks?.[0]?.vessel?.value;
+      if (vessel !== filterSegment) return false;
     }
 
     // 3. Date Range Filter
@@ -111,15 +121,14 @@ export default async function DashboardPage(props: {
 
   // Completed cases
   const completedCount = filteredCases.filter(
-    (r) => r.case_status === 'complete' || r.case_status === 'completed' || r.status === 'COMPLETED'
+    (r) => r.status === 'COMPLETED' || r.status === 'complete' || r.case_status === 'completed'
   ).length;
   const completedPercent = totalCases > 0 ? Math.round((completedCount / totalCases) * 100) : 0;
 
   // Strategy modified count
   const strategyModCount = filteredCases.filter((r) => {
-    if (r.modifico_estrategia || r.ultreon_modified_strategy) return true;
-    if (r.opstar_strategy_changes && r.opstar_strategy_changes[0]?.modified_strategy) return true;
-    return false;
+    // V3 Strategy modification is tracked in calcium_module.different_strategy_without_ultreon (Si/No)
+    return r.calcium_module?.different_strategy_without_ultreon === 'Si';
   }).length;
   const strategyModPercent = totalCases > 0 ? Math.round((strategyModCount / totalCases) * 100) : 0;
 
@@ -484,33 +493,55 @@ export default async function DashboardPage(props: {
                       {(profile.role === 'admin' || profile.role === 'monitor') && <th className="p-4 pr-6 text-right">Acciones</th>}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-850/60 text-xs font-mono">
+                  <tbody className="divide-y divide-slate-800/60 text-xs font-mono">
                     {filteredCases.map((record) => {
-                      const dateString = record.created_at ? new Date(record.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' }) : 'N/A';
-                      const recordScore = record.opstar_optimization_results?.[0]?.opstar_score;
+                      const dateString = record.procedure_date ? new Date(record.procedure_date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' }) : (record.created_at ? new Date(record.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' }) : 'N/A');
+                      const recordScore = null; // No OPSTAR score in V3 yet
+                      const vessel = record.core_data?.vessel?.value || record.core_data?.vessel || record.acquisition_data?.pullbacks?.[0]?.vessel?.value || 'N/A';
+                      const ffr_oct = record.ffr_oct_module?.pullback_corrections_made ? 'Si' : 'No';
+                      const expansion = record.findings_data?.expansion_percentage;
+                      const pullbacks = record.acquisition_data?.pullbacks || [];
+                      const contrast = pullbacks.length > 0 ? pullbacks.reduce((sum: number, pb: any) => sum + (Number(pb.fast_volume_ml) || 0), 0) : null;
 
                       return (
                         <tr key={record.id} className="hover:bg-background/20 transition-all">
                           <td className="p-4 pl-6 font-bold text-slate-800 dark:text-foreground">
-                            <div>{record.id_paciente}</div>
+                            <div className="flex items-center gap-2">
+                              {record.anonymous_code || 'N/A'}
+                              {record.is_demo && (
+                                <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 text-[9px] rounded font-bold uppercase">
+                                  DEMO
+                                </span>
+                              )}
+                              {record.status === 'DRAFT' && (
+                                <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300 text-[9px] rounded font-bold uppercase">
+                                  BORRADOR
+                                </span>
+                              )}
+                              {record.status === 'COMPLETED' && (
+                                <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 text-[9px] rounded font-bold uppercase">
+                                  COMPLETADO
+                                </span>
+                              )}
+                            </div>
                             <div className="text-[9px] text-muted-foreground font-normal">{dateString}</div>
                           </td>
                           <td className="p-4 text-slate-500 dark:text-slate-400">
-                            {record.hospitals ? (Array.isArray(record.hospitals) ? record.hospitals[0]?.name : (record.hospitals as any).name) : record.centro}
+                            {record.hospitals ? (Array.isArray(record.hospitals) ? record.hospitals[0]?.name : (record.hospitals as any).name) : 'N/A'}
                           </td>
                           <td className="p-4">
                             <span className="px-2 py-0.5 bg-cyan-950 text-cyan-400 border border-cyan-800/40 rounded">
-                              {record.vaso_diana}
+                              {vessel}
                             </span>
                           </td>
                           <td className="p-4 text-center text-muted-foreground">
-                            {record.ffr_oct !== null ? record.ffr_oct : 'N/A'}
+                            {ffr_oct !== null ? ffr_oct : 'N/A'}
                           </td>
                           <td className="p-4 text-center text-muted-foreground">
-                            {record.expansion !== null ? `${record.expansion}%` : 'N/A'}
+                            {expansion !== null && expansion !== undefined ? `${expansion}%` : 'N/A'}
                           </td>
                           <td className="p-4 text-center text-muted-foreground font-semibold">
-                            {record.actual_contrast_ml !== null ? `${record.actual_contrast_ml}ml` : (record.contraste_ml !== null ? `${record.contraste_ml}ml` : 'N/A')}
+                            {contrast !== null && contrast !== undefined ? `${contrast}ml` : 'N/A'}
                           </td>
                           <td className="p-4 text-center">
                             {recordScore !== undefined && recordScore !== null ? (
@@ -518,7 +549,7 @@ export default async function DashboardPage(props: {
                                 {recordScore}
                               </span>
                             ) : (
-                              <span className="text-slate-600">-</span>
+                              <span className="text-muted-foreground">-</span>
                             )}
                           </td>
                           <td className="p-4 text-center">

@@ -267,7 +267,7 @@ export default function AdminOperatorsClient({
               <button
                 onClick={cancel}
                 disabled={isSubmitting}
-                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-450 hover:text-foreground transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>

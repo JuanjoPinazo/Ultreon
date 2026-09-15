@@ -138,7 +138,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
       case 'hospital_user':
         return <span className="px-2 py-0.5 bg-cyan-950/80 text-cyan-400 border border-cyan-900/30 rounded text-[9px] font-mono font-bold">MÉDICO</span>;
       case 'viewer':
-        return <span className="px-2 py-0.5 bg-card text-slate-500 dark:text-slate-450 border border-border rounded text-[9px] font-mono font-bold">VISOR</span>;
+        return <span className="px-2 py-0.5 bg-card text-slate-500 dark:text-slate-400 border border-border rounded text-[9px] font-mono font-bold">VISOR</span>;
       default:
         return <span className="px-2 py-0.5 bg-card text-muted-foreground border border-border rounded text-[9px] font-mono font-bold">{role}</span>;
     }
@@ -304,7 +304,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-450 hover:text-foreground transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>

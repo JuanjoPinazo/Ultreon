@@ -62,7 +62,7 @@ export default function StrategyModificationPanel({ strategyChanges }: StrategyM
       </div>
 
       {/* Main Impact Card */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-850 border border-border rounded-2xl p-6">
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 border border-border rounded-2xl p-6">
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
             <h3 className="text-sm font-bold text-foreground mb-1">ULTREON™ modificó la estrategia</h3>

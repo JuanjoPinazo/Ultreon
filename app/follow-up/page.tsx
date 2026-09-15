@@ -40,15 +40,12 @@ export default async function FollowUpPage() {
     hospitals = hospitalsData || [];
   }
 
-  // Cargar casos con su correspondiente historial de seguimientos (opstar_followup)
+  // Cargar casos V3
   let query = supabase
-    .from('ecrf_opstar_records')
+    .from('ultreon_registry_cases')
     .select(`
       *,
-      hospitals(name),
-      opstar_strategy_changes(*),
-      opstar_optimization_results(*),
-      opstar_followup(*)
+      hospitals(name)
     `);
 
   // Restringir casos por centro si es investigador local (hospital_user)

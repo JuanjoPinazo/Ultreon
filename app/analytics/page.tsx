@@ -42,12 +42,10 @@ export default async function AnalyticsPage() {
 
   // Consulta de registros clínicos incluyendo datos de estrategia y resultados de optimización por OCT
   let query = supabase
-    .from('ecrf_opstar_records')
+    .from('ultreon_registry_cases')
     .select(`
       *,
-      hospitals(name),
-      opstar_strategy_changes(*),
-      opstar_optimization_results(*)
+      hospitals(name)
     `);
 
   // Restringir consulta al centro del usuario si es un perfil de hospital (hospital_user)

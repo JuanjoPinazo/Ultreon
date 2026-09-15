@@ -475,7 +475,7 @@ export default function RegistroOpstarForm() {
                           value={formData.centroMedico}
                           onChange={(e) => handleInputChange('centroMedico', e.target.value)}
                           className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all appearance-none cursor-pointer text-sm outline-none ${
-                            errors.centroMedico ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                            errors.centroMedico ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                           }`}
                         >
                           <option value="">Seleccione un hospital...</option>
@@ -511,7 +511,7 @@ export default function RegistroOpstarForm() {
                           onChange={(e) => handleInputChange('idPaciente', e.target.value)}
                           placeholder="Ej: OPS-LEV-2026-01"
                           className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all text-sm outline-none uppercase font-mono ${
-                            errors.idPaciente ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                            errors.idPaciente ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                           }`}
                         />
                         {errors.idPaciente && (
@@ -532,7 +532,7 @@ export default function RegistroOpstarForm() {
                             value={formData.vasoDiana}
                             onChange={(e) => handleInputChange('vasoDiana', e.target.value)}
                             className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all appearance-none cursor-pointer text-sm outline-none ${
-                              errors.vasoDiana ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                              errors.vasoDiana ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                             }`}
                           >
                             <option value="">Seleccione vaso...</option>
@@ -580,7 +580,7 @@ export default function RegistroOpstarForm() {
                           value={formData.estrategiaInicial}
                           onChange={(e) => handleInputChange('estrategiaInicial', e.target.value)}
                           className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all appearance-none cursor-pointer text-sm outline-none ${
-                            errors.estrategiaInicial ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                            errors.estrategiaInicial ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                           }`}
                         >
                           <option value="">Seleccione estrategia inicial...</option>
@@ -622,7 +622,7 @@ export default function RegistroOpstarForm() {
                           max="5.5"
                           placeholder="Ej: 3.00"
                           className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all text-sm outline-none ${
-                            errors.diametroStent ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                            errors.diametroStent ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                           }`}
                         />
                         {errors.diametroStent && (
@@ -646,7 +646,7 @@ export default function RegistroOpstarForm() {
                           max="60"
                           placeholder="Ej: 18"
                           className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all text-sm outline-none ${
-                            errors.longitudStent ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                            errors.longitudStent ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                           }`}
                         />
                         {errors.longitudStent && (
@@ -812,7 +812,7 @@ export default function RegistroOpstarForm() {
                             value={formData.estrategiaFinal}
                             onChange={(e) => handleInputChange('estrategiaFinal', e.target.value)}
                             className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all appearance-none cursor-pointer text-sm outline-none ${
-                              errors.estrategiaFinal ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                              errors.estrategiaFinal ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                             }`}
                           >
                             <option value="">Seleccione estrategia final...</option>
@@ -847,7 +847,7 @@ export default function RegistroOpstarForm() {
                             disabled={formData.estrategiaFinal === 'DEB_SIN_STENT'}
                             onChange={(e) => handleInputChange('stentImplantado', e.target.value)}
                             className={`w-full px-4 py-3 rounded-2xl bg-[#F5F5F7] border transition-all appearance-none cursor-pointer text-sm outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
-                              errors.stentImplantado ? 'border-red-500 ring-2 ring-red-150' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
+                              errors.stentImplantado ? 'border-red-500 ring-2 ring-red-200' : 'border-[#E2E2E7] focus:border-[#0071E3] focus:ring-[3px] focus:ring-[#0071E3]/10'
                             }`}
                           >
                             {formData.estrategiaFinal === 'DEB_SIN_STENT' ? (

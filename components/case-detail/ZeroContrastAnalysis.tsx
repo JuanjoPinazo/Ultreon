@@ -41,7 +41,7 @@ export default function ZeroContrastAnalysis({
       </div>
 
       {/* Main Metrics Card */}
-      <div className="bg-gradient-to-br from-slate-900 to-slate-850 border border-border rounded-2xl p-6">
+      <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-border rounded-2xl p-6">
         <div className="grid grid-cols-3 gap-4 mb-6">
           {/* Expected */}
           <div className="text-center">
