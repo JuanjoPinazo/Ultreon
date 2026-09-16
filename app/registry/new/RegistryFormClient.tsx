@@ -235,7 +235,7 @@ export default function RegistryFormClient({ user, profile, hospitals, existingC
         <div className="bg-emerald-50 border-emerald-200 dark:bg-emerald-950/40 border dark:border-emerald-800/50 p-8 rounded-2xl text-center space-y-4">
           <div className="text-4xl">✅</div>
           <h2 className="text-xl font-bold text-emerald-700 dark:text-emerald-400">¡Caso guardado con éxito!</h2>
-          <p className="text-slate-600 dark:text-muted-foreground text-sm">Redirigiendo al dashboard...</p>
+          <p className="text-muted-foreground dark:text-muted-foreground text-sm">Redirigiendo al dashboard...</p>
         </div>
       </div>
     );
@@ -318,7 +318,7 @@ export default function RegistryFormClient({ user, profile, hospitals, existingC
           {step < 6 ? (
             <button 
               onClick={handleNext}
-              className="px-8 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-sm font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all"
+              className="px-8 py-2.5 bg-primary hover:bg-primary text-white rounded-lg text-sm font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all"
             >
               Continuar →
             </button>

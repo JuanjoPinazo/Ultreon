@@ -34,14 +34,53 @@ export default async function DocumentationPage(props: {
   };
 
   // Fetch hospitals for admins
-  let hospitals: { id: string; name: string }[] = [];
+  let hospitals: { id: string; name: string; prefix?: string; operators?: string[] }[] = [];
   if (profile.role === 'admin' || profile.role === 'super_admin') {
     const { data: hospData } = await supabase
       .from('hospitals')
       .select('id, name')
       .order('name');
     hospitals = hospData || [];
+  } else if (profile.hospitalId) {
+    const { data: hospData } = await supabase
+      .from('hospitals')
+      .select('id, name')
+      .eq('id', profile.hospitalId)
+      .order('name');
+    hospitals = hospData || [];
   }
+
+  // Fetch hospital settings (prefixes)
+  const { data: settingsData } = await supabase
+    .from('ultreon_registry_hospital_settings')
+    .select('hospital_id, code_prefix');
+  
+  const settingsMap = new Map((settingsData || []).map(s => [s.hospital_id, s.code_prefix]));
+
+  // Fetch profiles to get operators for each hospital
+  const { data: profilesData } = await supabase
+    .from('profiles')
+    .select('hospital_id, full_name, email')
+    .eq('role', 'hospital_user');
+
+  const operatorsByHospital = new Map<string, string[]>();
+  if (profilesData) {
+    profilesData.forEach(p => {
+      if (p.hospital_id) {
+        if (!operatorsByHospital.has(p.hospital_id)) {
+          operatorsByHospital.set(p.hospital_id, []);
+        }
+        operatorsByHospital.get(p.hospital_id)!.push(p.full_name || p.email);
+      }
+    });
+  }
+
+  // Attach prefixes and operators to the hospitals array
+  hospitals = hospitals.map(h => ({
+    ...h,
+    prefix: settingsMap.get(h.id) || 'UNKNOWN',
+    operators: operatorsByHospital.get(h.id) || []
+  }));
 
   // Get user's hospital name
   let hospitalName = 'Centro No Asignado';

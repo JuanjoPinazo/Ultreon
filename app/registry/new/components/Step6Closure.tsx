@@ -121,7 +121,7 @@ export const Step6Closure = ({ formData, setFormData }: Props) => {
         <div className="flex flex-col gap-1.5 mt-4">
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Comentarios finales</label>
           <textarea
-            className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 outline-none min-h-[100px] focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+            className="bg-card border border-input-border dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 outline-none min-h-[100px] focus:border-primary focus:ring-1 focus:ring-cyan-500 transition-all"
             value={formData.final_comments}
             onChange={e => updateField('final_comments', e.target.value)}
           />

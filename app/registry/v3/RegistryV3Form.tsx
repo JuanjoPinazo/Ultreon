@@ -54,7 +54,7 @@ export default function RegistryV3Form() {
 
   return (
     <FormProvider {...methods}>
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border">
+      <div className="max-w-4xl mx-auto bg-surface p-6 rounded-xl shadow-sm border">
         <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
         
         <form onSubmit={methods.handleSubmit(onSubmit as any)} className="mt-8">

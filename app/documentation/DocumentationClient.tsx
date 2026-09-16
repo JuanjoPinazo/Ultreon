@@ -2,6 +2,19 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import PrintableDossier from './components/PrintableDossier';
+import PrintableECRF from './components/PrintableECRF';
+import PrintableLocalSheet from './components/PrintableLocalSheet';
+import PrintableInclusionsControl from './components/PrintableInclusionsControl';
+import PrintableOperatorProfile from './components/PrintableOperatorProfile';
+import ScientificTraceability from './components/ScientificTraceability';
+
+interface HospitalData {
+  id: string;
+  name: string;
+  prefix?: string;
+  operators?: string[];
+}
 
 interface DocumentationClientProps {
   profile: {
@@ -10,7 +23,7 @@ interface DocumentationClientProps {
     hospitalId: string | null;
     hospitalName: string;
   };
-  hospitals: { id: string; name: string }[];
+  hospitals: HospitalData[];
 }
 
 export default function DocumentationClient({
@@ -21,6 +34,12 @@ export default function DocumentationClient({
   const [selectedHospital, setSelectedHospital] = useState(
     profile.hospitalId || (hospitals.length > 0 ? hospitals[0].id : '')
   );
+
+  const activeHospitalData = hospitals.find(h => h.id === selectedHospital) || null;
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   return (
     <main className="min-h-screen bg-background text-foreground flex flex-col antialiased font-sans transition-colors">
@@ -76,8 +95,8 @@ export default function DocumentationClient({
             onClick={() => setActiveTab('dossier')}
             className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
               activeTab === 'dossier'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                ? 'bg-surface dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-muted-foreground dark:text-muted-foreground hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             Dossier del Centro
@@ -86,21 +105,76 @@ export default function DocumentationClient({
             onClick={() => setActiveTab('ecrf')}
             className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
               activeTab === 'ecrf'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                ? 'bg-surface dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-muted-foreground dark:text-muted-foreground hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             eCRF Imprimible
           </button>
           <button
+            onClick={() => setActiveTab('local_sheet')}
+            className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+              activeTab === 'local_sheet'
+                ? 'bg-surface dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-muted-foreground dark:text-muted-foreground hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            Hoja Local
+          </button>
+          <button
+            onClick={() => setActiveTab('inclusions')}
+            className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+              activeTab === 'inclusions'
+                ? 'bg-surface dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-muted-foreground dark:text-muted-foreground hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            Control Inclusiones
+          </button>
+          <button
+            onClick={() => setActiveTab('operator_profile')}
+            className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+              activeTab === 'operator_profile'
+                ? 'bg-surface dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-muted-foreground dark:text-muted-foreground hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+          >
+            Ficha Basal Operadores
+          </button>
+          <button
             onClick={() => setActiveTab('guia')}
             className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
               activeTab === 'guia'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                ? 'bg-surface dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-muted-foreground dark:text-muted-foreground hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             Guía del Investigador
+          </button>
+          {(profile.role === 'admin' || profile.role === 'monitor') && (
+            <button
+              onClick={() => setActiveTab('traceability')}
+              className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
+                activeTab === 'traceability'
+                  ? 'bg-surface dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-muted-foreground dark:text-muted-foreground hover:text-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              Trazabilidad Científica
+            </button>
+          )}
+        </div>
+        
+        {/* Print Actions */}
+        <div className="flex justify-end no-print">
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-bold shadow hover:bg-primary-hover transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Imprimir Documento
           </button>
         </div>
 
@@ -120,7 +194,7 @@ export default function DocumentationClient({
                   <select
                     value={selectedHospital}
                     onChange={(e) => setSelectedHospital(e.target.value)}
-                    className="px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer w-48"
+                    className="px-3 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs text-muted-foreground outline-none cursor-pointer w-48"
                   >
                     {hospitals.map(h => (
                       <option key={h.id} value={h.id}>{h.name}</option>
@@ -128,14 +202,11 @@ export default function DocumentationClient({
                   </select>
                 )}
               </div>
-              <div className="p-6 bg-background/50 border border-border rounded-2xl flex flex-col items-center justify-center text-center space-y-4">
-                <div className="h-12 w-12 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xl mb-2">
-                  🔒
-                </div>
-                <h4 className="text-md font-bold text-foreground">Dossier en construcción</h4>
-                <p className="text-sm text-muted-foreground max-w-sm">
-                  Esta funcionalidad de generación de dossier automático se activará próximamente.
-                </p>
+              <div className="mt-8 no-print">
+                <p className="text-xs text-muted-foreground mb-4">Usa el botón de imprimir para generar el PDF. A continuación se muestra una vista previa.</p>
+              </div>
+              <div className="bg-white text-black p-4 md:p-8 rounded-lg shadow-inner overflow-hidden border border-slate-200 print:shadow-none print:border-none print:p-0">
+                <PrintableDossier hospital={activeHospitalData} />
               </div>
             </div>
           )}
@@ -148,14 +219,67 @@ export default function DocumentationClient({
                   Documento estandarizado para la recogida de datos intra-sala antes de su volcado digital.
                 </p>
               </div>
-              <div className="p-6 bg-background/50 border border-border rounded-2xl flex flex-col items-center justify-center text-center space-y-4">
-                <div className="h-12 w-12 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xl mb-2">
-                  📄
-                </div>
-                <h4 className="text-md font-bold text-foreground">Documento en preparación</h4>
-                <p className="text-sm text-muted-foreground max-w-sm">
-                  El PDF del eCRF estructurado está siendo formateado para asegurar su legibilidad en formato impreso y su total concordancia con el portal.
+              <div className="mt-8 no-print">
+                <p className="text-xs text-muted-foreground mb-4">Usa el botón de imprimir para generar el PDF. A continuación se muestra una vista previa.</p>
+              </div>
+              <div className="bg-white text-black p-4 md:p-8 rounded-lg shadow-inner overflow-hidden border border-slate-200 print:shadow-none print:border-none print:p-0">
+                <PrintableECRF />
+              </div>
+            </div>
+          )}
+          
+          {activeTab === 'local_sheet' && (
+            <div className="space-y-6">
+              <div className="no-print">
+                <h3 className="text-lg font-bold text-foreground">Documento Local del Centro</h3>
+                <p className="text-sm text-muted-foreground">
+                  Hoja de correspondencia (Registro ↔ NHC). Este documento es de uso exclusivamente local.
                 </p>
+              </div>
+              <div className="bg-white text-black p-4 md:p-8 rounded-lg shadow-inner overflow-hidden border border-slate-200 print:shadow-none print:border-none print:p-0">
+                <PrintableLocalSheet />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'inclusions' && (
+            <div className="space-y-6">
+              <div className="no-print">
+                <h3 className="text-lg font-bold text-foreground">Control de Inclusiones</h3>
+                <p className="text-sm text-muted-foreground">
+                  Registro rápido de casos incluidos.
+                </p>
+              </div>
+              <div className="bg-white text-black p-4 md:p-8 rounded-lg shadow-inner overflow-hidden border border-slate-200 print:shadow-none print:border-none print:p-0">
+                <PrintableInclusionsControl hospital={activeHospitalData} />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'operator_profile' && (
+            <div className="space-y-6">
+              <div className="no-print">
+                <h3 className="text-lg font-bold text-foreground">Perfil Clínico Basal</h3>
+                <p className="text-sm text-muted-foreground">
+                  Ficha única por operador para recoger su uso de imagen y experiencia global.
+                </p>
+              </div>
+              <div className="bg-white text-black p-4 md:p-8 rounded-lg shadow-inner overflow-hidden border border-slate-200 print:shadow-none print:border-none print:p-0">
+                <PrintableOperatorProfile hospital={activeHospitalData} />
+              </div>
+            </div>
+          )}
+          
+          {activeTab === 'traceability' && (profile.role === 'admin' || profile.role === 'monitor') && (
+            <div className="space-y-6">
+              <div className="no-print">
+                <h3 className="text-lg font-bold text-foreground">Trazabilidad Científica</h3>
+                <p className="text-sm text-muted-foreground">
+                  Mapa de correlación entre los KPIs científicos y las variables de la plataforma (V3).
+                </p>
+              </div>
+              <div className="bg-white text-black p-4 md:p-8 rounded-lg shadow-inner overflow-hidden border border-slate-200 print:shadow-none print:border-none print:p-0">
+                <ScientificTraceability />
               </div>
             </div>
           )}

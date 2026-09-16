@@ -74,8 +74,8 @@ export default function AdminNav() {
             href={item.href}
             className={`flex items-center gap-3 px-4 py-3 text-xs font-bold font-mono tracking-wide uppercase rounded-xl transition-all ${
               isActive
-                ? 'bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400'
-                : 'text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300 hover:bg-background/30'
+                ? 'bg-primary-soft dark:bg-cyan-900/30 text-primary dark:text-cyan-400'
+                : 'text-muted-foreground dark:text-muted-foreground hover:text-primary dark:hover:text-cyan-300 hover:bg-background/30'
             }`}
           >
             {item.icon}
@@ -87,7 +87,7 @@ export default function AdminNav() {
 
       <Link
         href="/dashboard"
-        className="flex items-center gap-3 px-4 py-3 text-xs font-bold font-mono tracking-wide uppercase text-cyan-600 dark:text-cyan-400/80 hover:text-cyan-700 dark:hover:text-cyan-400 hover:bg-background/30 rounded-xl transition-all border border-dashed border-cyan-300 dark:border-cyan-800/25 mt-6"
+        className="flex items-center gap-3 px-4 py-3 text-xs font-bold font-mono tracking-wide uppercase text-primary dark:text-cyan-400/80 hover:text-primary dark:hover:text-cyan-400 hover:bg-background/30 rounded-xl transition-all border border-dashed border-cyan-300 dark:border-cyan-800/25 mt-6"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ECRFFormData } from '../types';
 import { ClinicalSelect, ClinicalMultiSelect, ClinicalRadioChips } from './ClinicalUX';
+import OperatorProfileModal from './OperatorProfileModal';
+import { getOperatorProfile, OperatorClinicalProfile } from '../../../../lib/registry/operator-profile';
 
 interface Props {
   formData: ECRFFormData;
@@ -30,6 +32,9 @@ const OCT_INDICATIONS = [
 ];
 
 export const Step1Case = ({ formData, setFormData, hospitals, profile }: Props) => {
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [operatorProfileLoaded, setOperatorProfileLoaded] = useState(false);
+
   const updateField = (key: keyof ECRFFormData, value: any) => {
     setFormData(prev => ({ ...prev, [key]: value }));
   };
@@ -81,6 +86,44 @@ export const Step1Case = ({ formData, setFormData, hospitals, profile }: Props) 
     }
   }, [profile, formData.centroMedico, formData.operador, setFormData, hospitals]);
 
+  // Fetch operator profile when operator is selected
+  useEffect(() => {
+    if (formData.operador && !operatorProfileLoaded) {
+      getOperatorProfile(formData.operador).then(data => {
+        if (data) {
+          // If we found a profile, copy it into formData (Snapshot creation)
+          setFormData(prev => ({
+            ...prev,
+            image_usage_oct: data.image_usage_oct,
+            image_usage_ivus: data.image_usage_ivus,
+            image_usage_angio: data.image_usage_angio,
+            operator_experience_oct: data.experience_oct,
+            operator_experience_level_oct: data.experience_level_oct,
+            operator_experience_ultreon: data.experience_ultreon
+          }));
+        } else {
+          // No profile found. Show modal automatically for first-time.
+          setIsProfileModalOpen(true);
+        }
+        setOperatorProfileLoaded(true);
+      });
+    } else if (!formData.operador) {
+      setOperatorProfileLoaded(false);
+    }
+  }, [formData.operador, operatorProfileLoaded, setFormData]);
+
+  const handleProfileUpdated = (data: OperatorClinicalProfile) => {
+    setFormData(prev => ({
+      ...prev,
+      image_usage_oct: data.image_usage_oct,
+      image_usage_ivus: data.image_usage_ivus,
+      image_usage_angio: data.image_usage_angio,
+      operator_experience_oct: data.experience_oct,
+      operator_experience_level_oct: data.experience_level_oct,
+      operator_experience_ultreon: data.experience_ultreon
+    }));
+  };
+
   const userHospital = profile?.hospital_id ? hospitals.find(h => h.id === profile.hospital_id) : null;
   const isLinkedOperator = profile?.role === 'hospital_user' && userHospital?.operators?.find((o: any) => o.user_id === profile.id);
 
@@ -113,7 +156,7 @@ export const Step1Case = ({ formData, setFormData, hospitals, profile }: Props) 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         {hospitals.length === 1 ? (
           <div className="flex flex-col gap-1.5 mb-4">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Centro Médico <span className="text-cyan-500">*</span></label>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Centro Médico <span className="text-primary">*</span></label>
             <input
               type="text"
               readOnly
@@ -136,7 +179,7 @@ export const Step1Case = ({ formData, setFormData, hospitals, profile }: Props) 
         
         {isLinkedOperator ? (
           <div className="flex flex-col gap-1.5 mb-4">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Operador <span className="text-cyan-500">*</span></label>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Operador <span className="text-primary">*</span></label>
             <input
               type="text"
               readOnly
@@ -174,88 +217,83 @@ export const Step1Case = ({ formData, setFormData, hospitals, profile }: Props) 
         </div>
 
         <div className="flex flex-col gap-1.5 mb-4">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fecha del Procedimiento <span className="text-cyan-500">*</span></label>
+          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fecha del Procedimiento <span className="text-primary">*</span></label>
           <input
             type="date"
-            className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 focus:border-cyan-500 outline-none transition-all"
+            className="bg-card border border-input-border dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 focus:border-primary outline-none transition-all"
             value={formData.fechaProcedimiento}
             onChange={e => updateField('fechaProcedimiento', e.target.value)}
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <ClinicalSelect
-          label="Experiencia del operador con OCT"
-          value={formData.operator_experience_oct}
-          onChange={(v: string) => updateField('operator_experience_oct', v)}
-          options={[
-            { value: '<1 año', label: '< 1 año' },
-            { value: '1-3 años', label: '1-3 años' },
-            { value: '3-5 años', label: '3-5 años' },
-            { value: '>5 años', label: '> 5 años' },
-          ]}
-        />
-        <ClinicalSelect
-          label="Nivel de experiencia OCT"
-          value={formData.operator_experience_level_oct}
-          onChange={(v: string) => updateField('operator_experience_level_oct', v)}
-          options={[
-            { value: 'Usuario experto', label: 'Usuario experto' },
-            { value: 'Usuario habitual', label: 'Usuario habitual' },
-            { value: 'Usuario ocasional', label: 'Usuario ocasional' },
-          ]}
-        />
-      </div>
+      {/* Perfil Clínico del Operador (Read-only Snapshot) */}
+      {formData.operador && (
+        <div className="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl p-5 mb-6 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Perfil Clínico Basal del Operador</h3>
+              <p className="text-xs text-muted-foreground mt-1">Snapshot de las variables de práctica clínica para este caso.</p>
+            </div>
+            <button 
+              onClick={() => setIsProfileModalOpen(true)}
+              className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors flex items-center gap-1 bg-cyan-50 dark:bg-cyan-950/30 px-3 py-1.5 rounded-md border border-cyan-100 dark:border-cyan-900"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+              Actualizar Perfil
+            </button>
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">OCT de cada 10 PCI</label>
-          <input
-            type="number"
-            min="1"
-            max="10"
-            className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 outline-none transition-all"
-            value={formData.image_usage_oct || ''}
-            onChange={e => updateField('image_usage_oct', parseInt(e.target.value) || 0)}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+            <div className="space-y-3">
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                <span className="text-muted-foreground">OCT de cada 10 PCI:</span>
+                <span className="font-semibold">{formData.image_usage_oct || 0}</span>
+              </div>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                <span className="text-muted-foreground">IVUS de cada 10 PCI:</span>
+                <span className="font-semibold">{formData.image_usage_ivus || 0}</span>
+              </div>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                <span className="text-muted-foreground">Solo Angio de cada 10 PCI:</span>
+                <span className="font-semibold">{formData.image_usage_angio || 0}</span>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                <span className="text-muted-foreground">Experiencia OCT:</span>
+                <span className="font-semibold">{formData.operator_experience_oct || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                <span className="text-muted-foreground">Nivel Experiencia OCT:</span>
+                <span className="font-semibold">{formData.operator_experience_level_oct || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1">
+                <span className="text-muted-foreground">Experiencia ULTREON™ 3.0:</span>
+                <span className="font-semibold">{formData.operator_experience_ultreon || 'N/A'}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">IVUS de cada 10 PCI</label>
-          <input
-            type="number"
-            min="1"
-            max="10"
-            className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 outline-none transition-all"
-            value={formData.image_usage_ivus || ''}
-            onChange={e => updateField('image_usage_ivus', parseInt(e.target.value) || 0)}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Solo Angio de cada 10 PCI</label>
-          <input
-            type="number"
-            min="1"
-            max="10"
-            className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 outline-none transition-all"
-            value={formData.image_usage_angio || ''}
-            onChange={e => updateField('image_usage_angio', parseInt(e.target.value) || 0)}
-          />
-        </div>
-      </div>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ClinicalSelect
-          label="Experiencia previa con Ultreon 3.0"
-          value={formData.operator_experience_ultreon}
-          onChange={(v: string) => updateField('operator_experience_ultreon', v)}
-          options={[
-            { value: 'Primeras utilizaciones', label: 'Primeras utilizaciones' },
-            { value: 'Usuario reciente', label: 'Usuario reciente' },
-            { value: 'Usuario experimentado', label: 'Usuario experimentado' },
-          ]}
+      {/* Operator Profile Modal */}
+      {formData.operador && (
+        <OperatorProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          operatorId={formData.operador}
+          operatorName={
+            hospitals.find(h => (h.id || h.name) === formData.centroMedico)?.operators?.find((o: any) => o.id === formData.operador)?.full_name || 
+            'Operador Seleccionado'
+          }
+          onProfileUpdated={handleProfileUpdated}
         />
-      </div>
+      )}
 
       <div className="pt-4 border-t border-border">
         <h2 className="text-xl font-bold text-foreground mb-4">Características del Procedimiento</h2>
@@ -299,7 +337,7 @@ export const Step1Case = ({ formData, setFormData, hospitals, profile }: Props) 
         {formData.pullback_count > 0 && (
           <div className="mt-4 space-y-4">
             {formData.pullbacks.slice(0, formData.pullback_count).map((pb, idx) => (
-              <div key={pb.id || idx} className="bg-card/50 p-4 rounded-xl border border-slate-300 dark:border-slate-700/50">
+              <div key={pb.id || idx} className="bg-card/50 p-4 rounded-xl border border-input-border dark:border-slate-700/50">
                 <h3 className="font-bold mb-3 text-cyan-400">Pullback {idx + 1}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <ClinicalSelect

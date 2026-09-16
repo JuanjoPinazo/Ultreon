@@ -153,7 +153,7 @@ export default function BusinessIntelligenceClient({
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
           >
             {[currentYear, currentYear - 1, currentYear - 2].map(year => (
               <option key={year} value={year}>{year}</option>
@@ -166,7 +166,7 @@ export default function BusinessIntelligenceClient({
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
           >
             <option value="all">Todos</option>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(month => (
@@ -182,7 +182,7 @@ export default function BusinessIntelligenceClient({
           <select
             value={selectedHospital}
             onChange={(e) => setSelectedHospital(e.target.value)}
-            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
           >
             <option value="all">Todos los centros</option>
             {hospitals.map(h => (
@@ -346,7 +346,7 @@ export default function BusinessIntelligenceClient({
         </div>
       ) : (
         <div className="bg-card border border-border rounded-2xl p-12 text-center">
-          <svg className="w-12 h-12 mx-auto text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg className="w-12 h-12 mx-auto text-muted-foreground mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 12a3 3 0 100-6 3 3 0 000 6zM7 6h.01M17 12a3 3 0 100-6 3 3 0 000 6zM17 6h.01M7 18a3 3 0 100-6 3 3 0 000 6zM7 12h.01M17 18a3 3 0 100-6 3 3 0 000 6zM17 12h.01" />
           </svg>
           <p className="text-muted-foreground text-sm">No hay datos disponibles para los filtros seleccionados.</p>

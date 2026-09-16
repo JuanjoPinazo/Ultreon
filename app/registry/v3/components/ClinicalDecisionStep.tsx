@@ -34,7 +34,7 @@ export default function ClinicalDecisionStep() {
       </div>
 
       {changed && (
-        <div className="mt-4 p-4 border-l-4 border-yellow-400 bg-white shadow-sm">
+        <div className="mt-4 p-4 border-l-4 border-yellow-400 bg-surface shadow-sm">
           <label className="block text-sm font-medium mb-1">Detalles del cambio de estrategia</label>
           <textarea {...register('core_data.strategy_change_details')} className="w-full border rounded p-2 h-24" placeholder="Describa qué se modificó..."></textarea>
         </div>

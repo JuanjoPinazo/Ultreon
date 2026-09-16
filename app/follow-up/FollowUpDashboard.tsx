@@ -84,9 +84,9 @@ export default function FollowUpDashboard({
   const handleExport = () => {
     const headers = ['ID Caso', 'Centro', 'Operador', 'Fecha', 'Estado', 'Tipo'];
     const rows = filteredCases.map(c => [
-      c.id_paciente || 'N/A',
+      c.anonymous_code || 'N/A',
       c.hospitals?.name || 'N/A',
-      c.operator?.full_name || 'N/A',
+      c.operators?.full_name || 'N/A',
       new Date(c.created_at).toLocaleDateString(),
       (c.case_status === 'complete' || c.case_status === 'completed' || c.status === 'COMPLETED') ? 'Completado' : 'Borrador',
       c.is_demo ? 'DEMO' : 'Real'
@@ -115,7 +115,7 @@ export default function FollowUpDashboard({
           <div className="flex items-center gap-3">
             <button
               onClick={handleExport}
-              className="px-4 py-2 bg-background border border-border hover:border-slate-300 text-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-2"
+              className="px-4 py-2 bg-background border border-border hover:border-input-border text-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -140,16 +140,25 @@ export default function FollowUpDashboard({
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Total Casos</p>
             <p className="text-3xl font-black text-foreground mt-1">{total}</p>
           </div>
-          <div className="bg-card border border-emerald-500/30 rounded-2xl p-5 bg-emerald-50/30 dark:bg-emerald-950/20">
+          <div className="bg-card border border-border rounded-2xl p-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
             <p className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Completados</p>
             <p className="text-3xl font-black text-emerald-700 dark:text-emerald-400 mt-1">{completed}</p>
           </div>
-          <div className="bg-card border border-amber-500/30 rounded-2xl p-5 bg-amber-50/30 dark:bg-amber-950/20">
+          <div className="bg-card border border-border rounded-2xl p-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
             <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Borradores</p>
             <p className="text-3xl font-black text-amber-700 dark:text-amber-400 mt-1">{draft}</p>
           </div>
           {(profile.role === 'admin' || profile.role === 'super_admin') && (
-            <div className="bg-card border border-orange-500/30 rounded-2xl p-5 bg-orange-50/30 dark:bg-orange-950/20">
+            <div className="bg-card border border-border rounded-2xl p-5 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <svg className="w-8 h-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+              </div>
               <p className="text-[10px] font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider">Casos DEMO</p>
               <p className="text-3xl font-black text-orange-700 dark:text-orange-400 mt-1">{demo}</p>
             </div>
@@ -233,13 +242,13 @@ export default function FollowUpDashboard({
                   return (
                     <tr key={c.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-6 py-4 font-mono font-bold text-foreground">
-                        {c.id_paciente || 'S/N'}
+                        {c.anonymous_code || 'S/N'}
                       </td>
                       <td className="px-6 py-4 text-muted-foreground font-medium">
                         {c.hospitals?.name || 'Desconocido'}
                       </td>
                       <td className="px-6 py-4 text-muted-foreground">
-                        {c.operator?.full_name || 'Desconocido'}
+                        {c.operators?.full_name || 'Desconocido'}
                       </td>
                       <td className="px-6 py-4 text-muted-foreground">
                         {new Date(c.created_at).toLocaleDateString()}
@@ -259,7 +268,7 @@ export default function FollowUpDashboard({
                       <td className="px-6 py-4 text-right">
                         <Link
                           href={`/cases/${c.id}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-background border border-border hover:border-cyan-500/50 text-cyan-600 dark:text-cyan-400 text-xs font-bold rounded-lg transition-all"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-background border border-border hover:border-primary/50 text-primary dark:text-cyan-400 text-xs font-bold rounded-lg transition-all"
                         >
                           Ver
                         </Link>

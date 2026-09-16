@@ -18,7 +18,7 @@ export default function PostPciStep() {
       </div>
 
       {requiresTreatment === 'yes' && (
-        <div className="p-4 border rounded bg-gray-50 space-y-4">
+        <div className="p-4 border rounded bg-surface-secondary space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Tipo de Tratamiento</label>
             <select {...register('global_assessment.post_pci_data.additional_treatment_type')} className="w-full border rounded p-2">

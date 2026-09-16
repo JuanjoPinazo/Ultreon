@@ -134,7 +134,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
+            className="px-4 py-2.5 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -171,7 +171,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ej: Hospital de San Juan"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                   required
                 />
               </div>
@@ -184,7 +184,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                   value={shortName}
                   onChange={(e) => setShortName(e.target.value)}
                   placeholder="Ej: HSJ"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                 />
               </div>
 
@@ -196,7 +196,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="Ej: San Juan de Alicante"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                 />
               </div>
 
@@ -208,7 +208,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                   value={province}
                   onChange={(e) => setProvince(e.target.value)}
                   placeholder="Ej: Alicante"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                 />
               </div>
 
@@ -220,12 +220,12 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   placeholder="Ej: HOSP-SANJUAN"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={editingId !== null}
                   required
                 />
                 {editingId && (
-                  <span className="text-[9px] text-slate-600 font-mono">El código no puede modificarse una vez creado.</span>
+                  <span className="text-[9px] text-muted-foreground font-mono">El código no puede modificarse una vez creado.</span>
                 )}
               </div>
 
@@ -235,7 +235,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                 <button
                   type="button"
                   onClick={() => setIsActive(!isActive)}
-                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${isActive ? 'bg-cyan-500' : 'bg-slate-100 dark:bg-slate-800'}`}
+                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${isActive ? 'bg-primary' : 'bg-slate-100 dark:bg-slate-800'}`}
                 >
                   <div className={`w-5 h-5 rounded-full bg-card absolute top-0.5 transition-transform shadow ${isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
                 </button>
@@ -254,14 +254,14 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-foreground transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-muted-foreground dark:text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isPending}
-                className="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                className="px-5 py-2 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
               >
                 {isPending ? 'Guardando...' : editingId ? 'Guardar Cambios' : 'Registrar Centro'}
               </button>

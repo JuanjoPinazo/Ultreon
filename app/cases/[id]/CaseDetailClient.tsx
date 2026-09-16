@@ -2,172 +2,167 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { 
+  formatClinicalLabel, 
+  formatClinicalValue, 
+  isModuleEmpty, 
+  MODULE_NAMES 
+} from '@/lib/registry/display-labels';
 
-// Components
-import CaseHero from '@/components/case-detail/CaseHero';
-import ProceduralTimeline from '@/components/case-detail/ProceduralTimeline';
-import KeyImagesSection from '@/components/case-detail/KeyImagesSection';
-import AIAnalysisPanel from '@/components/case-detail/AIAnalysisPanel';
-import StrategyModificationPanel from '@/components/case-detail/StrategyModificationPanel';
-import ZeroContrastAnalysis from '@/components/case-detail/ZeroContrastAnalysis';
-import TriadaUltreeon from '@/components/case-detail/TriadaUltreeon';
-import FollowUpPanel from '@/components/case-detail/FollowUpPanel';
-import CongressExportButton from '@/components/case-detail/CongressExportButton';
-
-interface KeyImage {
-  id: string;
-  file_name: string;
-  file_type?: string;
-  media_category: string;
-  acquisition_phase: string;
-  corelab_quality?: string;
+interface CaseDetailProps {
+  record: any;
+  profileRole: string;
 }
 
-interface FollowUp {
-  id: string;
-  case_id: string;
-  followup_type: 'procedural' | '30days' | '6months' | '12months';
-  followup_date: string;
-  mace: boolean;
-  tlr: boolean;
-  tvr: boolean;
-  rehospitalization: boolean;
-  completed: boolean;
-}
+export default function CaseDetailClient({ record, profileRole }: CaseDetailProps) {
+  const isDraft = record.status === 'DRAFT';
+  const isDemo = record.is_demo;
 
-interface CaseRecord {
-  id: string;
-  is_demo?: boolean;
-  id_paciente: string;
-  centro: string;
-  vaso_diana: string;
-  created_at: string;
-  calcio_ia?: boolean;
-  placa_lipida_ia?: boolean;
-  arco_lipidico_estimado?: number | null;
-  landing_zone?: string;
-  ffr_oct?: number | null;
-  expected_contrast_ml?: number | null;
-  actual_contrast_ml?: number | null;
-  zero_contrast_completed?: boolean;
-  hospitals?: { name: string } | { name: string }[];
-  opstar_strategy_changes?: Array<Record<string, any>> | null;
-  opstar_optimization_results?: Array<Record<string, any>> | null;
-}
+  // Render a simple key-value row
+  const renderRow = (key: string, value: any) => {
+    if (value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0)) return null;
+    
+    return (
+      <div key={key} className="flex flex-col py-2 border-b border-border/50 last:border-0">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase">{formatClinicalLabel(key)}</span>
+        <span className="mt-0.5 text-sm font-medium text-foreground">{formatClinicalValue(value)}</span>
+      </div>
+    );
+  };
 
-interface CaseDetailClientProps {
-  caseRecord: CaseRecord;
-  followups: FollowUp[];
-  keyImages: KeyImage[];
-}
+  // Render standard module
+  const renderModule = (title: string, data: any) => {
+    if (isModuleEmpty(data)) return null;
 
-export default function CaseDetailClient({ caseRecord, followups, keyImages }: CaseDetailClientProps) {
-  // Resolve hospital name (handle both single object and array)
-  const hospitalName = caseRecord.hospitals
-    ? Array.isArray(caseRecord.hospitals)
-      ? caseRecord.hospitals[0]?.name || 'Centro no definido'
-      : (caseRecord.hospitals as any).name || 'Centro no definido'
-    : 'Centro no definido';
+    return (
+      <div className="bg-surface border border-border rounded-xl mb-6 shadow-sm overflow-hidden">
+        <div className="bg-surface-secondary border-b border-border px-6 py-3">
+          <h3 className="text-sm font-bold text-foreground">{title}</h3>
+        </div>
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+          {Object.entries(data).map(([key, value]) => {
+            if (key === 'post_pci_data' || key === 'pullbacks') return null;
+            return renderRow(key, value);
+          })}
+        </div>
+      </div>
+    );
+  };
 
-  // Get first strategy change record if exists
-  const strategyChanges = caseRecord.opstar_strategy_changes?.[0] || null;
+  // Render pullbacks
+  const renderPullbacks = (data: any) => {
+    if (!data?.pullbacks || !Array.isArray(data.pullbacks) || data.pullbacks.length === 0) return null;
 
-  // Get first optimization result if exists
-  const optimization = caseRecord.opstar_optimization_results?.[0] || null;
+    return (
+      <div className="bg-surface border border-border rounded-xl mb-6 shadow-sm overflow-hidden">
+        <div className="bg-surface-secondary border-b border-border px-6 py-3">
+          <h3 className="text-sm font-bold text-foreground">Adquisiciones OCT</h3>
+        </div>
+        <div className="p-6 space-y-6">
+          {data.pullbacks.map((pullback: any, index: number) => (
+            <div key={index} className="bg-surface-secondary/50 border border-border rounded-lg p-5">
+              <h4 className="text-xs font-bold text-foreground mb-3 uppercase tracking-wider">Adquisición {index + 1}</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
+                {Object.entries(pullback).map(([k, v]) => {
+                  if (k === 'id') return null;
+                  return renderRow(k, v);
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
-  // Determine follow-up status
-  const getFollowupStatus = () => {
-    if (followups.length === 0) return undefined;
-    const hasMAace = followups.some((f) => f.mace);
-    if (hasMAace) return 'mace';
-    const allCompleted = followups.every((f) => f.completed);
-    if (allCompleted) return 'clean';
-    return 'pending';
+  // Render post PCI
+  const renderPostPCI = (data: any) => {
+    const postData = data?.post_pci_data;
+    if (isModuleEmpty(postData)) return null;
+
+    return (
+      <div className="bg-surface border border-border rounded-xl mb-6 shadow-sm overflow-hidden">
+        <div className="bg-surface-secondary border-b border-border px-6 py-3">
+          <h3 className="text-sm font-bold text-foreground">Optimización Post-PCI</h3>
+        </div>
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+          {Object.entries(postData).map(([key, value]) => renderRow(key, value))}
+        </div>
+      </div>
+    );
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col antialiased font-sans">
-      {/* Header */}
-      <header className="bg-card border-b border-border p-4 md:px-8 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <div className="min-h-screen bg-background">
+      <header className="bg-card border-b border-border p-6 md:px-8">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-2xl font-black text-foreground tracking-tight font-mono">
+                {record.anonymous_code}
+              </h1>
+              {isDemo && (
+                <span className="px-2 py-1 bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-400 text-[10px] rounded uppercase font-bold tracking-wider">
+                  DEMO
+                </span>
+              )}
+              <span className={`px-2 py-1 text-[10px] rounded uppercase font-bold tracking-wider border ${isDraft ? 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-400 dark:border-amber-800/50' : 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800/50'}`}>
+                {isDraft ? 'BORRADOR' : 'COMPLETADO'}
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1 font-medium">
+              <span className="text-foreground">{record.hospitals?.name}</span> — Operador: <span className="text-foreground">{record.operators?.full_name}</span> — Fecha: <span className="text-foreground">{new Date(record.procedure_date).toLocaleDateString()}</span>
+            </p>
+          </div>
           <div className="flex items-center gap-3">
             <Link
-              href="/dashboard"
-              className="h-8 w-8 rounded-lg bg-background hover:bg-muted border border-border flex items-center justify-center text-muted-foreground font-bold transition-all"
+              href="/follow-up"
+              className="px-4 py-2 bg-secondary text-secondary-foreground hover:bg-slate-200 dark:hover:bg-slate-800 border border-border font-bold rounded-xl text-xs transition-colors"
             >
-              ←
+              Volver
             </Link>
-            <div>
-              <span className="text-[8px] font-mono font-bold text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/40">
-                CASE DETAIL
-              </span>
-              <h1 className="text-base font-bold text-foreground mt-0.5">Revisión de Caso Clínico</h1>
-            </div>
+            {isDraft && (
+              <Link
+                href={`/registry/new?caseId=${record.id}`}
+                className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 font-bold rounded-xl text-xs transition-colors"
+              >
+                Editar Caso
+              </Link>
+            )}
           </div>
-
-          <Link
-            href="/dashboard"
-            className="px-3 py-1.5 bg-background hover:bg-muted border border-border rounded-xl text-xs font-medium transition-all"
-          >
-            Volver
-          </Link>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
-        <div className="space-y-8">
-          {/* 1. CASE HERO */}
-          <CaseHero
-            caseId={caseRecord.id}
-            patientId={caseRecord.id_paciente}
-            hospitalName={hospitalName}
-            procedureDate={caseRecord.created_at}
-            segment={caseRecord.vaso_diana}
-            zeroContrastCompleted={caseRecord.zero_contrast_completed}
-            opstarScore={optimization?.opstar_score}
-            opstarScoreCategory={optimization?.opstar_score_category}
-            followupStatus={getFollowupStatus()}
-            isDemo={caseRecord.is_demo}
-          />
-
-          {/* 2. PROCEDURAL TIMELINE */}
-          <ProceduralTimeline />
-
-          {/* 2.5. KEY IMAGES SECTION */}
-          {keyImages.length > 0 && (
-            <KeyImagesSection caseId={caseRecord.id} keyImages={keyImages} />
-          )}
-
-          {/* 3. AI ANALYSIS PANEL */}
-          <AIAnalysisPanel
-            severeCalcium={caseRecord.calcio_ia}
-            lipidPlaque={caseRecord.placa_lipida_ia}
-            lipidArc={caseRecord.arco_lipidico_estimado}
-            ffrOct={caseRecord.ffr_oct}
-            landingZone={caseRecord.landing_zone}
-          />
-
-          {/* 4. STRATEGY MODIFICATION */}
-          <StrategyModificationPanel strategyChanges={strategyChanges} />
-
-          {/* 5. ZERO-CONTRAST ANALYSIS */}
-          <ZeroContrastAnalysis
-            expectedContrastMl={caseRecord.expected_contrast_ml}
-            actualContrastMl={caseRecord.actual_contrast_ml}
-            zeroContrastCompleted={caseRecord.zero_contrast_completed}
-          />
-
-          {/* 6. TRIADA ULTREON™ */}
-          <TriadaUltreeon optimization={optimization} />
-
-          {/* 7. FOLLOW-UP PANEL */}
-          <FollowUpPanel caseId={caseRecord.id} followups={followups} />
-
-          {/* 8. CONGRESS EXPORT */}
-          <CongressExportButton caseId={caseRecord.id} />
+      <div className="max-w-[1400px] mx-auto p-6 md:p-8">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+          
+          {/* Columna Izquierda: Workflow Principal (60%) */}
+          <div className="xl:col-span-7 space-y-2">
+            <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4 ml-1">Ficha Clínica Principal</h2>
+            
+            {renderModule('1. Datos del Caso', record.core_data)}
+            
+            {renderPullbacks(record.acquisition_data)}
+            
+            {renderModule('3. Hallazgos OCT', record.findings_data)}
+            
+            {renderPostPCI(record.findings_data)}
+          </div>
+          
+          {/* Columna Derecha: Módulos y Valoración (40%) */}
+          <div className="xl:col-span-5 space-y-2">
+            <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4 ml-1">Módulos Dinámicos y Cierre</h2>
+            
+            {renderModule(MODULE_NAMES.calcium_module, record.calcium_module)}
+            {renderModule(MODULE_NAMES.lipid_module, record.lipid_module)}
+            {renderModule(MODULE_NAMES.left_main_module, record.left_main_module)}
+            {renderModule(MODULE_NAMES.ffr_oct_module, record.ffr_oct_module)}
+            
+            {renderModule('Valoración Global', record.global_assessment)}
+          </div>
+          
         </div>
       </div>
-    </main>
+    </div>
   );
 }

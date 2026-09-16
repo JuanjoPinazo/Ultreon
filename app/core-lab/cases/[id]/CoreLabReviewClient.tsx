@@ -228,7 +228,7 @@ export default function CoreLabReviewClient({
                           href={signedUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-4 py-2 bg-cyan-500 text-slate-950 rounded-lg font-semibold"
+                          className="px-4 py-2 bg-primary text-slate-950 rounded-lg font-semibold"
                         >
                           Abrir PDF →
                         </a>
@@ -310,7 +310,7 @@ export default function CoreLabReviewClient({
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Observaciones clínicas, recomendaciones, hallazgos..."
                       rows={3}
-                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-xs outline-none focus:border-cyan-500 resize-none"
+                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-xs outline-none focus:border-primary resize-none"
                     />
                   </div>
 
@@ -325,7 +325,7 @@ export default function CoreLabReviewClient({
                       }
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                         selectedMedia.is_key_image
-                          ? 'bg-cyan-500/20 border border-cyan-700 text-cyan-400'
+                          ? 'bg-primary/20 border border-cyan-700 text-cyan-400'
                           : 'bg-slate-100 dark:bg-slate-800 border border-border dark:border-slate-700 text-muted-foreground hover:bg-slate-700'
                       }`}
                     >

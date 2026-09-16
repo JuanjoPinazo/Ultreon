@@ -45,7 +45,7 @@ export default function DashboardFilters({
           <select
             value={currentHospital}
             onChange={(e) => updateFilters('hospital', e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
+            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs text-muted-foreground outline-none cursor-pointer"
           >
             <option value="">Todos los Hospitales</option>
             {hospitals.map((h) => (
@@ -69,7 +69,7 @@ export default function DashboardFilters({
         <select
           value={currentSegment}
           onChange={(e) => updateFilters('segment', e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
+          className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs text-muted-foreground outline-none cursor-pointer"
         >
           <option value="">Todos los Segmentos</option>
           <option value="TCI">TCI (Tronco Común Izquierdo)</option>
@@ -86,7 +86,7 @@ export default function DashboardFilters({
         <select
           value={currentDateRange}
           onChange={(e) => updateFilters('dateRange', e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
+          className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs text-muted-foreground outline-none cursor-pointer"
         >
           <option value="all">Histórico Completo</option>
           <option value="30days">Últimos 30 días</option>
@@ -103,7 +103,7 @@ export default function DashboardFilters({
           <select
             value={currentCaseType}
             onChange={(e) => updateFilters('caseType', e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs text-muted-foreground outline-none cursor-pointer"
+            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs text-muted-foreground outline-none cursor-pointer"
           >
             <option value="real">Casos Reales</option>
             <option value="demo">Casos DEMO</option>

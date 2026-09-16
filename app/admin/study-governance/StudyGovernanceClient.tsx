@@ -110,7 +110,7 @@ export default function StudyGovernanceClient({
                       type="text"
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
-                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500"
+                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-sm outline-none focus:border-primary"
                       placeholder="Título"
                     />
                   </div>
@@ -123,7 +123,7 @@ export default function StudyGovernanceClient({
                       value={editBody}
                       onChange={(e) => setEditBody(e.target.value)}
                       rows={8}
-                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500 resize-none"
+                      className="w-full px-3 py-2 bg-background border border-border text-foreground rounded-lg text-sm outline-none focus:border-primary resize-none"
                       placeholder="Contenido detallado..."
                     />
                   </div>
@@ -132,7 +132,7 @@ export default function StudyGovernanceClient({
                     <button
                       onClick={() => handleSave(item.section)}
                       disabled={isPending}
-                      className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-sm transition-all disabled:opacity-50"
+                      className="flex-1 px-4 py-2 bg-primary hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-sm transition-all disabled:opacity-50"
                     >
                       {isPending ? 'Guardando...' : '✓ Guardar'}
                     </button>
@@ -152,7 +152,7 @@ export default function StudyGovernanceClient({
                       <h3 className="text-sm font-bold text-foreground">
                         {SECTION_LABELS[item.section] || item.section}
                       </h3>
-                      <p className="text-xs text-slate-600 mt-1 font-mono">
+                      <p className="text-xs text-muted-foreground mt-1 font-mono">
                         {item.section}
                       </p>
                     </div>
@@ -180,7 +180,7 @@ export default function StudyGovernanceClient({
                     </p>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-between text-[9px] text-slate-600">
+                  <div className="pt-2 flex items-center justify-between text-[9px] text-muted-foreground">
                     <span>
                       {item.is_active ? '✓ Activo' : '✗ Inactivo'}
                     </span>

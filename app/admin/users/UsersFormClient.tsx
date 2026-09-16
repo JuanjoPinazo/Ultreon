@@ -138,7 +138,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
       case 'hospital_user':
         return <span className="px-2 py-0.5 bg-cyan-950/80 text-cyan-400 border border-cyan-900/30 rounded text-[9px] font-mono font-bold">MÉDICO</span>;
       case 'viewer':
-        return <span className="px-2 py-0.5 bg-card text-slate-500 dark:text-slate-400 border border-border rounded text-[9px] font-mono font-bold">VISOR</span>;
+        return <span className="px-2 py-0.5 bg-card text-muted-foreground dark:text-muted-foreground border border-border rounded text-[9px] font-mono font-bold">VISOR</span>;
       default:
         return <span className="px-2 py-0.5 bg-card text-muted-foreground border border-border rounded text-[9px] font-mono font-bold">{role}</span>;
     }
@@ -166,7 +166,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
+            className="px-4 py-2.5 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -203,7 +203,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Ej: juan@sanjuan.com"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   required
                   disabled={editingId !== null}
                 />
@@ -217,7 +217,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Ej: Dr. Juan Pérez"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                   required
                 />
               </div>
@@ -231,7 +231,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="OpstarPassword2026!"
-                    className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground font-mono"
+                    className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground font-mono"
                     required
                   />
                   <span className="text-[9px] text-slate-550 mt-1 font-mono">
@@ -251,7 +251,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                       setHospitalId('');
                     }
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground cursor-pointer"
                 >
                   <option value="hospital_user">Médico (hospital_user)</option>
                   <option value="monitor">Monitor (monitor)</option>
@@ -269,7 +269,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                   value={hospitalId}
                   onChange={(e) => setHospitalId(e.target.value)}
                   disabled={role !== 'hospital_user'}
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">Seleccione hospital...</option>
                   {hospitals.map((h) => (
@@ -286,7 +286,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                 <button
                   type="button"
                   onClick={() => setIsActive(!isActive)}
-                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${isActive ? 'bg-cyan-500' : 'bg-slate-100 dark:bg-slate-800'}`}
+                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${isActive ? 'bg-primary' : 'bg-slate-100 dark:bg-slate-800'}`}
                 >
                   <div className={`w-5 h-5 rounded-full bg-card absolute top-0.5 transition-transform shadow ${isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
                 </button>
@@ -304,14 +304,14 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-foreground transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-muted-foreground dark:text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isPending}
-                className="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                className="px-5 py-2 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
               >
                 {isPending ? 'Guardando...' : editingId ? 'Guardar Cambios' : 'Crear Usuario'}
               </button>
@@ -337,7 +337,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o email..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-primary/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
           />
         </div>
         <div className="text-xs text-muted-foreground font-mono">
@@ -370,7 +370,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                         <div>
                           <div className="font-bold text-sm text-foreground">
                             {u.full_name || 'Sin nombre'}
-                            {isSelf && <span className="ml-2 text-[9px] font-mono text-cyan-500 bg-cyan-950/40 px-1.5 py-0.5 rounded border border-cyan-800/30">(Tú)</span>}
+                            {isSelf && <span className="ml-2 text-[9px] font-mono text-primary bg-cyan-950/40 px-1.5 py-0.5 rounded border border-cyan-800/30">(Tú)</span>}
                           </div>
                           <div className="text-[10px] font-mono text-muted-foreground mt-0.5">{u.email}</div>
                         </div>
@@ -385,7 +385,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                           <span className="text-[10px]">🏥</span> {u.hospitals?.name || 'No asignado'}
                         </span>
                       ) : (
-                        <span className="text-slate-600 italic">No aplicable</span>
+                        <span className="text-muted-foreground italic">No aplicable</span>
                       )}
                     </td>
                     <td className="px-4 py-3 align-middle text-center">

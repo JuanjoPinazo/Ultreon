@@ -106,7 +106,7 @@ export default function AnalyticsClient({
                 className={`pb-3 text-xs md:text-sm font-semibold whitespace-nowrap transition-all border-b-2 ${
                   activeTab === tab.id
                     ? 'border-violet-500 text-violet-600 dark:text-violet-400'
-                    : 'border-transparent text-muted-foreground hover:text-slate-700 dark:hover:text-muted-foreground hover:border-slate-300 dark:hover:border-slate-700'
+                    : 'border-transparent text-muted-foreground hover:text-slate-700 dark:hover:text-muted-foreground hover:border-input-border dark:hover:border-slate-700'
                 }`}
               >
                 {tab.label}

@@ -53,7 +53,7 @@ const STEPS = [
 ];
 
 const colorClasses: Record<string, { activeIcon: string; completedLine: string; activeGlow: string }> = {
-  cyan: { activeIcon: 'text-cyan-400 bg-cyan-950/80 border-cyan-500/50', completedLine: 'bg-cyan-500/50', activeGlow: 'shadow-[0_0_15px_rgba(34,211,238,0.4)]' },
+  cyan: { activeIcon: 'text-cyan-400 bg-cyan-950/80 border-primary/50', completedLine: 'bg-primary/50', activeGlow: 'shadow-[0_0_15px_rgba(34,211,238,0.4)]' },
   violet: { activeIcon: 'text-violet-400 bg-violet-950/80 border-violet-500/50', completedLine: 'bg-violet-500/50', activeGlow: 'shadow-[0_0_15px_rgba(139,92,246,0.4)]' },
   emerald: { activeIcon: 'text-emerald-400 bg-emerald-950/80 border-emerald-500/50', completedLine: 'bg-emerald-500/50', activeGlow: 'shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
   sky: { activeIcon: 'text-sky-400 bg-sky-950/80 border-sky-500/50', completedLine: 'bg-sky-500/50', activeGlow: 'shadow-[0_0_15px_rgba(56,189,248,0.4)]' },
@@ -88,7 +88,7 @@ export default function ProceduralTimeline({ currentStep }: ProceduralTimelinePr
                     ? `${c.activeIcon} ${c.activeGlow} scale-110`
                     : isCompleted
                     ? 'bg-card border-border dark:border-slate-700 text-muted-foreground'
-                    : 'bg-background border-border text-slate-600'
+                    : 'bg-background border-border text-muted-foreground'
                 }`}
               >
                 {isCompleted ? (
@@ -103,14 +103,14 @@ export default function ProceduralTimeline({ currentStep }: ProceduralTimelinePr
                 {isActive && (
                   <span className="absolute -top-1 -right-1 w-3 h-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
                   </span>
                 )}
               </div>
 
               {/* Text */}
               <div className="mt-3 flex flex-col items-center text-center">
-                <span className={`text-[10px] font-black font-mono tracking-widest uppercase transition-colors ${isActive ? 'text-foreground' : isCompleted ? 'text-muted-foreground' : 'text-slate-600'}`}>
+                <span className={`text-[10px] font-black font-mono tracking-widest uppercase transition-colors ${isActive ? 'text-foreground' : isCompleted ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   {step.title}
                 </span>
                 <span className={`text-[9px] mt-0.5 transition-colors ${isActive ? 'text-cyan-400' : 'text-muted-foreground'}`}>

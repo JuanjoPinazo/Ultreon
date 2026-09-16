@@ -73,12 +73,12 @@ export default function AboutClient({ profile, hospitals }: AboutClientProps) {
         
         {/* ── HERO BRANDING SECTION ── */}
         <div className="relative bg-card border border-border rounded-3xl p-8 md:p-12 overflow-hidden shadow-sm dark:shadow-2xl transition-colors">
-          <div className="absolute top-0 right-0 w-[600px] h-[400px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[600px] h-[400px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/35 to-transparent" />
           
           <div className="relative z-10 grid grid-cols-1 gap-8 items-center">
             <div className="space-y-4">
-              <span className="text-[10px] font-black font-mono tracking-[0.3em] text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-200 dark:border-cyan-800/40 uppercase inline-block">
+              <span className="text-[10px] font-black font-mono tracking-[0.3em] text-primary dark:text-cyan-400 bg-primary-soft dark:bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-200 dark:border-cyan-800/40 uppercase inline-block">
                 Post-Market Evaluation & Clinical Utility Registry
               </span>
               <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight leading-none">

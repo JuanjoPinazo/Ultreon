@@ -182,7 +182,7 @@ function CheckItem({
       onClick={onToggle}
       className={`w-full text-left flex items-start gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer select-none group ${
         checked
-          ? 'bg-cyan-950/30 border-cyan-500/40 shadow-[0_0_12px_rgba(34,211,238,0.08)]'
+          ? 'bg-cyan-950/30 border-primary/40 shadow-[0_0_12px_rgba(34,211,238,0.08)]'
           : 'bg-card/60 border-border/80 hover:border-slate-700'
       }`}
     >
@@ -494,7 +494,7 @@ function HemoMode({
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
             </svg>
           </button>
-          <span className="text-xs font-mono text-slate-600 font-bold">{step}/4</span>
+          <span className="text-xs font-mono text-muted-foreground font-bold">{step}/4</span>
           <button
             onClick={() => onStepChange(Math.min(4, step + 1) as Step)}
             disabled={step === 4}
@@ -517,7 +517,7 @@ function HemoMode({
           ← ANTERIOR
         </button>
         <div className="flex items-center px-4 border-x border-slate-900">
-          <span className="text-xs font-mono text-slate-600">{step}/4</span>
+          <span className="text-xs font-mono text-muted-foreground">{step}/4</span>
         </div>
         <button
           onClick={() => onStepChange(Math.min(4, step + 1) as Step)}
@@ -564,7 +564,7 @@ export default function ZeroContrastClient() {
 
   const currentStepData = PROTOCOL_STEPS.find((s) => s.id === activeStep)!;
   const colorAccentMap: Record<Step, { text: string; border: string; bg: string; glow: string }> = {
-    1: { text: 'text-cyan-400', border: 'border-cyan-500/40', bg: 'bg-cyan-950/25', glow: 'shadow-[0_0_30px_rgba(34,211,238,0.12)]' },
+    1: { text: 'text-cyan-400', border: 'border-primary/40', bg: 'bg-cyan-950/25', glow: 'shadow-[0_0_30px_rgba(34,211,238,0.12)]' },
     2: { text: 'text-sky-400', border: 'border-sky-500/40', bg: 'bg-sky-950/25', glow: 'shadow-[0_0_30px_rgba(56,189,248,0.12)]' },
     3: { text: 'text-violet-400', border: 'border-violet-500/40', bg: 'bg-violet-950/25', glow: 'shadow-[0_0_30px_rgba(139,92,246,0.12)]' },
     4: { text: 'text-emerald-400', border: 'border-emerald-500/40', bg: 'bg-emerald-950/25', glow: 'shadow-[0_0_30px_rgba(16,185,129,0.12)]' },
@@ -624,7 +624,7 @@ export default function ZeroContrastClient() {
         <section className="relative overflow-hidden">
           {/* Background layers */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute top-20 right-0 w-80 h-80 bg-blue-500/4 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
 
@@ -657,7 +657,7 @@ export default function ZeroContrastClient() {
               Flujo de trabajo de adquisición de OCT manual guiado por suero salino.{' '}
               <span className="text-muted-foreground font-medium">Paso a paso, optimizado para sala de hemodinámica.</span>
             </p>
-            <p className="text-[11px] font-mono text-slate-600 mb-8 tracking-wider uppercase">
+            <p className="text-[11px] font-mono text-muted-foreground mb-8 tracking-wider uppercase">
               Protocolo diseñado para sala de hemodinámica · iPad optimizado · 0 ml contraste
             </p>
 
@@ -689,7 +689,7 @@ export default function ZeroContrastClient() {
                   setActiveStep(1);
                   document.getElementById('protocol-steps')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="group flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-sm transition-all duration-200 shadow-[0_0_25px_rgba(34,211,238,0.3)] hover:shadow-[0_0_40px_rgba(34,211,238,0.45)] cursor-pointer"
+                className="group flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-primary hover:bg-cyan-400 text-slate-950 font-black text-sm transition-all duration-200 shadow-[0_0_25px_rgba(34,211,238,0.3)] hover:shadow-[0_0_40px_rgba(34,211,238,0.45)] cursor-pointer"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -721,7 +721,7 @@ export default function ZeroContrastClient() {
               <a
                 href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A3_v3.pdf"
                 download
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-card/60 border border-border hover:border-cyan-500/40 text-foreground font-bold text-sm transition-all duration-200 cursor-pointer hover:text-cyan-400"
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-card/60 border border-border hover:border-primary/40 text-foreground font-bold text-sm transition-all duration-200 cursor-pointer hover:text-cyan-400"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -732,7 +732,7 @@ export default function ZeroContrastClient() {
               <a
                 href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A4_v3.pdf"
                 download
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-card/60 border border-border hover:border-cyan-500/40 text-foreground font-bold text-sm transition-all duration-200 cursor-pointer hover:text-cyan-400"
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-card/60 border border-border hover:border-primary/40 text-foreground font-bold text-sm transition-all duration-200 cursor-pointer hover:text-cyan-400"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -772,7 +772,7 @@ export default function ZeroContrastClient() {
                       <div className="h-1 bg-card rounded-full overflow-hidden">
                         <div className="h-full rounded-full" style={{ width: `${prog.pct}%`, background: color, transition: 'width 0.4s' }} />
                       </div>
-                      <div className="text-[9px] font-mono text-slate-600 mt-1">{prog.done}/{prog.total}</div>
+                      <div className="text-[9px] font-mono text-muted-foreground mt-1">{prog.done}/{prog.total}</div>
                     </button>
                   );
                 })}
@@ -787,7 +787,7 @@ export default function ZeroContrastClient() {
           {/* SIDEBAR */}
           <aside className="lg:w-64 xl:w-72 flex-shrink-0">
             <div className="lg:sticky lg:top-20 space-y-2">
-              <div className="text-[9px] font-black font-mono tracking-[0.3em] text-slate-600 uppercase mb-4 px-1">
+              <div className="text-[9px] font-black font-mono tracking-[0.3em] text-muted-foreground uppercase mb-4 px-1">
                 Pasos del Protocolo
               </div>
               {PROTOCOL_STEPS.map((s) => {
@@ -835,7 +835,7 @@ export default function ZeroContrastClient() {
                       <div className="h-full rounded-full transition-all duration-400" style={{ width: `${prog.pct}%`, background: color }} />
                     </div>
                     <div className="flex justify-between items-center mt-1 ml-11">
-                      <span className="text-[9px] font-mono text-slate-600">{prog.done}/{prog.total} verificados</span>
+                      <span className="text-[9px] font-mono text-muted-foreground">{prog.done}/{prog.total} verificados</span>
                       <span className="text-[9px] font-mono" style={isActive ? { color } : { color: '#334155' }}>{s.duration}</span>
                     </div>
                   </button>
@@ -866,7 +866,7 @@ export default function ZeroContrastClient() {
                     <a
                       href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A3_v3.pdf"
                       download
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-border hover:border-cyan-500/40 bg-card/60 hover:bg-cyan-950/20 text-muted-foreground hover:text-cyan-400 text-[10px] font-bold font-mono transition-all"
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-border hover:border-primary/40 bg-card/60 hover:bg-cyan-950/20 text-muted-foreground hover:text-cyan-400 text-[10px] font-bold font-mono transition-all"
                     >
                       <span>Póster Oficial A3</span>
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -876,7 +876,7 @@ export default function ZeroContrastClient() {
                     <a
                       href="/protocols/zero-contrast/Protocolo_Zero_Contrast_OCT_OPSTAR_AI_Levante_A4_v3.pdf"
                       download
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-border hover:border-cyan-500/40 bg-card/60 hover:bg-cyan-950/20 text-muted-foreground hover:text-cyan-400 text-[10px] font-bold font-mono transition-all"
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-border hover:border-primary/40 bg-card/60 hover:bg-cyan-950/20 text-muted-foreground hover:text-cyan-400 text-[10px] font-bold font-mono transition-all"
                     >
                       <span>Póster de Bolsillo A4</span>
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -939,14 +939,14 @@ export default function ZeroContrastClient() {
                     >
                       {currentStepData.icon}
                     </div>
-                    <span className="text-[9px] font-mono font-bold text-slate-600">{currentStepData.duration}</span>
+                    <span className="text-[9px] font-mono font-bold text-muted-foreground">{currentStepData.duration}</span>
                   </div>
                 </div>
 
                 {/* Step progress */}
                 <div className="mt-5">
                   <div className="flex justify-between text-[10px] font-mono mb-1.5">
-                    <span className="text-slate-600">Progreso de Verificación</span>
+                    <span className="text-muted-foreground">Progreso de Verificación</span>
                     <span className={accent.text}>{getStepProgress(activeStep).done}/{getStepProgress(activeStep).total}</span>
                   </div>
                   <div className="h-1.5 bg-card rounded-full overflow-hidden">
@@ -1041,7 +1041,7 @@ export default function ZeroContrastClient() {
                   <h3 className="text-sm font-bold text-foreground font-mono uppercase tracking-wider">Videos de Referencia</h3>
                   <p className="text-[10px] text-muted-foreground mt-0.5">Demostraciones del procedimiento (próximamente)</p>
                 </div>
-                <span className="text-[9px] font-black font-mono text-slate-600 bg-card border border-border px-2.5 py-1 rounded-full uppercase tracking-widest">
+                <span className="text-[9px] font-black font-mono text-muted-foreground bg-card border border-border px-2.5 py-1 rounded-full uppercase tracking-widest">
                   Próximamente
                 </span>
               </div>
@@ -1067,8 +1067,8 @@ export default function ZeroContrastClient() {
                       </div>
                       <span className="text-[9px] font-mono text-muted-foreground text-center px-3">{vid.title}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-[8px] font-mono text-slate-600">{vid.duration}</span>
-                        <span className="text-[7px] font-black font-mono px-1.5 py-0.5 rounded bg-card border border-border text-slate-600 uppercase">{vid.tag}</span>
+                        <span className="text-[8px] font-mono text-muted-foreground">{vid.duration}</span>
+                        <span className="text-[7px] font-black font-mono px-1.5 py-0.5 rounded bg-card border border-border text-muted-foreground uppercase">{vid.tag}</span>
                       </div>
                     </div>
                   </div>
@@ -1212,7 +1212,7 @@ export default function ZeroContrastClient() {
                             suboptimal: 'Subóptimo',
                           };
                           return (
-                            <div key={item.label} className={`p-2 rounded-xl border ${item.value ? clsMap[item.value] : 'bg-card border-border text-slate-600'}`}>
+                            <div key={item.label} className={`p-2 rounded-xl border ${item.value ? clsMap[item.value] : 'bg-card border-border text-muted-foreground'}`}>
                               <div className="text-[8px] font-mono font-bold mb-1 opacity-70 uppercase">{item.label}</div>
                               <div className="text-xs font-black capitalize">
                                 {item.value ? (valTextMap[item.value] ?? item.value) : '—'}
@@ -1228,7 +1228,7 @@ export default function ZeroContrastClient() {
             </div>
 
             {/* ── METAS DEL REGISTRO Y BANNER CLÍNICO ─────────────────────── */}
-            <div className="rounded-3xl border border-cyan-500/20 bg-card/40 p-6 md:p-8 space-y-4">
+            <div className="rounded-3xl border border-primary/20 bg-card/40 p-6 md:p-8 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-cyan-950/60 border border-cyan-800/60 flex items-center justify-center text-cyan-400">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1257,14 +1257,14 @@ export default function ZeroContrastClient() {
             {/* ── FOOTER CTA ─────────────────────────────────────────────── */}
             <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-slate-900 to-slate-950 p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
-                <p className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest mb-1">Siguiente paso</p>
+                <p className="text-[9px] font-mono font-black text-muted-foreground uppercase tracking-widest mb-1">Siguiente paso</p>
                 <h4 className="text-sm font-bold text-foreground">Registrar caso en eCRF OPSTAR-AI</h4>
                 <p className="text-[10px] text-muted-foreground mt-0.5">Documenta los hallazgos OCT y el Score de Optimización</p>
               </div>
               <div className="flex gap-3 flex-shrink-0">
                 <Link
                   href="/registry/new"
-                  className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_20px_rgba(34,211,238,0.25)] cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_20px_rgba(34,211,238,0.25)] cursor-pointer"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />

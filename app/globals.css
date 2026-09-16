@@ -1,106 +1,123 @@
 @import "tailwindcss";
 
 :root {
-  /* LIGHT MODE (Slate-based theme) */
-  --background: #f7f9fc;
-  --foreground: #0f172a;
-  
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  
-  --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  
-  --primary: #0e7490;
-  --primary-foreground: #ffffff;
-  --primary-soft: #cffafe;
-  
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  
-  --muted: #f1f5f9;
-  --muted-foreground: #475569;
-  
-  --accent: #7c3aed;
-  --accent-foreground: #ffffff;
-  
-  --destructive: #b91c1c;
-  --destructive-foreground: #ffffff;
-  
-  --success: #15803d;
-  --success-foreground: #ffffff;
+  /* LIGHT MODE (Premium Clinical SaaS) */
+  --background: #F5F7FA;
+  --surface: #FFFFFF;
+  --surface-secondary: #F8FAFC;
+  --card: #FFFFFF; /* mapped to surface */
 
-  --warning: #b45309;
-  --warning-foreground: #ffffff;
+  --foreground: #0F172A;
+  --foreground-secondary: #334155;
+  --muted-foreground: #64748B;
+
+  --border: #CBD5E1;
+  --divider: #E2E8F0;
+  --input-border: #94A3B8;
+
+  --primary: #0E7490;
+  --primary-hover: #155E75;
+  --primary-soft: #ECFEFF;
+
+  --success: #15803D;
+  --success-soft: #F0FDF4;
+
+  --warning: #A16207;
+  --warning-soft: #FFFBEB;
+
+  --destructive: #B91C1C;
+  --destructive-soft: #FEF2F2;
+
+  --demo: #C2410C;
+  --demo-soft: #FFF7ED;
+
+  --focus-ring: #0891B2;
   
-  --border: #cbd5e1;
-  --input: #e2e8f0;
-  --ring: #0e7490;
-  
-  --radius: 0.5rem;
+  --radius: 0.75rem; /* 12px for consistent modern look */
 }
 
 .dark {
   /* DARK MODE */
   --background: #020617; /* slate-950 */
+  --surface: #0f172a;    /* slate-900 */
+  --surface-secondary: #1e293b; /* slate-800 */
+  --card: #0f172a;       /* slate-900 */
+
   --foreground: #f8fafc; /* slate-50 */
+  --foreground-secondary: #cbd5e1; /* slate-300 */
+  --muted-foreground: #94a3b8; /* slate-400 */
+
+  --border: #1e293b;     /* slate-800 */
+  --divider: #1e293b;    /* slate-800 */
+  --input-border: #334155; /* slate-700 */
+
+  --primary: #06b6d4;    /* cyan-500 */
+  --primary-hover: #22d3ee; /* cyan-400 */
+  --primary-soft: #083344;  /* cyan-950 */
+
+  --success: #166534;    /* green-800 */
+  --success-soft: #052e16;  /* green-950 */
+
+  --warning: #78350f;    /* amber-900 */
+  --warning-soft: #451a03;  /* amber-950 */
+
+  --destructive: #7f1d1d; /* red-900 */
+  --destructive-soft: #450a0a; /* red-950 */
+
+  --demo: #fb923c;       /* orange-400 */
+  --demo-soft: #431407;  /* orange-950 */
+
+  --focus-ring: #0891b2; /* cyan-600 */
   
-  --card: #0f172a; /* slate-900 */
-  --card-foreground: #f8fafc; /* slate-50 */
-  
+  --card-foreground: #f8fafc;
   --popover: #0f172a;
   --popover-foreground: #f8fafc;
-  
-  --primary: #06b6d4; /* cyan-500 */
   --primary-foreground: #020617;
-  
-  --secondary: #1e293b; /* slate-800 */
+  --secondary: #1e293b;
   --secondary-foreground: #f8fafc;
-  
-  --muted: #1e293b; /* slate-800 */
-  --muted-foreground: #94a3b8; /* slate-400 */
-  
-  --accent: #1e293b; /* slate-800 */
+  --muted: #1e293b;
+  --accent: #1e293b;
   --accent-foreground: #f8fafc;
-  
-  --destructive: #7f1d1d; /* red-900 */
   --destructive-foreground: #f8fafc;
-  
-  --success: #166534;
   --success-foreground: #f8fafc;
-
-  --warning: #78350f;
   --warning-foreground: #f8fafc;
-
-  --border: #1e293b; /* slate-800 */
-  --input: #020617; /* slate-950 */
+  --input: #020617;
   --ring: #06b6d4;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-card: var(--surface);
+  
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
+  --color-foreground-secondary: var(--foreground-secondary);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
+  
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  
   --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  
   --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  
+  --color-demo: var(--demo);
+  --color-demo-soft: var(--demo-soft);
+  
   --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-divider: var(--divider);
+  --color-input-border: var(--input-border);
+  --color-focus-ring: var(--focus-ring);
+  
+  --color-muted: var(--surface-secondary); /* Backwards compatibility */
+  
   --radius: var(--radius);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -111,3 +128,42 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+
+@media print {
+  /* Enforce white background and black text globally for printing */
+  body, main { 
+    background-color: white !important; 
+    color: black !important; 
+  }
+  
+  /* Hide UI elements not meant for print */
+  header, nav, footer, .no-print { 
+    display: none !important; 
+  }
+  
+  /* Optimize printable components */
+  .print-page { 
+    page-break-after: always; 
+    margin: 0; 
+    padding: 1cm;
+    background-color: white !important;
+  }
+  
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+
+  /* Reset container styles that might interfere with printing */
+  .bg-card {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Ensure borders print correctly for checkboxes/inputs */
+  .print-border {
+    border: 1px solid black !important;
+  }
+}
+

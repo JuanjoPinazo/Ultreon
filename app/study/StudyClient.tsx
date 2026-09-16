@@ -93,7 +93,7 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
   useEffect(() => setIsMounted(true), []);
 
   return (
-    <main className="min-h-screen bg-background text-foreground font-sans selection:bg-cyan-500/30">
+    <main className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border transition-colors">
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
@@ -118,7 +118,7 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
       <section className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-500/10 via-background to-background" />
         <div className="max-w-4xl mx-auto px-6 relative text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-soft dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 text-xs font-bold uppercase tracking-wider mb-2">
             Documento de Proyecto
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
@@ -137,7 +137,7 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
       </section>
 
       {/* PILLARS GRID */}
-      <section className="py-16 bg-slate-50 dark:bg-slate-900/20 border-y border-border">
+      <section className="py-16 bg-surface-secondary dark:bg-slate-900/20 border-y border-border">
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-black text-foreground">Pilares de Evaluación</h2>
@@ -170,15 +170,15 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
             </p>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <span className="text-cyan-500 font-bold mt-0.5">•</span>
+                <span className="text-primary font-bold mt-0.5">•</span>
                 <span>¿En qué porcentaje de casos la información proporcionada por ULTREON 3.0 altera significativamente la estrategia previamente planificada mediante angiografía? (Decision Change Rate)</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-cyan-500 font-bold mt-0.5">•</span>
+                <span className="text-primary font-bold mt-0.5">•</span>
                 <span>¿En qué medida las nuevas herramientas automáticas (detección de calcio, lípidos y FFR-OCT) aumentan la confianza del operador y reducen la carga cognitiva durante procedimientos complejos?</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-cyan-500 font-bold mt-0.5">•</span>
+                <span className="text-primary font-bold mt-0.5">•</span>
                 <span>¿Es la adopción de protocolos como el Fast Pullback o el co-registro un factor determinante para democratizar el uso de imagen intracoronaria, haciéndolo más eficiente en tiempo y recursos?</span>
               </li>
             </ul>

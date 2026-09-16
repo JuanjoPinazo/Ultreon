@@ -37,7 +37,7 @@ export default async function AdminDashboardPage() {
       description: 'Centros de hemodinámica activos',
       link: '/admin/hospitals',
       color: 'from-cyan-500/10 to-blue-500/5',
-      borderColor: 'border-cyan-500/20',
+      borderColor: 'border-primary/20',
       icon: (
         <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -136,11 +136,11 @@ export default async function AdminDashboardPage() {
         <div className="lg:col-span-2 bg-card border border-border rounded-3xl p-6 space-y-4">
           <div className="flex justify-between items-center pb-2 border-b border-border">
             <h3 className="text-xs font-bold text-muted-foreground tracking-wider uppercase font-mono">Últimos casos registrados</h3>
-            <Link href="/dashboard" className="text-[10px] text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Ver todos</Link>
+            <Link href="/dashboard" className="text-[10px] text-primary dark:text-cyan-400 font-bold hover:underline">Ver todos</Link>
           </div>
 
           {recentCasesList.length === 0 ? (
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono py-8 text-center">No se han registrado casos clínicos en el sistema.</p>
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground font-mono py-8 text-center">No se han registrado casos clínicos en el sistema.</p>
           ) : (
             <div className="space-y-3.5">
               {recentCasesList.map((c) => {
@@ -183,11 +183,11 @@ export default async function AdminDashboardPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">FILAS DE HOSPITALES:</span>
-              <span className="text-slate-600 dark:text-slate-400">{totalHospitals}</span>
+              <span className="text-muted-foreground dark:text-muted-foreground">{totalHospitals}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">FILAS DE USUARIOS:</span>
-              <span className="text-slate-600 dark:text-slate-400">{totalUsers}</span>
+              <span className="text-muted-foreground dark:text-muted-foreground">{totalUsers}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">ÚLTIMO INTENTO DE COMPILACIÓN:</span>

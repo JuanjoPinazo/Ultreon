@@ -210,7 +210,7 @@ export default async function DashboardPage(props: {
         
         {/* Welcome and Call to Actions */}
         <div className="bg-card border border-border rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
           
           <div className="space-y-1">
             <h2 className="text-xl font-extrabold text-foreground">
@@ -229,8 +229,12 @@ export default async function DashboardPage(props: {
             {profile.role === 'admin' && (
               <Link
                 href="/admin"
-                className="px-5 py-3 bg-background border border-border hover:border-cyan-500/30 text-cyan-700 dark:text-cyan-400 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+                className="px-5 py-3 bg-surface border border-input-border hover:border-primary hover:bg-surface-secondary text-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-focus-ring shadow-sm"
               >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
                 Panel de Administración
               </Link>
             )}
@@ -238,7 +242,7 @@ export default async function DashboardPage(props: {
             {/* Resultados y Análisis (Visible para todos los investigadores) */}
             <Link
               href="/analytics"
-              className="px-5 py-3 bg-violet-50 dark:bg-background border border-violet-200 dark:border-violet-800/40 hover:border-violet-300 dark:hover:border-violet-600/60 hover:bg-violet-100 dark:hover:bg-violet-950/20 text-violet-800 dark:text-violet-400 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-sm dark:shadow-md dark:shadow-violet-500/5"
+              className="px-5 py-3 bg-surface-secondary border border-border hover:border-primary/50 hover:bg-surface text-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-sm"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -249,7 +253,7 @@ export default async function DashboardPage(props: {
             {(profile.role === 'admin' || profile.role === 'hospital_user') && (
               <Link
                 href="/registry/new"
-                className="px-5 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-lg shadow-cyan-500/10"
+                className="px-5 py-3 bg-primary hover:bg-primary-hover text-surface font-black rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-lg shadow-primary/10"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -261,7 +265,7 @@ export default async function DashboardPage(props: {
             {/* Casos Registrados */}
             <Link
               href="/follow-up"
-              className="px-5 py-3 bg-background border border-blue-800/40 hover:border-blue-600/60 hover:bg-blue-950/20 text-blue-400 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-md shadow-blue-500/5"
+              className="px-5 py-3 bg-surface border border-border hover:border-primary/50 hover:bg-surface-secondary text-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-sm"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -272,14 +276,14 @@ export default async function DashboardPage(props: {
             {/* Sobre el Registro (Iniciativa Científica) */}
             <Link
               href="/about"
-              className="px-5 py-3 bg-background border border-border hover:border-cyan-500/30 hover:bg-cyan-950/10 text-muted-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+              className="px-5 py-3 bg-surface border border-border hover:border-input-border hover:bg-surface-secondary text-foreground-secondary font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-sm"
             >
               Sobre el Registro
             </Link>
             {/* Documentación */}
             <Link
               href="/documentation"
-              className="px-5 py-3 bg-background border border-border hover:border-indigo-500/30 hover:bg-indigo-950/10 text-muted-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+              className="px-5 py-3 bg-surface border border-border hover:border-input-border hover:bg-surface-secondary text-foreground-secondary font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-sm"
             >
               Documentación
             </Link>
@@ -307,7 +311,7 @@ export default async function DashboardPage(props: {
               </div>
               <Link
                 href="/study"
-                className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-cyan-500/10 border border-cyan-700/50 hover:bg-cyan-500/20 text-cyan-400 font-bold text-xs transition-all"
+                className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-primary/10 border border-cyan-700/50 hover:bg-primary/20 text-cyan-400 font-bold text-xs transition-all"
               >
                 Abrir
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -390,7 +394,7 @@ export default async function DashboardPage(props: {
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-mono">Total Casos</span>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl font-black text-foreground tracking-tight">{totalCases}</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">fichas</span>
+              <span className="text-[10px] text-muted-foreground dark:text-muted-foreground font-mono">fichas</span>
             </div>
             <span className="text-[9px] text-muted-foreground font-mono mt-1">Registrados {profile.role === 'hospital_user' ? 'en tu centro' : 'globales'}</span>
           </div>
@@ -398,37 +402,37 @@ export default async function DashboardPage(props: {
           {/* Card 2: Completed Cases */}
           <div className="bg-card border border-border rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[110px]">
             <div className="absolute top-0 right-0 p-3 opacity-10">
-              <svg className="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-mono">Casos Completados</span>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-emerald-400 tracking-tight">{completedPercent}%</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">({completedCount})</span>
+              <span className="text-3xl font-black text-emerald-700 dark:text-emerald-400 tracking-tight">{completedPercent}%</span>
+              <span className="text-[10px] text-muted-foreground dark:text-muted-foreground font-mono">({completedCount})</span>
             </div>
-            <span className="text-[9px] text-emerald-500/80 font-mono mt-1">Estado: COMPLETED</span>
+            <span className="text-[9px] text-emerald-600/80 font-mono mt-1">Estado: COMPLETED</span>
           </div>
 
           {/* Card 3: Strategy Modified */}
           <div className="bg-card border border-border rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[110px]">
             <div className="absolute top-0 right-0 p-3 opacity-10">
-              <svg className="w-8 h-8 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-8 h-8 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
             </div>
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-mono">Estrategia Cambiada</span>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-violet-400 tracking-tight">{strategyModPercent}%</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">({strategyModCount})</span>
+              <span className="text-3xl font-black text-violet-700 dark:text-violet-400 tracking-tight">{strategyModPercent}%</span>
+              <span className="text-[10px] text-muted-foreground dark:text-muted-foreground font-mono">({strategyModCount})</span>
             </div>
-            <span className="text-[9px] text-violet-500/80 font-mono mt-1">Decision Change Rate</span>
+            <span className="text-[9px] text-violet-600/80 font-mono mt-1">Decision Change Rate</span>
           </div>
 
           {/* Card 4: Additional Info OCT */}
           <div className="bg-card border border-border rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[110px]">
             <div className="absolute top-0 right-0 p-3 opacity-10">
-              <svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -442,7 +446,7 @@ export default async function DashboardPage(props: {
           {/* Card 5: Post-PCI Optimization */}
           <div className="bg-card border border-border rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between min-h-[110px] col-span-2 lg:col-span-1">
             <div className="absolute top-0 right-0 p-3 opacity-10">
-              <svg className="w-8 h-8 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-8 h-8 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
@@ -457,7 +461,7 @@ export default async function DashboardPage(props: {
         {/* Case List Section */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase font-mono">
+            <h3 className="text-sm font-bold text-muted-foreground dark:text-muted-foreground tracking-wider uppercase font-mono">
               Casos Clínicos Registrados ({filteredCases.length})
             </h3>
           </div>
@@ -509,24 +513,24 @@ export default async function DashboardPage(props: {
                             <div className="flex items-center gap-2">
                               {record.anonymous_code || 'N/A'}
                               {record.is_demo && (
-                                <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 text-[9px] rounded font-bold uppercase">
+                                <span className="px-1.5 py-0.5 bg-demo-soft text-demo dark:bg-demo/20 dark:text-demo-soft text-[9px] rounded font-bold uppercase">
                                   DEMO
                                 </span>
                               )}
                               {record.status === 'DRAFT' && (
-                                <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300 text-[9px] rounded font-bold uppercase">
+                                <span className="px-1.5 py-0.5 bg-warning-soft text-warning dark:bg-warning/20 dark:text-warning-soft text-[9px] rounded font-bold uppercase">
                                   BORRADOR
                                 </span>
                               )}
                               {record.status === 'COMPLETED' && (
-                                <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 text-[9px] rounded font-bold uppercase">
+                                <span className="px-1.5 py-0.5 bg-success-soft text-success dark:bg-success/20 dark:text-success-soft text-[9px] rounded font-bold uppercase">
                                   COMPLETADO
                                 </span>
                               )}
                             </div>
                             <div className="text-[9px] text-muted-foreground font-normal">{dateString}</div>
                           </td>
-                          <td className="p-4 text-slate-500 dark:text-slate-400">
+                          <td className="p-4 text-muted-foreground dark:text-muted-foreground">
                             {record.hospitals ? (Array.isArray(record.hospitals) ? record.hospitals[0]?.name : (record.hospitals as any).name) : 'N/A'}
                           </td>
                           <td className="p-4">
@@ -583,7 +587,7 @@ export default async function DashboardPage(props: {
                                   type="submit"
                                   className={`px-2 py-1 rounded border text-[10px] font-bold transition-all cursor-pointer ${
                                     record.monitor_validated
-                                      ? 'bg-background border-border text-slate-500 dark:text-slate-400 hover:bg-muted'
+                                      ? 'bg-background border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted'
                                       : 'bg-emerald-950/40 border-emerald-800/40 text-emerald-400 hover:bg-emerald-950'
                                   }`}
                                 >
@@ -597,7 +601,7 @@ export default async function DashboardPage(props: {
                                   type="submit"
                                   className={`px-2 py-1 rounded border text-[10px] font-bold transition-all cursor-pointer ${
                                     record.locked
-                                      ? 'bg-background border-border text-slate-500 dark:text-slate-400 hover:bg-muted'
+                                      ? 'bg-background border-border text-muted-foreground dark:text-muted-foreground hover:bg-muted'
                                       : 'bg-red-950/40 border-red-800/40 text-red-400 hover:bg-red-950'
                                   }`}
                                 >

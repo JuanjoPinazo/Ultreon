@@ -14,7 +14,7 @@ export default function OctAcquisitionStep() {
       {fields.map((field, index) => {
         const speed = watch(`acquisition_data.pullbacks.${index}.speed`);
         return (
-          <div key={field.id} className="p-4 border rounded-lg bg-gray-50 relative">
+          <div key={field.id} className="p-4 border rounded-lg bg-surface-secondary relative">
             <button type="button" onClick={() => remove(index)} className="absolute top-2 right-2 text-red-500 text-sm">Eliminar</button>
             <div className="grid grid-cols-2 gap-4 mt-2">
               <div>

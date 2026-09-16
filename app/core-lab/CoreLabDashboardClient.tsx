@@ -155,7 +155,7 @@ export default function CoreLabDashboardClient({
                 <select
                   value={filterHospital}
                   onChange={(e) => setFilterHospital(e.target.value)}
-                  className="w-full px-4 py-2 bg-card border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 bg-card border border-border text-foreground rounded-lg text-sm outline-none focus:border-primary"
                 >
                   <option value="all">Todos los centros</option>
                   {hospitals.map((h) => (
@@ -174,7 +174,7 @@ export default function CoreLabDashboardClient({
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="w-full px-4 py-2 bg-card border border-border text-foreground rounded-lg text-sm outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 bg-card border border-border text-foreground rounded-lg text-sm outline-none focus:border-primary"
                 >
                   <option value="pending">Pendiente de revisión</option>
                   <option value="suboptimal">Calidad subóptima detectada</option>
@@ -279,7 +279,7 @@ export default function CoreLabDashboardClient({
                         <td className="px-4 py-3 text-center">
                           <Link
                             href={`/core-lab/cases/${c.id}`}
-                            className="inline-block px-3 py-1.5 bg-cyan-500/20 border border-cyan-700 text-cyan-400 rounded-lg text-xs font-semibold hover:bg-cyan-500/30 transition-all"
+                            className="inline-block px-3 py-1.5 bg-primary/20 border border-cyan-700 text-cyan-400 rounded-lg text-xs font-semibold hover:bg-primary/30 transition-all"
                           >
                             Revisar →
                           </Link>

@@ -187,7 +187,7 @@ export default function AdminOperatorsClient({
         {!showAdd && !editingId && (
           <button
             onClick={openAdd}
-            className="self-start px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
+            className="self-start px-4 py-2.5 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -198,7 +198,7 @@ export default function AdminOperatorsClient({
       </div>
 
       {(showAdd || editingId) && (
-        <Card className="p-6 border-cyan-500/30 bg-card animate-fade-slide">
+        <Card className="p-6 border-primary/30 bg-card animate-fade-slide">
           <h3 className="text-sm font-bold text-muted-foreground tracking-wider uppercase font-mono mb-4">
             {editingId ? 'Editar Operador' : 'Añadir Operador'}
           </h3>
@@ -216,7 +216,7 @@ export default function AdminOperatorsClient({
                   type="text"
                   value={formData.fullName}
                   onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-xs text-foreground focus:border-cyan-500/50 outline-none"
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-xs text-foreground focus:border-primary/50 outline-none"
                   placeholder="Ej: Dra. Elena García"
                 />
               </div>
@@ -226,7 +226,7 @@ export default function AdminOperatorsClient({
                   type="email"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-xs text-foreground focus:border-cyan-500/50 outline-none"
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-xs text-foreground focus:border-primary/50 outline-none"
                   placeholder="Ej: elena@hospital.com"
                 />
               </div>
@@ -237,7 +237,7 @@ export default function AdminOperatorsClient({
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
-                className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${formData.isActive ? 'bg-cyan-500' : 'bg-slate-100 dark:bg-slate-800'}`}
+                className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${formData.isActive ? 'bg-primary' : 'bg-slate-100 dark:bg-slate-800'}`}
               >
                 <div className={`w-5 h-5 rounded-full bg-card absolute top-0.5 transition-transform shadow ${formData.isActive ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
               </button>
@@ -255,7 +255,7 @@ export default function AdminOperatorsClient({
                       type="checkbox"
                       checked={formData.hospitalIds.includes(h.id)}
                       onChange={() => toggleHospital(h.id)}
-                      className="mt-0.5 w-4 h-4 rounded bg-card border-border dark:border-slate-700 text-cyan-500 focus:ring-cyan-500/20 cursor-pointer"
+                      className="mt-0.5 w-4 h-4 rounded bg-card border-border dark:border-slate-700 text-primary focus:ring-cyan-500/20 cursor-pointer"
                     />
                     <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors leading-tight">{h.name}</span>
                   </label>
@@ -267,14 +267,14 @@ export default function AdminOperatorsClient({
               <button
                 onClick={cancel}
                 disabled={isSubmitting}
-                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-foreground transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-muted-foreground dark:text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={editingId ? handleUpdate : handleCreate}
                 disabled={isSubmitting}
-                className="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                className="px-5 py-2 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
               >
                 {isSubmitting ? 'Guardando...' : editingId ? 'Guardar Cambios' : 'Añadir Operador'}
               </button>
@@ -300,7 +300,7 @@ export default function AdminOperatorsClient({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar operador por nombre o email..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-primary/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
           />
         </div>
 
@@ -309,7 +309,7 @@ export default function AdminOperatorsClient({
           <select
             value={selectedHospitalFilter}
             onChange={(e) => setSelectedHospitalFilter(e.target.value)}
-            className="w-full md:w-64 px-3 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground"
+            className="w-full md:w-64 px-3 py-2 rounded-xl bg-background border border-border focus:border-primary/40 text-xs outline-none text-muted-foreground"
           >
             <option value="all">Todos los Hospitales</option>
             {allHospitals.map((h) => (
@@ -341,7 +341,7 @@ export default function AdminOperatorsClient({
                   <tr className={`hover:bg-slate-200 dark:hover:bg-slate-800/30 transition-colors ${!op.is_active ? 'opacity-60' : ''}`}>
                     <td className="px-4 py-3 align-middle">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 text-cyan-500 font-bold text-xs uppercase border border-border dark:border-slate-700">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 text-primary font-bold text-xs uppercase border border-border dark:border-slate-700">
                           {op.full_name.substring(0, 2)}
                         </div>
                         <div>

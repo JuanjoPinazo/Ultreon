@@ -13,7 +13,7 @@ const FINDINGS_OPTIONS = [
   'Calcio profundo',
   'Placa lipídica',
   'Lesión larga',
-  'Landing zone subóptima',
+  'Zona de aterrizaje subóptima',
   'Infraexpansión',
   'Malaposición',
   'Disección',
@@ -75,7 +75,7 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
         
         <div className="flex flex-col gap-1.5 mb-4">
           <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">¿Cómo podría mejorarse?</label>
-          <input type="text" className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 text-sm outline-none" value={formData.improvement_ideas_calcium || ''} onChange={e => updateField('improvement_ideas_calcium', e.target.value)} />
+          <input type="text" className="bg-card border border-input-border dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 text-sm outline-none" value={formData.improvement_ideas_calcium || ''} onChange={e => updateField('improvement_ideas_calcium', e.target.value)} />
         </div>
 
         <ClinicalRadioChips label="¿La evaluación modificó la estrategia de preparación?" value={formData.changed_prep_strategy_calcium === true ? 'Si' : formData.changed_prep_strategy_calcium === false ? 'No' : ''} onChange={(v: string) => updateField('changed_prep_strategy_calcium', v === 'Si')} options={['Si', 'No']} />
@@ -106,7 +106,7 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
         
         <div className="flex flex-col gap-1.5 mb-4">
           <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">¿Cómo podría mejorarse?</label>
-          <input type="text" className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 text-sm outline-none" value={formData.improvement_ideas_lipid || ''} onChange={e => updateField('improvement_ideas_lipid', e.target.value)} />
+          <input type="text" className="bg-card border border-input-border dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 text-sm outline-none" value={formData.improvement_ideas_lipid || ''} onChange={e => updateField('improvement_ideas_lipid', e.target.value)} />
         </div>
       </ConditionalSection>
 
@@ -156,7 +156,7 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
             
             <div className="flex flex-col gap-1.5 mb-4">
               <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">¿Cómo modificó la decisión?</label>
-              <input type="text" className="bg-card border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 text-sm outline-none" value={formData.ffr_oct_decision_change || ''} onChange={e => updateField('ffr_oct_decision_change', e.target.value)} />
+              <input type="text" className="bg-card border border-input-border dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 text-sm outline-none" value={formData.ffr_oct_decision_change || ''} onChange={e => updateField('ffr_oct_decision_change', e.target.value)} />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

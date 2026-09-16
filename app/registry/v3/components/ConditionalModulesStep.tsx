@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 function CalciumModule() {
   const { register } = useFormContext();
   return (
-    <div className="p-4 border rounded bg-white mt-2">
+    <div className="p-4 border rounded bg-surface mt-2">
       <h3 className="font-semibold mb-3">Módulo de Calcio</h3>
       <div className="space-y-3">
         <label className="flex items-center space-x-2">
@@ -29,7 +29,7 @@ function CalciumModule() {
 function LipidModule() {
   const { register } = useFormContext();
   return (
-    <div className="p-4 border rounded bg-white mt-2">
+    <div className="p-4 border rounded bg-surface mt-2">
       <h3 className="font-semibold mb-3">Módulo de Lípido</h3>
       <div className="space-y-3">
         <label className="flex items-center space-x-2">
@@ -44,7 +44,7 @@ function LipidModule() {
 function LeftMainModule() {
   const { register } = useFormContext();
   return (
-    <div className="p-4 border rounded bg-white mt-2">
+    <div className="p-4 border rounded bg-surface mt-2">
       <h3 className="font-semibold mb-3">Módulo de Tronco Común (TCI)</h3>
       <div className="space-y-3">
         <label className="flex items-center space-x-2">
@@ -59,7 +59,7 @@ function LeftMainModule() {
 function FfrOctModule() {
   const { register } = useFormContext();
   return (
-    <div className="p-4 border rounded bg-white mt-2">
+    <div className="p-4 border rounded bg-surface mt-2">
       <h3 className="font-semibold mb-3">Módulo FFR-OCT</h3>
       <div className="space-y-3">
         <label className="flex items-center space-x-2">
@@ -99,19 +99,19 @@ export default function ConditionalModulesStep() {
       <h2 className="text-xl font-semibold border-b pb-2">Paso 5: Módulos Condicionales</h2>
       
       <div className="flex space-x-4 flex-wrap gap-y-2">
-        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-gray-50">
+        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-surface-secondary">
           <input type="checkbox" {...register('calcium_module.has_calcium_module')} />
           <span>Calcio</span>
         </label>
-        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-gray-50">
+        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-surface-secondary">
           <input type="checkbox" {...register('lipid_module.has_lipid_module')} />
           <span>Lípido</span>
         </label>
-        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-gray-50">
+        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-surface-secondary">
           <input type="checkbox" {...register('left_main_module.has_left_main_module')} />
           <span>Tronco Común (TCI)</span>
         </label>
-        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-gray-50">
+        <label className="flex items-center space-x-2 p-3 border rounded cursor-pointer bg-surface-secondary">
           <input type="checkbox" {...register('ffr_oct_module.has_ffr_oct_module')} />
           <span>FFR-OCT</span>
         </label>

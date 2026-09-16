@@ -45,7 +45,8 @@ export default async function FollowUpPage() {
     .from('ultreon_registry_cases')
     .select(`
       *,
-      hospitals(name)
+      hospitals(name),
+      operators(full_name)
     `);
 
   // Restringir casos por centro si es investigador local (hospital_user)

@@ -551,7 +551,7 @@ export default function CaseFollowUpClient({
                   disabled={isEditingDisabled}
                   value={formData.followup_date}
                   onChange={(e) => handleInputChange('followup_date', e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-cyan-500/50 text-xs font-mono outline-none w-full disabled:opacity-50"
+                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-primary/50 text-xs font-mono outline-none w-full disabled:opacity-50"
                 />
               </div>
 
@@ -564,7 +564,7 @@ export default function CaseFollowUpClient({
                   disabled={isEditingDisabled}
                   value={formData.clinical_status}
                   onChange={(e) => handleInputChange('clinical_status', e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-cyan-500/50 text-xs outline-none w-full cursor-pointer disabled:opacity-50"
+                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-primary/50 text-xs outline-none w-full cursor-pointer disabled:opacity-50"
                 >
                   <option value="asymptomatic">Asintomático</option>
                   <option value="stable_angina">Angina Estable (Angor)</option>
@@ -585,7 +585,7 @@ export default function CaseFollowUpClient({
                   placeholder="Detalles adicionales sobre la evolución del paciente, hospitalizaciones externas, dosis de fármacos, o hallazgos clínicos relevantes..."
                   value={formData.investigator_notes || ''}
                   onChange={(e) => handleInputChange('investigator_notes', e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-cyan-500/50 text-xs outline-none w-full resize-none disabled:opacity-50 font-sans"
+                  className="px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:border-primary/50 text-xs outline-none w-full resize-none disabled:opacity-50 font-sans"
                 />
               </div>
 

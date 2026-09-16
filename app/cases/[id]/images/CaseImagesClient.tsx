@@ -146,7 +146,7 @@ export default function CaseImagesClient({
                 onClick={() => setSelectedFilter(filter.id)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
                   selectedFilter === filter.id
-                    ? 'bg-cyan-500/20 border border-cyan-500 text-cyan-400'
+                    ? 'bg-primary/20 border border-primary text-cyan-400'
                     : 'bg-card border border-border text-muted-foreground hover:border-slate-700'
                 }`}
               >

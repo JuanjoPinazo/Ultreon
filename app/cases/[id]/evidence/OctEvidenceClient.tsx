@@ -341,7 +341,7 @@ export default function OctEvidenceClient({
                       onChange={(e) =>
                         setFormData({ ...formData, phase: e.target.value as any })
                       }
-                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
                     >
                       {PHASE_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -361,7 +361,7 @@ export default function OctEvidenceClient({
                       onChange={(e) =>
                         setFormData({ ...formData, evidenceType: e.target.value as any })
                       }
-                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
                     >
                       {EVIDENCE_TYPE_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -381,7 +381,7 @@ export default function OctEvidenceClient({
                       onChange={(e) =>
                         setFormData({ ...formData, linkedVariable: e.target.value })
                       }
-                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
                     >
                       <option value="">Seleccionar...</option>
                       {LINKED_VARIABLE_OPTIONS.map((opt) => (
@@ -404,7 +404,7 @@ export default function OctEvidenceClient({
                         setFormData({ ...formData, title: e.target.value })
                       }
                       placeholder="Ej: OCT Pull-back pre-stent"
-                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-slate-600 focus:outline-none focus:border-primary"
                     />
                   </div>
 
@@ -470,7 +470,7 @@ export default function OctEvidenceClient({
           <select
             value={filterPhase}
             onChange={(e) => setFilterPhase(e.target.value)}
-            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
           >
             <option value="all">Todas</option>
             {PHASE_OPTIONS.map((opt) => (
@@ -600,7 +600,7 @@ export default function OctEvidenceClient({
       ) : (
         <div className="bg-card border border-border rounded-2xl p-12 text-center">
           <svg
-            className="w-12 h-12 mx-auto text-slate-600 mb-4"
+            className="w-12 h-12 mx-auto text-muted-foreground mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

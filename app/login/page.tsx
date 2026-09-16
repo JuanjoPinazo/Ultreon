@@ -79,7 +79,7 @@ function LoginForm() {
             required
             placeholder="ejemplo@hospital.com"
             disabled={isPending}
-            className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-cyan-500/50 transition-all text-sm outline-none text-foreground placeholder-slate-650"
+            className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary/50 transition-all text-sm outline-none text-foreground placeholder-slate-650"
           />
         </div>
 
@@ -96,7 +96,7 @@ function LoginForm() {
               required
               placeholder="••••••••"
               disabled={isPending}
-              className="w-full px-4 py-3 pr-10 rounded-xl bg-background border border-border focus:border-cyan-500/50 transition-all text-sm outline-none text-foreground placeholder-slate-650"
+              className="w-full px-4 py-3 pr-10 rounded-xl bg-background border border-border focus:border-primary/50 transition-all text-sm outline-none text-foreground placeholder-slate-650"
             />
             <button
               type="button"
@@ -121,7 +121,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full py-3.5 rounded-xl bg-primary hover:bg-cyan-400 text-slate-950 font-black transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {isPending ? (
             <>
@@ -144,7 +144,7 @@ function LoginForm() {
 
       {/* Card Footer */}
       <div className="p-6 bg-background border-t border-border/50 flex flex-col items-center justify-center gap-4">
-        <div className="text-center text-[10px] text-slate-600 font-mono">
+        <div className="text-center text-[10px] text-muted-foreground font-mono">
           🔒 Conexión segura SSL/TLS · Cumple RGPD de datos médicos
         </div>
       </div>
@@ -156,7 +156,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 md:p-8 antialiased font-sans">
       {/* Cyan glow background orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       
       <Suspense fallback={
         <div className="w-full max-w-md bg-card border border-border rounded-3xl p-12 text-center flex flex-col items-center gap-4">

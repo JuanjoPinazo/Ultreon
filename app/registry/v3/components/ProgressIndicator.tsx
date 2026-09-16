@@ -2,7 +2,7 @@ export default function ProgressIndicator({ currentStep, totalSteps }: { current
   const percentage = Math.round((currentStep / totalSteps) * 100);
   return (
     <div className="mb-6">
-      <div className="flex justify-between text-sm text-gray-500 mb-2">
+      <div className="flex justify-between text-sm text-muted-foreground mb-2">
         <span>Paso {currentStep} de {totalSteps}</span>
         <span>{percentage} % completado</span>
       </div>

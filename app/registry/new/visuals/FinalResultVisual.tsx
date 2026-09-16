@@ -95,7 +95,7 @@ export default function FinalResultVisual({
           <span className="text-[10px] font-black font-mono tracking-[0.3em] text-muted-foreground uppercase mb-2">SCORE OPSTAR</span>
           <div className="flex items-baseline gap-1">
             <span className={`text-7xl font-black tracking-tighter ${colors.text}`}>{animatedScore}</span>
-            <span className="text-xl font-bold text-slate-600">/100</span>
+            <span className="text-xl font-bold text-muted-foreground">/100</span>
           </div>
           <span className={`mt-2 px-4 py-1 rounded-full text-xs font-bold font-mono tracking-wider border uppercase ${colors.text} ${colors.bg} border-current opacity-80`}>
             {categoryLabel}

@@ -305,7 +305,7 @@ export default function SiteMonitoringClient({
           <select
             value={selectedHospital}
             onChange={(e) => setSelectedHospital(e.target.value)}
-            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
           >
             <option value="all">Todos los centros</option>
             {hospitals.map((h) => (
@@ -325,7 +325,7 @@ export default function SiteMonitoringClient({
             onChange={(e) =>
               setSelectedStatus(e.target.value as 'all' | 'green' | 'amber' | 'red')
             }
-            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-cyan-500"
+            className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
           >
             <option value="all">Todos los estados</option>
             <option value="green">✓ Green</option>
@@ -546,7 +546,7 @@ export default function SiteMonitoringClient({
       ) : (
         <div className="bg-card border border-border rounded-2xl p-12 text-center">
           <svg
-            className="w-12 h-12 mx-auto text-slate-600 mb-4"
+            className="w-12 h-12 mx-auto text-muted-foreground mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

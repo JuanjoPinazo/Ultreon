@@ -214,7 +214,7 @@ export default function InvestigatorsFormClient({
               resetForm();
               setShowForm(true);
             }}
-            className="self-start px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
+            className="self-start px-4 py-2.5 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -243,7 +243,7 @@ export default function InvestigatorsFormClient({
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Ej: Dr. Salvador Almenar"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                   required
                 />
               </div>
@@ -254,7 +254,7 @@ export default function InvestigatorsFormClient({
                 <select
                   value={hospitalId}
                   onChange={(e) => setHospitalId(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                   required
                 >
                   <option value="">Seleccione un hospital...</option>
@@ -272,7 +272,7 @@ export default function InvestigatorsFormClient({
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                   required
                 >
                   {Object.entries(ROLE_LABELS).map(([k, label]) => (
@@ -291,7 +291,7 @@ export default function InvestigatorsFormClient({
                   value={specialty}
                   onChange={(e) => setSpecialty(e.target.value)}
                   placeholder="Ej: Cardiología Intervencionista"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                 />
               </div>
 
@@ -304,7 +304,7 @@ export default function InvestigatorsFormClient({
                   onChange={(e) => setDisplayOrder(Number(e.target.value))}
                   placeholder="Ej: 0"
                   min="0"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground font-mono"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground font-mono"
                 />
               </div>
 
@@ -316,7 +316,7 @@ export default function InvestigatorsFormClient({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Ej: doctor@hospital.com"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                 />
               </div>
 
@@ -328,7 +328,7 @@ export default function InvestigatorsFormClient({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Ej: +34 600 000 000"
-                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-cyan-500/50 text-xs outline-none text-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground"
                 />
               </div>
 
@@ -340,7 +340,7 @@ export default function InvestigatorsFormClient({
                     type="checkbox"
                     checked={isPrincipalInvestigator}
                     onChange={(e) => setIsPrincipalInvestigator(e.target.checked)}
-                    className="w-4 h-4 rounded bg-background border-border text-cyan-500 focus:ring-0 cursor-pointer"
+                    className="w-4 h-4 rounded bg-background border-border text-primary focus:ring-0 cursor-pointer"
                   />
                   <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">¿Investigador Principal (IP)?</span>
                 </label>
@@ -351,7 +351,7 @@ export default function InvestigatorsFormClient({
                     type="checkbox"
                     checked={isActive}
                     onChange={(e) => setIsActive(e.target.checked)}
-                    className="w-4 h-4 rounded bg-background border-border text-cyan-500 focus:ring-0 cursor-pointer"
+                    className="w-4 h-4 rounded bg-background border-border text-primary focus:ring-0 cursor-pointer"
                   />
                   <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Estado Activo</span>
                 </label>
@@ -368,14 +368,14 @@ export default function InvestigatorsFormClient({
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-foreground transition-all cursor-pointer"
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-muted-foreground dark:text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isPending}
-                className="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                className="px-5 py-2 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
               >
                 {isPending ? 'Guardando...' : editingId ? 'Guardar Cambios' : 'Registrar Investigador'}
               </button>
@@ -401,7 +401,7 @@ export default function InvestigatorsFormClient({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, especialidad o email..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-primary/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
           />
         </div>
 
@@ -410,7 +410,7 @@ export default function InvestigatorsFormClient({
           <select
             value={selectedHospitalFilter}
             onChange={(e) => setSelectedHospitalFilter(e.target.value)}
-            className="w-full md:w-64 px-3 py-2 rounded-xl bg-background border border-border focus:border-cyan-500/40 text-xs outline-none text-muted-foreground"
+            className="w-full md:w-64 px-3 py-2 rounded-xl bg-background border border-border focus:border-primary/40 text-xs outline-none text-muted-foreground"
           >
             <option value="all">Todos los Hospitales</option>
             {hospitals.map((h) => (
