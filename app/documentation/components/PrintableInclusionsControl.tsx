@@ -3,14 +3,16 @@ import React from 'react';
 interface HospitalData {
   id: string;
   name: string;
+  phase?: string;
   prefix?: string;
   operators?: string[];
   target?: {
     target_total: number;
     target_monthly: number | null;
-    target_weekly: number | null;
+    target_weekly?: number | null;
     start_date: string;
     end_date: string | null;
+    status?: 'DRAFT' | 'ACTIVE' | 'CLOSED';
   } | null;
 }
 
@@ -38,7 +40,7 @@ export default function PrintableInclusionsControl({ hospital }: { hospital: Hos
               <div>
                 <h1 className="text-3xl font-black uppercase text-slate-900 tracking-tighter">CONTROL DE INCLUSIONES</h1>
                 <h2 className="text-lg font-bold text-slate-600 uppercase tracking-widest mt-1">Registro Clínico ULTREON™ 3.0</h2>
-                {!hospital?.target && (
+                {(!hospital?.target || hospital.target.status !== 'ACTIVE') && (
                   <div className="text-sm font-bold text-orange-600 mt-2 uppercase tracking-widest bg-orange-50 inline-block px-2 py-1 rounded">
                     Objetivo pendiente de definir
                   </div>

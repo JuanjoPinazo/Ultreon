@@ -8,6 +8,8 @@ import {
   groupWarningsBySeverity,
   type DataQualityWarning,
 } from '@/lib/clinical/case-quality';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 interface DataQualityPanelProps {
   caseId: string;
@@ -30,6 +32,8 @@ export default function DataQualityPanel({
 }: DataQualityPanelProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [expandWarnings, setExpandWarnings] = useState(false);
+  const { showSuccess, showError } = useGlobalToast();
+  const { showDialog } = useGlobalDialog();
 
   const statusColor = getQualityStatusColor(completenessScore);
   const statusLabel = getQualityStatusLabel(completenessScore);
@@ -44,7 +48,7 @@ export default function DataQualityPanel({
 
   const handleMarkComplete = async () => {
     if (!canEdit) {
-      alert('No tienes permisos para completar este caso');
+      showError('No tienes permisos para completar este caso');
       return;
     }
 
@@ -52,13 +56,21 @@ export default function DataQualityPanel({
     try {
       const result = await markCaseCompleteAction(caseId);
       if (result.success) {
-        alert('Caso marcado como completo');
+        showSuccess('Caso marcado como completo');
         window.location.reload();
       } else {
-        alert(`Error: ${result.error}`);
+        showDialog({
+          type: 'error',
+          title: 'Error de validación',
+          message: result.error
+        });
       }
     } catch (err: any) {
-      alert(`Error: ${err?.message}`);
+      showDialog({
+        type: 'error',
+        title: 'Error técnico',
+        message: err?.message
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -66,7 +78,7 @@ export default function DataQualityPanel({
 
   const handleValidate = async () => {
     if (!isAdmin) {
-      alert('Solo admin/monitor pueden validar');
+      showError('Solo admin/monitor pueden validar');
       return;
     }
 
@@ -79,47 +91,68 @@ export default function DataQualityPanel({
         warnings,
       });
       if (result.success) {
-        alert('Caso validado');
+        showSuccess('Caso validado');
         window.location.reload();
       } else {
-        alert(`Error: ${result.error}`);
+        showDialog({
+          type: 'error',
+          title: 'Error de validación',
+          message: result.error
+        });
       }
     } catch (err: any) {
-      alert(`Error: ${err?.message}`);
+      showDialog({
+        type: 'error',
+        title: 'Error técnico',
+        message: err?.message
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleLock = async () => {
+  const handleLock = () => {
     if (!isAdmin) {
-      alert('Solo admin/monitor pueden bloquear');
+      showError('Solo admin/monitor pueden bloquear');
       return;
     }
 
-    if (!confirm('¿Bloquear este caso? No se podrá editar.')) {
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const result = await updateCaseStatusAction({
-        caseId,
-        newStatus: 'locked',
-        completenessScore,
-        warnings,
-      });
-      if (result.success) {
-        alert('Caso bloqueado');
-        window.location.reload();
-      } else {
-        alert(`Error: ${result.error}`);
+    showDialog({
+      type: 'destructive',
+      title: '¿Bloquear este caso?',
+      message: 'Una vez bloqueado, el caso no se podrá editar sin una solicitud formal de desbloqueo.',
+      confirmLabel: 'Bloquear',
+      cancelLabel: 'Cancelar',
+      onConfirm: async () => {
+        setIsSubmitting(true);
+        try {
+          const result = await updateCaseStatusAction({
+            caseId,
+            newStatus: 'locked',
+            completenessScore,
+            warnings,
+          });
+          if (result.success) {
+            showSuccess('Caso bloqueado');
+            window.location.reload();
+          } else {
+            showDialog({
+              type: 'error',
+              title: 'Error al bloquear',
+              message: result.error
+            });
+          }
+        } catch (err: any) {
+          showDialog({
+            type: 'error',
+            title: 'Error técnico',
+            message: err?.message
+          });
+        } finally {
+          setIsSubmitting(false);
+        }
       }
-    } catch (err: any) {
-      alert(`Error: ${err?.message}`);
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
   };
 
   return (

@@ -8,6 +8,7 @@ export interface TargetProgress {
   variance: number; // completed - expectedToDate
   startDate: string;
   endDate: string | null;
+  expectedWeeklyRate: number; // target / weeks or monthly / 4.345
 }
 
 export interface CenterTarget {
@@ -17,7 +18,9 @@ export interface CenterTarget {
   end_date: string | null;
   target_total: number;
   target_monthly: number | null;
-  active: boolean;
+  status: 'DRAFT' | 'ACTIVE' | 'CLOSED';
+  notes?: string;
+  created_by?: string;
 }
 
 export interface OperatorTarget {
@@ -29,7 +32,9 @@ export interface OperatorTarget {
   end_date: string | null;
   target_total: number;
   target_monthly: number | null;
-  active: boolean;
+  status: 'DRAFT' | 'ACTIVE' | 'CLOSED';
+  notes?: string;
+  created_by?: string;
 }
 
 export interface RegistryCase {
@@ -64,6 +69,7 @@ export function isOfficialRegistryCase(c: RegistryCase, officialStartDate: strin
  */
 export function calculateProgress(
   targetTotal: number,
+  targetMonthly: number | null,
   startDateStr: string,
   endDateStr: string | null,
   cases: RegistryCase[]
@@ -113,6 +119,15 @@ export function calculateProgress(
     actualRate = completed / passedMonths;
   }
 
+  // Weekly rate as requested (Ritmo semanal orientativo)
+  let expectedWeeklyRate = 0;
+  if (endDate) {
+    const weeksInPeriod = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 7);
+    if (weeksInPeriod > 0) expectedWeeklyRate = targetTotal / weeksInPeriod;
+  } else if (targetMonthly) {
+    expectedWeeklyRate = targetMonthly / 4.345;
+  }
+
   return {
     targetTotal,
     completed,
@@ -122,7 +137,8 @@ export function calculateProgress(
     actualRate: parseFloat(actualRate.toFixed(1)),
     variance,
     startDate: startDateStr,
-    endDate: endDateStr
+    endDate: endDateStr,
+    expectedWeeklyRate: parseFloat(expectedWeeklyRate.toFixed(1))
   };
 }
 
@@ -131,7 +147,7 @@ export function calculateProgress(
  */
 export function getCenterProgress(target: CenterTarget, allCases: RegistryCase[]): TargetProgress {
   const centerCases = allCases.filter(c => c.hospital_id === target.hospital_id);
-  return calculateProgress(target.target_total, target.start_date, target.end_date, centerCases);
+  return calculateProgress(target.target_total, target.target_monthly, target.start_date, target.end_date, centerCases);
 }
 
 /**
@@ -139,5 +155,5 @@ export function getCenterProgress(target: CenterTarget, allCases: RegistryCase[]
  */
 export function getOperatorProgress(target: OperatorTarget, allCases: RegistryCase[]): TargetProgress {
   const operatorCases = allCases.filter(c => c.operator_id === target.operator_id);
-  return calculateProgress(target.target_total, target.start_date, target.end_date, operatorCases);
+  return calculateProgress(target.target_total, target.target_monthly, target.start_date, target.end_date, operatorCases);
 }

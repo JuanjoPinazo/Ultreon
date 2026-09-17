@@ -7,6 +7,8 @@ import {
   deleteOperatorAction,
 } from '@/lib/supabase/actions';
 import Card from '@/components/design-system/Card';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 interface HospitalOperatorLink {
   hospital_id: string;
@@ -51,6 +53,8 @@ export default function AdminOperatorsClient({
   const [formData, setFormData] = useState(emptyForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const { showSuccess, showError } = useGlobalToast();
+  const { showDialog } = useGlobalDialog();
   
   // Linking state
   const [linkingOperatorId, setLinkingOperatorId] = useState<string | null>(null);
@@ -180,25 +184,42 @@ export default function AdminOperatorsClient({
     const { linkOperatorToUserAction } = await import('@/lib/supabase/actions');
     const res = await linkOperatorToUserAction(linkingOperatorId, selectedUserId);
     if (res.error) {
-      alert(res.error);
+      showDialog({
+        type: 'error',
+        title: 'Error de vinculación',
+        message: res.error
+      });
     } else {
       setLinkingOperatorId(null);
+      showSuccess('Usuario vinculado correctamente');
       setTimeout(() => window.location.reload(), 500);
     }
     setIsSubmitting(false);
   };
 
   const handleUnlinkUser = async (opId: string) => {
-    if (!confirm('¿Estás seguro de desvincular este usuario?')) return;
-    setIsSubmitting(true);
-    const { unlinkOperatorAction } = await import('@/lib/supabase/actions');
-    const res = await unlinkOperatorAction(opId);
-    if (res.error) {
-      alert(res.error);
-    } else {
-      setTimeout(() => window.location.reload(), 500);
-    }
-    setIsSubmitting(false);
+    showDialog({
+      type: 'warning',
+      title: 'Desvincular usuario',
+      message: '¿Estás seguro de desvincular este usuario?',
+      confirmLabel: 'Sí, desvincular',
+      onConfirm: async () => {
+        setIsSubmitting(true);
+        const { unlinkOperatorAction } = await import('@/lib/supabase/actions');
+        const res = await unlinkOperatorAction(opId);
+        if (res.error) {
+          showDialog({
+            type: 'error',
+            title: 'Error de desvinculación',
+            message: res.error
+          });
+        } else {
+          showSuccess('Usuario desvinculado correctamente');
+          setTimeout(() => window.location.reload(), 500);
+        }
+        setIsSubmitting(false);
+      }
+    });
   };
 
   // Build the view model. If an operator belongs to multiple hospitals,

@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS public.opstar_investigators (
 );
 
 -- Triggers para updated_at
-CREATE TRIGGER update_operators_modtime
+DROP TRIGGER IF EXISTS update_operators_modtime ON public.operators; CREATE TRIGGER update_operators_modtime
 BEFORE UPDATE ON public.operators
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE TRIGGER update_investigators_modtime
+DROP TRIGGER IF EXISTS update_operators_modtime ON public.operators; CREATE TRIGGER update_investigators_modtime
 BEFORE UPDATE ON public.opstar_investigators
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();

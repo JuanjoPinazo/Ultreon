@@ -4,6 +4,7 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { saveFollowUpAction, toggleFollowUpValidationAction } from '@/lib/supabase/actions';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -81,6 +82,7 @@ export default function CaseFollowUpClient({
 }: CaseFollowUpClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { showDialog } = useGlobalDialog();
 
   // Active timepoint tab
   const [activeType, setActiveType] = useState<'procedural' | '30days' | '6months' | '12months'>('30days');
@@ -458,9 +460,14 @@ export default function CaseFollowUpClient({
                 key={type}
                 onClick={() => {
                   if (isDirty) {
-                    if (!confirm('Tiene cambios sin guardar en este seguimiento. ¿Desea cambiar de periodo igualmente? Se perderán los cambios.')) {
-                      return;
-                    }
+                    showDialog({
+                      type: 'warning',
+                      title: 'Cambios sin guardar',
+                      message: 'Tiene cambios sin guardar en este seguimiento. ¿Desea cambiar de periodo igualmente? Se perderán los cambios.',
+                      confirmLabel: 'Cambiar de periodo',
+                      onConfirm: () => setActiveType(type)
+                    });
+                    return;
                   }
                   setActiveType(type);
                 }}

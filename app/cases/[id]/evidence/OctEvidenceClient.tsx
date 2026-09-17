@@ -8,6 +8,8 @@ import {
   getOctEvidenceAction,
   deleteOctEvidenceAction,
 } from '@/lib/supabase/actions';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 interface OctEvidenceRecord {
   id: string;
@@ -94,6 +96,8 @@ export default function OctEvidenceClient({
   const [filterPhase, setFilterPhase] = useState<string>('all');
   const [filterKeyOnly, setFilterKeyOnly] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { showSuccess, showError } = useGlobalToast();
+  const { showDialog } = useGlobalDialog();
 
   const [formData, setFormData] = useState({
     phase: 'pre_pci' as const,
@@ -108,12 +112,12 @@ export default function OctEvidenceClient({
   // Handle file selection
   const handleFileSelect = (file: File) => {
     if (file.size > 25 * 1024 * 1024) {
-      alert('Archivo muy grande (máximo 25 MB)');
+      showError('Archivo muy grande (máximo 25 MB)');
       return;
     }
 
     if (!['image/jpeg', 'image/png', 'image/webp', 'application/pdf'].includes(file.type)) {
-      alert('Tipo de archivo no permitido (JPG, PNG, WebP, PDF)');
+      showError('Tipo de archivo no permitido (JPG, PNG, WebP, PDF)');
       return;
     }
 
@@ -156,7 +160,7 @@ export default function OctEvidenceClient({
   // Handle upload
   const handleUpload = async () => {
     if (!selectedFile || !isAnonymized) {
-      alert('Debes confirmar que la imagen no contiene datos personales.');
+      showError('Debes confirmar que la imagen no contiene datos personales.');
       return;
     }
 
@@ -173,7 +177,7 @@ export default function OctEvidenceClient({
       const uploadResult = await uploadOctEvidenceFileAction(formDataObj);
 
       if (!uploadResult.success || !uploadResult.path) {
-        alert(`Error al subir: ${uploadResult.error || 'Desconocido'}`);
+        showDialog({ type: 'error', title: 'Error de subida', message: uploadResult.error || 'Desconocido' });
         setIsSubmitting(false);
         return;
       }
@@ -196,8 +200,9 @@ export default function OctEvidenceClient({
       });
 
       if (saveResult.error) {
-        alert(`Error al guardar: ${saveResult.error}`);
+        showDialog({ type: 'error', title: 'Error al guardar', message: saveResult.error });
       } else {
+        showSuccess('Evidencia subida correctamente');
         // Refresh evidence list
         const result = await getOctEvidenceAction(caseId);
         if (result.data) {
@@ -207,7 +212,7 @@ export default function OctEvidenceClient({
         setShowUploadForm(false);
       }
     } catch (err: any) {
-      alert(`Error: ${err?.message}`);
+      showDialog({ type: 'error', title: 'Error técnico', message: err?.message });
     } finally {
       setIsSubmitting(false);
     }

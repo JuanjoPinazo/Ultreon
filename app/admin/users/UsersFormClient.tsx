@@ -72,10 +72,16 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
     setRole('hospital_user');
     setHospitalId('');
     setIsActive(true);
-    setPassword('OpstarPassword2026!');
+    setPassword(''); // Empty by default when resetting
     setEditingId(null);
     setFormError(null);
     setShowForm(false);
+  };
+
+  const handleCreateClick = () => {
+    resetForm();
+    setPassword('OpstarPassword2026!'); // Default password for new users
+    setShowForm(true);
   };
 
   const handleEditClick = (u: Profile) => {
@@ -85,6 +91,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
     setRole(u.role);
     setHospitalId(u.hospital_id || '');
     setIsActive(u.is_active);
+    setPassword(''); // Blank when editing to not override unless typed
     setEditingId(u.id);
     setFormError(null);
     setShowForm(true);
@@ -121,12 +128,18 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
     startTransition(async () => {
       let res;
       if (editingId) {
-        res = await updateUserAction(editingId, {
+        const payload = {
           fullName,
           role,
           hospitalId: hospitalId || null,
           isActive,
-        });
+        };
+
+        if (password.trim() !== '') {
+          (payload as any).password = password;
+        }
+
+        res = await updateUserAction(editingId, payload);
       } else {
         res = await createUserAction({
           email,
@@ -196,7 +209,7 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
         </div>
         {!showForm && (
           <button
-            onClick={() => setShowForm(true)}
+            onClick={handleCreateClick}
             className="px-4 py-2.5 bg-primary hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-cyan-500/10"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -253,23 +266,25 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                 />
               </div>
 
-              {/* Password (only if creating) */}
-              {!editingId && (
-                <div className="flex flex-col gap-1 col-span-1 md:col-span-2">
-                  <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Contraseña Inicial</label>
-                  <input
-                    type="text"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="OpstarPassword2026!"
-                    className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground font-mono"
-                    required
-                  />
-                  <span className="text-[9px] text-slate-550 mt-1 font-mono">
-                    💡 El usuario podrá cambiar esta contraseña al acceder por primera vez.
-                  </span>
-                </div>
-              )}
+              {/* Password */}
+              <div className="flex flex-col gap-1 col-span-1 md:col-span-2">
+                <label className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">
+                  {editingId ? 'Cambiar Contraseña (opcional)' : 'Contraseña Inicial'}
+                </label>
+                <input
+                  type="text"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={editingId ? 'Dejar en blanco para mantener actual...' : 'OpstarPassword2026!'}
+                  className="px-4 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs outline-none text-foreground font-mono"
+                  required={!editingId}
+                />
+                <span className="text-[9px] text-muted-foreground mt-1 font-mono">
+                  {editingId 
+                    ? '💡 Si introduces texto aquí, la contraseña del usuario será reemplazada.' 
+                    : '💡 El usuario podrá cambiar esta contraseña al acceder por primera vez.'}
+                </span>
+              </div>
 
               {/* Role */}
               <div className="flex flex-col gap-1">

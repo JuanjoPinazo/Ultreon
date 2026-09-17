@@ -8,8 +8,8 @@
 create table if not exists public.opstar_center_business_metrics (
   id uuid primary key default gen_random_uuid(),
   hospital_id uuid not null references public.hospitals(id) on delete cascade,
-  year integer not null,
-  month integer,
+  metric_year integer not null,
+  metric_month integer,
   product_line text,
   purchase_volume_units numeric default 0,
   purchase_revenue_eur numeric default 0,
@@ -29,7 +29,7 @@ create table if not exists public.opstar_center_business_metrics (
 create table if not exists public.opstar_center_objectives (
   id uuid primary key default gen_random_uuid(),
   hospital_id uuid not null references public.hospitals(id) on delete cascade,
-  year integer not null,
+  metric_year integer not null,
   target_cases integer,
   target_zero_contrast_rate numeric,
   target_strategy_modification_rate numeric,
@@ -65,10 +65,10 @@ create policy deny_non_admin_objectives on public.opstar_center_objectives
 
 -- 6. CREATE INDEXES FOR PERFORMANCE
 create index if not exists idx_business_metrics_hospital on public.opstar_center_business_metrics(hospital_id);
-create index if not exists idx_business_metrics_year_month on public.opstar_center_business_metrics(year, month);
+create index if not exists idx_business_metrics_metric_year_metric_month on public.opstar_center_business_metrics(metric_year, metric_month);
 create index if not exists idx_business_metrics_product on public.opstar_center_business_metrics(product_line);
 create index if not exists idx_objectives_hospital on public.opstar_center_objectives(hospital_id);
-create index if not exists idx_objectives_year on public.opstar_center_objectives(year);
+create index if not exists idx_objectives_metric_year on public.opstar_center_objectives(metric_year);
 
 -- 7. CREATE COMPUTED COLUMNS VIEW FOR KPIs (OPTIONAL - for future performance)
 -- This view helps calculate aggregated metrics
@@ -76,8 +76,8 @@ create or replace view public.vw_center_business_kpis as
 select
   h.id as hospital_id,
   h.name as hospital_name,
-  m.year,
-  m.month,
+  m.metric_year,
+  m.metric_month,
   coalesce(m.purchase_volume_units, 0) as purchase_volume_units,
   coalesce(m.purchase_revenue_eur, 0) as purchase_revenue_eur,
   coalesce(
@@ -95,7 +95,7 @@ select
   o.target_strategy_modification_rate
 from public.hospitals h
 left join public.opstar_center_business_metrics m on h.id = m.hospital_id
-left join public.opstar_center_objectives o on h.id = o.hospital_id and m.year = o.year
+left join public.opstar_center_objectives o on h.id = o.hospital_id and m.metric_year = o.metric_year
 where h.is_active = true;
 
 -- 8. SECURITY: ENSURE NO LEAKAGE

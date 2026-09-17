@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GlobalDialogProvider } from "@/components/providers/GlobalDialogProvider";
+import { GlobalToastProvider } from "@/components/providers/GlobalToastProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,9 +33,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <GlobalDialogProvider>
-            {children}
-          </GlobalDialogProvider>
+          <GlobalToastProvider>
+            <GlobalDialogProvider>
+              {children}
+            </GlobalDialogProvider>
+          </GlobalToastProvider>
         </ThemeProvider>
       </body>
     </html>

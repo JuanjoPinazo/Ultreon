@@ -2,7 +2,7 @@
 -- Funciones helper para RLS y validación
 
 -- Función para obtener el rol del usuario actual
-CREATE OR REPLACE FUNCTION public.get_current_user_role()
+DROP FUNCTION IF EXISTS public.get_current_user_role() CASCADE; CREATE OR REPLACE FUNCTION public.get_current_user_role()
 RETURNS user_role AS $$
 DECLARE
   current_role user_role;

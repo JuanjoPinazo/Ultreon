@@ -4,6 +4,8 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getSignedUrlAction, submitCoreLabReviewAction, markAsKeyImageAction } from '@/lib/supabase/media-actions';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 interface MediaItem {
   id: string;
@@ -56,6 +58,8 @@ export default function CoreLabReviewClient({
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(initialMedia[0] || null);
   const [signedUrl, setSignedUrl] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { showSuccess, showError } = useGlobalToast();
+  const { showDialog } = useGlobalDialog();
 
   // Form state for selected media
   const [quality, setQuality] = useState<Quality | ''>(
@@ -102,9 +106,13 @@ export default function CoreLabReviewClient({
               : m
           )
         );
-        alert('✓ Revisión guardada correctamente');
+        showSuccess('Revisión guardada correctamente');
       } else {
-        alert(`Error: ${res.error}`);
+        showDialog({
+          type: 'error',
+          title: 'Error al guardar revisión',
+          message: `Error: ${res.error}`
+        });
       }
     });
   };

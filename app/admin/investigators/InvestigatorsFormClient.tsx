@@ -7,6 +7,7 @@ import {
   updateInvestigatorAction,
   toggleInvestigatorActiveAction,
 } from '@/lib/supabase/actions';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 interface Hospital {
   id: string;
@@ -56,6 +57,7 @@ export default function InvestigatorsFormClient({
   hospitals,
 }: InvestigatorsFormClientProps) {
   const [isPending, startTransition] = useTransition();
+  const { showDialog } = useGlobalDialog();
 
   // Form toggles
   const [showForm, setShowForm] = useState(false);
@@ -168,7 +170,11 @@ export default function InvestigatorsFormClient({
     startTransition(async () => {
       const res = await toggleInvestigatorActiveAction(id, !currentStatus);
       if (res?.error) {
-        alert(`Error al cambiar el estado: ${res.error}`);
+        showDialog({
+          type: 'error',
+          title: 'Error',
+          message: `Error al cambiar el estado: ${res.error}`
+        });
       }
     });
   };

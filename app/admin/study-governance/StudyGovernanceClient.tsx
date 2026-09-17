@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useTransition } from 'react';
 import { updateStudyGovernanceAction } from '@/lib/supabase/actions';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 interface GovernanceItem {
   id: string;
@@ -36,6 +38,8 @@ export default function StudyGovernanceClient({
   const [editTitle, setEditTitle] = useState('');
   const [editBody, setEditBody] = useState('');
   const [isPending, startTransition] = useTransition();
+  const { showSuccess, showError } = useGlobalToast();
+  const { showDialog } = useGlobalDialog();
 
   const handleEdit = (item: GovernanceItem) => {
     setEditingId(item.id);
@@ -45,7 +49,7 @@ export default function StudyGovernanceClient({
 
   const handleSave = (section: string) => {
     if (!editTitle || !editBody) {
-      alert('Por favor completa todos los campos');
+      showError('Por favor completa todos los campos');
       return;
     }
 
@@ -60,9 +64,13 @@ export default function StudyGovernanceClient({
           )
         );
         setEditingId(null);
-        alert('✓ Gobernanza actualizada correctamente');
+        showSuccess('✓ Gobernanza actualizada correctamente');
       } else {
-        alert(`Error: ${result.error}`);
+        showDialog({
+          type: 'error',
+          title: 'Error de actualización',
+          message: result.error
+        });
       }
     });
   };

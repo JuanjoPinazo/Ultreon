@@ -3,8 +3,17 @@ import React from 'react';
 interface HospitalData {
   id: string;
   name: string;
+  phase?: string;
   prefix?: string;
   operators?: string[];
+  target?: {
+    target_total: number;
+    target_monthly: number | null;
+    target_weekly?: number | null;
+    start_date: string;
+    end_date: string | null;
+    status?: 'DRAFT' | 'ACTIVE' | 'CLOSED';
+  } | null;
 }
 
 export default function PrintableOperatorProfile({ hospital }: { hospital: HospitalData | null }) {

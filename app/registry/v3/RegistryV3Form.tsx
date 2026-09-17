@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ultreonRegistryV3Schema, UltreonRegistryV3Form } from '@/schemas/ultreon-registry-v3';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
 
 import ProgressIndicator from './components/ProgressIndicator';
 import CaseContextStep from './components/CaseContextStep';
@@ -17,6 +18,7 @@ import GlobalValueStep from './components/GlobalValueStep';
 export default function RegistryV3Form() {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 7;
+  const { showInfo } = useGlobalToast();
 
   const methods = useForm<UltreonRegistryV3Form>({
     resolver: zodResolver(ultreonRegistryV3Schema) as any,
@@ -41,7 +43,7 @@ export default function RegistryV3Form() {
 
   const onSubmit = (data: UltreonRegistryV3Form) => {
     console.log('✅ Form Validated! Payload ready for Supabase:', data);
-    alert('Payload logged to console');
+    showInfo('Payload logged to console');
   };
 
   const nextStep = async () => {

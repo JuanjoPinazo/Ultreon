@@ -3,6 +3,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { createHospitalAction, updateHospitalAction, deleteHospitalAction } from '@/lib/supabase/actions';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 interface Hospital {
   id: string;
@@ -25,6 +26,7 @@ interface HospitalsFormClientProps {
 export default function HospitalsFormClient({ hospitals, userCounts, caseCounts, invCounts = {}, opCounts = {} }: HospitalsFormClientProps) {
   const [isPending, startTransition] = useTransition();
   const [localHospitals, setLocalHospitals] = useState<Hospital[]>(hospitals);
+  const { showDialog } = useGlobalDialog();
 
   // Form states
   const [showForm, setShowForm] = useState(false);
@@ -341,7 +343,12 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
                 <div className="mt-4 flex justify-end">
                   <button 
                     type="button" 
-                    onClick={() => alert('Mock: Diálogo Poner Centro en Marcha\n\nAdvertencia: "Los datos de prueba anteriores permanecerán excluidos de toda métrica oficial."')}
+                    onClick={() => showDialog({
+                      type: 'warning',
+                      title: 'Poner Centro en Marcha',
+                      message: 'Mock: Diálogo Poner Centro en Marcha\n\nAdvertencia: "Los datos de prueba anteriores permanecerán excluidos de toda métrica oficial."',
+                      confirmLabel: 'Entendido'
+                    })}
                     className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-colors"
                   >
                     Poner Centro en Marcha

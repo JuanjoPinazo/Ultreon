@@ -1,4 +1,5 @@
 import React from 'react';
+import { registrySupportConfig } from '@/lib/registry/supportConfig';
 import PrintableECRF from './PrintableECRF';
 import PrintableInclusionsControl from './PrintableInclusionsControl';
 import PrintableOperatorProfile from './PrintableOperatorProfile';
@@ -10,14 +11,16 @@ import PrintableIncidents from './PrintableIncidents';
 interface HospitalData {
   id: string;
   name: string;
+  phase?: string;
   prefix?: string;
   operators?: string[];
   target?: {
     target_total: number;
     target_monthly: number | null;
-    target_weekly: number | null;
+    target_weekly?: number | null;
     start_date: string;
     end_date: string | null;
+    status?: 'DRAFT' | 'ACTIVE' | 'CLOSED';
   } | null;
 }
 
@@ -82,7 +85,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Objetivo Asignado</span>
               <div className="text-xl border-b-2 border-slate-200 pb-2 text-slate-900 font-bold">
-                {hospital.target ? (
+                {hospital.target && hospital.target.status === 'ACTIVE' ? (
                   <div className="flex gap-4">
                     <span>{hospital.target.target_total} casos</span>
                     {hospital.target.target_monthly && <span className="text-slate-500 text-sm mt-1">({hospital.target.target_monthly} / mes)</span>}
@@ -209,7 +212,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
 
       {/* ---------------- SUB-COMPONENTS ---------------- */}
       <PrintableOperatorProfile hospital={hospital} />
-      <PrintableChecklist />
+      <PrintableChecklist hospital={hospital} />
       <PrintableSignatures />
       <PrintableTraining />
       <PrintableInclusionsControl hospital={hospital} />
@@ -224,8 +227,8 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
           <h3 className="text-xl font-bold mb-4">Información de Soporte</h3>
           <table className="w-full text-left border-collapse border border-slate-300 text-sm">
             <tbody>
-              <tr><td className="border border-slate-300 p-2 font-bold bg-slate-50 w-1/3">Responsable Registro</td><td className="border border-slate-300 p-2">Abbott Medical España</td></tr>
-              <tr><td className="border border-slate-300 p-2 font-bold bg-slate-50">Soporte Técnico Web</td><td className="border border-slate-300 p-2">soporte@ultreonregistry.com</td></tr>
+              <tr><td className="border border-slate-300 p-2 font-bold bg-slate-50 w-1/3">Responsable Registro</td><td className="border border-slate-300 p-2">{registrySupportConfig.registryOwner}</td></tr>
+              <tr><td className="border border-slate-300 p-2 font-bold bg-slate-50">Soporte Técnico Web</td><td className="border border-slate-300 p-2">{registrySupportConfig.technicalSupportEmail}</td></tr>
               <tr><td className="border border-slate-300 p-2 font-bold bg-slate-50">Horario de Atención</td><td className="border border-slate-300 p-2">Lunes - Viernes (09:00 - 18:00 CET)</td></tr>
               <tr><td className="border border-slate-300 p-2 font-bold bg-slate-50">Proceso de Escalado</td><td className="border border-slate-300 p-2">1. Email a Soporte Web. 2. Contactar Monitor.</td></tr>
             </tbody>

@@ -230,6 +230,7 @@ export async function updateUserAction(
     role: string;
     hospitalId: string | null;
     isActive: boolean;
+    password?: string;
   }
 ) {
   const isAdmin = await checkAdmin();
@@ -241,13 +242,18 @@ export async function updateUserAction(
     const adminClient = createAdminClient();
 
     // Update metadata on the Auth user
-    const { error: authError } = await adminClient.auth.admin.updateUserById(id, {
+    const authUpdatePayload: any = {
       user_metadata: {
         role: data.role,
         full_name: data.fullName,
         hospital_id: data.hospitalId || null,
       },
-    });
+    };
+    if (data.password) {
+      authUpdatePayload.password = data.password;
+    }
+
+    const { error: authError } = await adminClient.auth.admin.updateUserById(id, authUpdatePayload);
 
     if (authError) {
       console.warn('Could not sync update to auth metadata:', authError.message);

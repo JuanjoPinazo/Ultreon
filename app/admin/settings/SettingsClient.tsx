@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
+import { useGlobalDialog } from '@/components/providers/GlobalDialogProvider';
 
 export default function SettingsClient({
   settings,
@@ -15,6 +17,8 @@ export default function SettingsClient({
 }) {
   const supabase = createClient();
   const router = useRouter();
+  const { showSuccess, showError } = useGlobalToast();
+  const { showDialog } = useGlobalDialog();
   
   const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
   const [officialDate, setOfficialDate] = useState('');
@@ -33,11 +37,15 @@ export default function SettingsClient({
         p_official_start_date: officialDate
       });
       if (error) throw error;
-      alert('Registro activado exitosamente.');
+      showSuccess('Registro activado exitosamente.');
       setIsGoLiveOpen(false);
       router.refresh();
     } catch (err: any) {
-      alert(err.message || 'Error al activar el registro');
+      showDialog({
+        type: 'error',
+        title: 'Error de activación',
+        message: err.message || 'Error al activar el registro'
+      });
     } finally {
       setGoLiveLoading(false);
     }
@@ -53,11 +61,15 @@ export default function SettingsClient({
         p_quantity: parseInt(stockQuantity, 10)
       });
       if (error) throw error;
-      alert('Stock inicial establecido exitosamente.');
+      showSuccess('Stock inicial establecido exitosamente.');
       setStockQuantity('0');
       router.refresh();
     } catch (err: any) {
-      alert(err.message || 'Error al establecer el stock');
+      showDialog({
+        type: 'error',
+        title: 'Error de stock',
+        message: err.message || 'Error al establecer el stock'
+      });
     } finally {
       setStockLoading(false);
     }

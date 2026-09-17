@@ -1,6 +1,22 @@
 import React from 'react';
 
-export default function PrintableChecklist() {
+interface HospitalData {
+  id: string;
+  name: string;
+  phase?: string;
+  prefix?: string;
+  operators?: string[];
+  target?: {
+    target_total: number;
+    target_monthly: number | null;
+    target_weekly?: number | null;
+    start_date: string;
+    end_date: string | null;
+    status?: 'DRAFT' | 'ACTIVE' | 'CLOSED';
+  } | null;
+}
+
+export default function PrintableChecklist({ hospital }: { hospital?: HospitalData | null }) {
   return (
     <div className="print-page w-full max-w-4xl mx-auto bg-white text-black font-sans">
       <div className="border-b-4 border-slate-900 pb-4 mb-8">
@@ -17,7 +33,9 @@ export default function PrintableChecklist() {
           'Investigador Principal confirmado y con acceso.',
           'Operadores clínicos confirmados y con perfil basal completado.',
           'Usuarios de plataforma creados con los roles correctos.',
-          'Objetivo del centro configurado en el sistema.',
+          hospital?.target?.status === 'ACTIVE' 
+            ? '✅ Objetivo del centro configurado y ACTIVADO en el sistema.'
+            : '❌ Objetivo del centro configurado en el sistema (Debe estar en estado ACTIVE).',
           'Documentación del centro (Dossier) impresa y entregada.',
           'Formación completada (Protocolo y uso de la plataforma).',
           'Acceso al eCRF digital validado por el equipo.',

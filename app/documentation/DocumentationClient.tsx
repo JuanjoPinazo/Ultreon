@@ -8,18 +8,21 @@ import PrintableLocalSheet from './components/PrintableLocalSheet';
 import PrintableInclusionsControl from './components/PrintableInclusionsControl';
 import PrintableOperatorProfile from './components/PrintableOperatorProfile';
 import ScientificTraceability from './components/ScientificTraceability';
+import PrintFooter from './components/PrintFooter';
 
 interface HospitalData {
   id: string;
   name: string;
+  phase?: string;
   prefix?: string;
   operators?: string[];
   target?: {
     target_total: number;
     target_monthly: number | null;
-    target_weekly: number | null;
+    target_weekly?: number | null;
     start_date: string;
     end_date: string | null;
+    status?: 'DRAFT' | 'ACTIVE' | 'CLOSED';
   } | null;
 }
 
@@ -167,6 +170,7 @@ export default function DocumentationClient({
         </div>
 
       </div>
+      <PrintFooter hospitalName={activeHospitalData?.name} />
     </main>
   );
 }

@@ -3,7 +3,7 @@
 
 -- Gobernanza del estudio (opstar_study_governance)
 CREATE TABLE IF NOT EXISTS public.opstar_study_governance (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(255) NOT NULL,
   description TEXT,
   document_url TEXT,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.opstar_study_governance (
 
 -- Objetivos por centro (opstar_center_objectives)
 CREATE TABLE IF NOT EXISTS public.opstar_center_objectives (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   hospital_id UUID REFERENCES public.hospitals(id) ON DELETE CASCADE,
   target_cases INTEGER NOT NULL DEFAULT 0,
   start_date DATE NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS public.opstar_center_objectives (
 -- Métricas económicas / BI por centro (opstar_center_business_metrics)
 -- Solo visible para admin
 CREATE TABLE IF NOT EXISTS public.opstar_center_business_metrics (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   hospital_id UUID REFERENCES public.hospitals(id) ON DELETE CASCADE,
   period_month DATE NOT NULL, -- Siempre el primer día del mes
   stent_savings_eur NUMERIC(10,2) DEFAULT 0,

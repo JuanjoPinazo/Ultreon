@@ -8,6 +8,7 @@ import {
   isModuleEmpty, 
   MODULE_NAMES 
 } from '@/lib/registry/display-labels';
+import { useGlobalToast } from '@/components/providers/GlobalToastProvider';
 
 interface CaseDetailProps {
   record: any;
@@ -17,6 +18,7 @@ interface CaseDetailProps {
 export default function CaseDetailClient({ record, profileRole }: CaseDetailProps) {
   const [showCorrectionDialog, setShowCorrectionDialog] = React.useState(false);
   const [correctionReason, setCorrectionReason] = React.useState('');
+  const { showInfo } = useGlobalToast();
 
   const isDraft = record.status === 'DRAFT';
   const isDemo = record.is_demo;
@@ -169,7 +171,7 @@ export default function CaseDetailClient({ record, profileRole }: CaseDetailProp
                   Cancelar
                 </button>
                 <button
-                  onClick={() => alert('Mock: Procedimiento de Corrección usando la RPC correct_completed_case registrada. El caso permanece COMPLETADO.')}
+                  onClick={() => showInfo('Mock: Procedimiento de Corrección usando la RPC correct_completed_case registrada. El caso permanece COMPLETADO.')}
                   disabled={correctionReason.trim().length < 10}
                   className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
                 >
