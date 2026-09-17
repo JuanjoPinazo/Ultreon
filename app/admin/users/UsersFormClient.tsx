@@ -45,9 +45,26 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
   const [isActive, setIsActive] = useState(true);
   const [password, setPassword] = useState('OpstarPassword2026!');
   const [formError, setFormError] = useState<string | null>(null);
-  
-  // Search
+  // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortField, setSortField] = useState<'name' | 'email' | 'role' | 'hospital' | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (field: 'name' | 'email' | 'role' | 'hospital') => {
+    if (sortField === field) {
+      if (sortOrder === 'asc') setSortOrder('desc');
+      else { setSortField(null); setSortOrder('asc'); }
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSortField(null);
+    setSortOrder('asc');
+  };
 
   const resetForm = () => {
     setEmail('');
@@ -145,14 +162,28 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
   };
 
   const filteredUsers = useMemo(() => {
-    return localUsers.filter(u => {
+    let result = localUsers.filter(u => {
       const q = searchQuery.toLowerCase();
       return (
         (u.full_name?.toLowerCase().includes(q)) ||
         (u.email?.toLowerCase().includes(q))
       );
     });
-  }, [localUsers, searchQuery]);
+
+    if (sortField) {
+      result.sort((a, b) => {
+        let valA = '';
+        let valB = '';
+        if (sortField === 'name') { valA = a.full_name || ''; valB = b.full_name || ''; }
+        if (sortField === 'email') { valA = a.email || ''; valB = b.email || ''; }
+        if (sortField === 'role') { valA = a.role || ''; valB = b.role || ''; }
+        if (sortField === 'hospital') { valA = a.hospitals?.name || ''; valB = b.hospitals?.name || ''; }
+        
+        return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      });
+    }
+    return result;
+  }, [localUsers, searchQuery, sortField, sortOrder]);
 
   return (
     <div className="space-y-6">
@@ -340,8 +371,18 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
             className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-primary/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
           />
         </div>
-        <div className="text-xs text-muted-foreground font-mono">
-          {filteredUsers.length} usuario(s) encontrado(s)
+        <div className="flex items-center gap-4">
+          {(searchQuery || sortField) && (
+            <button
+              onClick={clearFilters}
+              className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground border border-border rounded-lg bg-card hover:bg-slate-800 transition-colors"
+            >
+              Limpiar Filtros
+            </button>
+          )}
+          <div className="text-xs text-muted-foreground font-mono">
+            {filteredUsers.length} usuario(s) encontrado(s)
+          </div>
         </div>
       </div>
 
@@ -350,9 +391,15 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-background/50 border-b border-border text-[10px] uppercase font-mono text-muted-foreground">
-              <th className="px-4 py-3 font-bold tracking-wider">Usuario</th>
-              <th className="px-4 py-3 font-bold tracking-wider">Rol</th>
-              <th className="px-4 py-3 font-bold tracking-wider">Centro / Hospital</th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('name')}>
+                Usuario {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('role')}>
+                Rol {sortField === 'role' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('hospital')}>
+                Centro / Hospital {sortField === 'hospital' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
               <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
               <th className="px-4 py-3 font-bold tracking-wider text-right">Acciones</th>
             </tr>

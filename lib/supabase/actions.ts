@@ -2,7 +2,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { ZeroContrastInsertPayload } from '@/types/zero-contrast';
+import type { ZeroContrastInsertPayload } from '@/types/zero-contrast';
 import { createClient as createServerClient } from './server';
 import { createAdminClient } from './admin';
 
@@ -593,13 +593,17 @@ export async function getActiveHospitalsWithInvestigators() {
         operator:operators (
           id,
           full_name,
-          is_active
+          is_active,
+          operator_user_links (
+            user_id
+          )
         )
       `)
       .eq('is_active', true);
       
     if (hopError) {
-      console.error('Error fetching hospital_operators:', hopError);
+      console.error('Error fetching hospital_operators:', JSON.stringify(hopError, null, 2));
+      console.error('Error details:', hopError);
     }
       
     // Transform into flat operator objects mapped to hospital_id
@@ -609,7 +613,10 @@ export async function getActiveHospitalsWithInvestigators() {
         id: ho.operator.id, // the true operator_id
         full_name: ho.operator.full_name,
         hospital_id: ho.hospital_id,
-        is_active: true
+        is_active: true,
+        user_id: ho.operator.operator_user_links && ho.operator.operator_user_links.length > 0
+          ? ho.operator.operator_user_links[0].user_id
+          : null
       }));
     // Fetch case counts per hospital (RLS-aware)
     const { data: casesData } = await supabase
@@ -1759,18 +1766,8 @@ export async function getOperatorsForHospitalAction(hospitalId: string) {
       .eq('is_active', true);
 
     if (error) {
-      console.warn("Using fallback to opstar_investigators for operators dropdown:", error.message);
-      // Fallback query to opstar_investigators
-      const { data: invData, error: invError } = await supabase
-        .from('opstar_investigators')
-        .select('id, full_name, email, is_active')
-        .eq('hospital_id', hospitalId)
-        .eq('is_active', true);
-      if (invError) {
-        console.error('Error fetching investigators fallback:', invError);
-      }
-      if (invError) throw invError;
-      return { success: true, data: invData || [] };
+      console.error('Error fetching operators:', error);
+      throw error;
     }
     
     // Extract actual operator records
@@ -1799,7 +1796,27 @@ export async function updateOperatorAction(
   try {
     const supabase = await createServerClient();
 
-    // 1. Update operator core data
+    // 1. Verify operator exists and log diagnostics
+    const { data: existingOperator, error: checkError } = await supabase
+      .from('operators')
+      .select('id')
+      .eq('id', id)
+      .single();
+
+    if (checkError || !existingOperator) {
+      console.error('[DIAGNOSTICS] updateOperatorAction FAILED');
+      console.error(`- operatorId enviado: ${id}`);
+      console.error(`- hospitalIds enviados: ${data.hospitalIds.join(', ')}`);
+      console.error(`- operator existente: NO`);
+      return { error: 'El operador seleccionado no existe o ya no está disponible.' };
+    }
+
+    console.log('[DIAGNOSTICS] updateOperatorAction PRE-UPDATE');
+    console.log(`- operatorId enviado: ${id}`);
+    console.log(`- hospitalIds enviados: ${data.hospitalIds.join(', ')}`);
+    console.log(`- operator existente: SÍ`);
+
+    // 2. Update operator core data
     const { error: opError } = await supabase
       .from('operators')
       .update({
@@ -1812,7 +1829,7 @@ export async function updateOperatorAction(
 
     if (opError) return { error: opError.message };
 
-    // 2. Remove all existing hospital links
+    // 3. Remove all existing hospital links
     const { error: deleteError } = await supabase
       .from('hospital_operators')
       .delete()
@@ -1820,7 +1837,7 @@ export async function updateOperatorAction(
 
     if (deleteError) return { error: deleteError.message };
 
-    // 3. Re-insert new hospital links
+    // 4. Re-insert new hospital links
     if (data.hospitalIds.length > 0) {
       const hospitalLinks = data.hospitalIds.map(hId => ({
         operator_id: id,
@@ -1892,34 +1909,17 @@ export async function getAllOperatorsAction() {
         hospital_operators(
           hospital_id,
           hospitals(name)
+        ),
+        operator_user_links(
+          user_id,
+          profiles(email)
         )
       `)
       .order('full_name');
 
     if (error) {
-      console.warn("Using fallback to opstar_investigators for all operators admin list:", error.message);
-      // Fallback to opstar_investigators for admin screen
-      const { data: invData, error: invError } = await supabase
-        .from('opstar_investigators')
-        .select(`
-          id, hospital_id, full_name, email, is_active, created_at,
-          hospitals(name)
-        `)
-        .order('full_name');
-      if (invError) throw invError;
-
-      const adapted = (invData || []).map((inv: any) => ({
-        id: inv.id,
-        full_name: inv.full_name,
-        email: inv.email,
-        is_active: inv.is_active,
-        created_at: inv.created_at,
-        hospital_operators: inv.hospitals ? [{
-          hospital_id: inv.hospital_id,
-          hospitals: { name: inv.hospitals.name }
-        }] : []
-      }));
-      return { success: true, data: adapted };
+      console.error('Error fetching all operators:', error);
+      throw error;
     }
     return { success: true, data: data || [] };
   } catch (err: any) {
@@ -1964,5 +1964,186 @@ export async function getExecutiveDashboardStats() {
     };
   } catch (err: any) {
     return { error: err?.message || 'Error al obtener datos del dashboard ejecutivo.' };
+  }
+}
+
+// 26. LINK OPERATOR TO USER
+export async function linkOperatorToUserAction(operatorId: string, userId: string) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado.' };
+
+  try {
+    const supabase = await createServerClient();
+    
+    // Check if the link exists
+    const { data: existing } = await supabase
+      .from('operator_user_links')
+      .select('id')
+      .eq('operator_id', operatorId)
+      .maybeSingle();
+
+    if (existing) {
+      const { error } = await supabase
+        .from('operator_user_links')
+        .update({ user_id: userId, active: true, updated_at: new Date().toISOString() })
+        .eq('operator_id', operatorId);
+      if (error) return { error: error.message };
+    } else {
+      const { error } = await supabase
+        .from('operator_user_links')
+        .insert({ operator_id: operatorId, user_id: userId, active: true });
+      if (error) return { error: error.message };
+    }
+    
+    revalidatePath('/admin/operators');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error al vincular el operador.' };
+  }
+}
+
+// 27. UNLINK OPERATOR
+export async function unlinkOperatorAction(operatorId: string) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado.' };
+
+  try {
+    const supabase = await createServerClient();
+    const { error } = await supabase
+      .from('operator_user_links')
+      .delete()
+      .eq('operator_id', operatorId);
+
+    if (error) return { error: error.message };
+    
+    revalidatePath('/admin/operators');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error al desvincular el operador.' };
+  }
+}
+
+// 28. GET CURRENT USER OPERATOR LINK
+export async function getCurrentUserOperatorLinkAction() {
+  try {
+    const supabase = await createServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false };
+
+    const { data, error } = await supabase
+      .from('operator_user_links')
+      .select('operator_id')
+      .eq('user_id', user.id)
+      .eq('active', true)
+      .maybeSingle();
+
+    if (error || !data) return { success: true, operatorId: null };
+    
+    return { success: true, operatorId: data.operator_id };
+  } catch (err) {
+    return { success: true, operatorId: null };
+  }
+}
+
+// ============================================================================
+// ECONOMICS (ADMIN ONLY)
+// ============================================================================
+
+export async function createCaseEconomicsAction(payload: {
+  case_id: string;
+  revenue_snapshot: number;
+  product_cost: number;
+  gross_compensation: number;
+  withholding_rate: number;
+  other_variable_costs: number;
+}) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado' };
+
+  try {
+    const supabase = await createServerClient();
+    const { data, error } = await supabase.rpc('create_case_economics', {
+      p_case_id: payload.case_id,
+      p_revenue_snapshot: payload.revenue_snapshot,
+      p_product_cost: payload.product_cost,
+      p_gross_compensation: payload.gross_compensation,
+      p_withholding_rate: payload.withholding_rate,
+      p_other_variable_costs: payload.other_variable_costs
+    });
+
+    if (error) {
+      return { error: error.message };
+    }
+    revalidatePath('/admin/economics');
+    return { success: true, id: data };
+  } catch (err: any) {
+    return { error: err?.message || 'Error creating economics' };
+  }
+}
+
+export async function generateMonthlySettlementAction(beneficiaryId: string, year: number, month: number) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado' };
+
+  try {
+    const supabase = await createServerClient();
+    const { data, error } = await supabase.rpc('generate_monthly_settlement', {
+      p_beneficiary_id: beneficiaryId,
+      p_year: year,
+      p_month: month
+    });
+
+    if (error) {
+      return { error: error.message };
+    }
+    revalidatePath('/admin/economics');
+    return { success: true, id: data };
+  } catch (err: any) {
+    return { error: err?.message || 'Error generating settlement' };
+  }
+}
+
+export async function approveSettlementAction(settlementId: string) {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado' };
+
+  try {
+    const supabase = await createServerClient();
+    const { data, error } = await supabase.rpc('approve_monthly_settlement', {
+      p_settlement_id: settlementId
+    });
+
+    if (error) {
+      return { error: error.message };
+    }
+    revalidatePath('/admin/economics');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err?.message || 'Error approving settlement' };
+  }
+}
+
+export async function getCaseEconomicsAction() {
+  const isAdmin = await checkAdmin();
+  if (!isAdmin) return { error: 'No autorizado' };
+
+  try {
+    const supabase = await createServerClient();
+    const { data, error } = await supabase
+      .from('registry_case_economics')
+      .select(`
+        *,
+        hospital:hospitals(name),
+        operator:operators(first_name, last_name),
+        beneficiary:payment_beneficiaries(display_name)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return { error: error.message };
+    }
+    return { success: true, data };
+  } catch (err: any) {
+    return { error: err?.message || 'Error fetching economics' };
   }
 }

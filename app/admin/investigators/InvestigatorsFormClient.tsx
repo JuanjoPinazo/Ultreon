@@ -76,6 +76,25 @@ export default function InvestigatorsFormClient({
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedHospitalFilter, setSelectedHospitalFilter] = useState('all');
+  const [sortField, setSortField] = useState<'name' | 'hospital' | 'role' | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (field: 'name' | 'hospital' | 'role') => {
+    if (sortField === field) {
+      if (sortOrder === 'asc') setSortOrder('desc');
+      else { setSortField(null); setSortOrder('asc'); }
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedHospitalFilter('all');
+    setSortField(null);
+    setSortOrder('asc');
+  };
 
   const resetForm = () => {
     setHospitalId('');
@@ -187,7 +206,7 @@ export default function InvestigatorsFormClient({
     {}
   );
   
-  // Create a flat list ordered by hospital name, then investigator name
+  // Create a flat list ordered by hospital name, then investigator name (unless sorted)
   const flatOrderedInvestigators: (Investigator & { hospitalObj: Hospital })[] = [];
   hospitals
     .slice()
@@ -199,6 +218,18 @@ export default function InvestigatorsFormClient({
         });
       }
     });
+
+  if (sortField) {
+    flatOrderedInvestigators.sort((a, b) => {
+      let valA = '';
+      let valB = '';
+      if (sortField === 'name') { valA = a.full_name || ''; valB = b.full_name || ''; }
+      if (sortField === 'hospital') { valA = a.hospitalObj.name || ''; valB = b.hospitalObj.name || ''; }
+      if (sortField === 'role') { valA = ROLE_LABELS[a.role] || ''; valB = ROLE_LABELS[b.role] || ''; }
+      
+      return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+    });
+  }
 
   return (
     <div className="space-y-6">
@@ -419,6 +450,14 @@ export default function InvestigatorsFormClient({
               </option>
             ))}
           </select>
+          {(searchQuery || selectedHospitalFilter !== 'all' || sortField) && (
+            <button
+              onClick={clearFilters}
+              className="px-3 py-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground border border-border rounded-lg bg-card hover:bg-slate-800 transition-colors whitespace-nowrap"
+            >
+              Limpiar Filtros
+            </button>
+          )}
         </div>
       </div>
 
@@ -427,9 +466,15 @@ export default function InvestigatorsFormClient({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-background/50 border-b border-border text-[10px] uppercase font-mono text-muted-foreground">
-              <th className="px-4 py-3 font-bold tracking-wider">Investigador</th>
-              <th className="px-4 py-3 font-bold tracking-wider">Centro</th>
-              <th className="px-4 py-3 font-bold tracking-wider">Rol / Posición</th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('name')}>
+                Investigador {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('hospital')}>
+                Centro {sortField === 'hospital' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('role')}>
+                Rol / Posición {sortField === 'role' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
               <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
               <th className="px-4 py-3 font-bold tracking-wider text-right">Acciones</th>
             </tr>

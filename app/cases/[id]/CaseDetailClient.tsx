@@ -15,6 +15,9 @@ interface CaseDetailProps {
 }
 
 export default function CaseDetailClient({ record, profileRole }: CaseDetailProps) {
+  const [showCorrectionDialog, setShowCorrectionDialog] = React.useState(false);
+  const [correctionReason, setCorrectionReason] = React.useState('');
+
   const isDraft = record.status === 'DRAFT';
   const isDemo = record.is_demo;
 
@@ -121,17 +124,62 @@ export default function CaseDetailClient({ record, profileRole }: CaseDetailProp
             >
               Volver
             </Link>
-            {isDraft && (
+            {isDraft ? (
               <Link
                 href={`/registry/new?caseId=${record.id}`}
                 className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 font-bold rounded-xl text-xs transition-colors"
               >
                 Editar Caso
               </Link>
+            ) : (
+              <button
+                onClick={() => setShowCorrectionDialog(true)}
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 font-bold rounded-xl text-xs transition-colors"
+              >
+                Realizar corrección auditada
+              </button>
             )}
           </div>
         </div>
       </header>
+
+      {/* Correction Dialog */}
+      {showCorrectionDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-lg rounded-3xl p-6 border border-border shadow-2xl">
+            <h3 className="text-lg font-black text-foreground mb-2">Corrección Auditada de Caso</h3>
+            <p className="text-xs text-muted-foreground mb-6">
+              Este caso está <strong>COMPLETADO</strong>. La modificación estándar está deshabilitada. Debe usar este panel para ejecutar una corrección oficial auditable que conservará el estado COMPLETADO pero modificará los valores clínicos autorizados, registrándose en el Audit Trail.
+            </p>
+            <div className="space-y-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider font-mono">Motivo de Corrección (Obligatorio)</label>
+                <textarea
+                  value={correctionReason}
+                  onChange={(e) => setCorrectionReason(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-red-500/50 text-sm text-foreground outline-none resize-none h-24"
+                  placeholder="Ej: Error tipográfico en variable de OCT, ajuste solicitado por monitor..."
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  onClick={() => { setShowCorrectionDialog(false); setCorrectionReason(''); }}
+                  className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-muted-foreground transition-all cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => alert('Mock: Procedimiento de Corrección usando la RPC correct_completed_case registrada. El caso permanece COMPLETADO.')}
+                  disabled={correctionReason.trim().length < 10}
+                  className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-black rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                >
+                  Aplicar Corrección Auditada
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-[1400px] mx-auto p-6 md:p-8">
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">

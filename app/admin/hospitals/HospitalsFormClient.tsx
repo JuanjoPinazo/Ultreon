@@ -41,6 +41,52 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
   const [isActive, setIsActive] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
 
+  // Search & Filters
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortField, setSortField] = useState<'name' | 'code' | 'city' | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (field: 'name' | 'code' | 'city') => {
+    if (sortField === field) {
+      if (sortOrder === 'asc') setSortOrder('desc');
+      else { setSortField(null); setSortOrder('asc'); }
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSortField(null);
+    setSortOrder('asc');
+  };
+
+  const filteredHospitals = React.useMemo(() => {
+    let result = localHospitals.filter(h => {
+      const q = searchQuery.toLowerCase();
+      return (
+        (h.name?.toLowerCase().includes(q)) ||
+        (h.code?.toLowerCase().includes(q)) ||
+        (h.city?.toLowerCase().includes(q)) ||
+        (h.province?.toLowerCase().includes(q))
+      );
+    });
+
+    if (sortField) {
+      result.sort((a, b) => {
+        let valA = '';
+        let valB = '';
+        if (sortField === 'name') { valA = a.name || ''; valB = b.name || ''; }
+        if (sortField === 'code') { valA = a.code || ''; valB = b.code || ''; }
+        if (sortField === 'city') { valA = a.city || ''; valB = b.city || ''; }
+        
+        return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      });
+    }
+    return result;
+  }, [localHospitals, searchQuery, sortField, sortOrder]);
+
   const resetForm = () => {
     setName('');
     setShortName('');
@@ -243,6 +289,66 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
               </div>
 
             </div>
+            
+            {/* GO-LIVE CHECKLIST (ONLY IN EDIT) */}
+            {editingId && (
+              <div className="mt-8 pt-6 border-t border-border/60">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono mb-1">Activación de Centro (Go-Live)</h4>
+                    <p className="text-xs text-muted-foreground">Requisitos previos obligatorios para comenzar el Registro Oficial.</p>
+                  </div>
+                  <div className="px-2 py-0.5 rounded border border-amber-900/20 bg-amber-950/80 text-amber-400 text-[9px] font-bold">
+                    CENTER_PRELAUNCH
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 p-4 bg-muted/30 rounded-xl border border-border">
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">Objetivo configurado</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">PI asignado</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">Operadores activos</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">Perfiles basales completos</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">Documentación generada</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">Stock inicial configurado</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">Formación completada</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-not-allowed opacity-80">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
+                    <span className="text-xs font-medium">Privacidad confirmada</span>
+                  </label>
+                </div>
+
+                <div className="mt-4 flex justify-end">
+                  <button 
+                    type="button" 
+                    onClick={() => alert('Mock: Diálogo Poner Centro en Marcha\n\nAdvertencia: "Los datos de prueba anteriores permanecerán excluidos de toda métrica oficial."')}
+                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-colors"
+                  >
+                    Poner Centro en Marcha
+                  </button>
+                </div>
+              </div>
+            )}
 
             {formError && (
               <p className="p-3 bg-red-950/20 border border-red-500/30 text-red-400 rounded-xl text-[10px] font-mono leading-relaxed">
@@ -270,21 +376,62 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
         </div>
       )}
 
+      {/* Filters and Search */}
+      <div className="bg-card border border-border rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="relative w-full md:w-80">
+          <svg
+            className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Buscar por nombre, código o ciudad..."
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-border focus:border-primary/40 text-xs outline-none text-muted-foreground placeholder-slate-600"
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          {(searchQuery || sortField) && (
+            <button
+              onClick={clearFilters}
+              className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground border border-border rounded-lg bg-card hover:bg-slate-800 transition-colors"
+            >
+              Limpiar Filtros
+            </button>
+          )}
+          <div className="text-xs text-muted-foreground font-mono">
+            {filteredHospitals.length} hospital(es) encontrado(s)
+          </div>
+        </div>
+      </div>
+
       {/* List / Table of Hospitals */}
       <div className="bg-card border border-border rounded-2xl overflow-hidden overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-background/50 border-b border-border text-[10px] uppercase font-mono text-muted-foreground">
-              <th className="px-4 py-3 font-bold tracking-wider">Centro</th>
-              <th className="px-4 py-3 font-bold tracking-wider">Acrónimo/Código</th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('name')}>
+                Centro {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('code')}>
+                Acrónimo/Código {sortField === 'code' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
               <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
               <th className="px-4 py-3 font-bold tracking-wider">Asociados</th>
-              <th className="px-4 py-3 font-bold tracking-wider">Ubicación</th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('city')}>
+                Ubicación {sortField === 'city' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
               <th className="px-4 py-3 font-bold tracking-wider text-right">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/60">
-            {localHospitals.map((h) => {
+            {filteredHospitals.map((h) => {
               const userCount = userCounts[h.id] || 0;
               const caseCount = caseCounts[h.id] || 0;
               const invCount = invCounts[h.id] || 0;
@@ -379,7 +526,7 @@ export default function HospitalsFormClient({ hospitals, userCounts, caseCounts,
               );
             })}
             
-            {localHospitals.length === 0 && (
+            {filteredHospitals.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground text-xs">
                   No se encontraron hospitales.

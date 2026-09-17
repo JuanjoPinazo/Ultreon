@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation';
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { toggleCaseLockAction, toggleCaseValidationAction, logoutAction } from '@/lib/supabase/actions';
 import DashboardFilters from './DashboardFilters';
+import TargetDashboardWidget from './TargetDashboardWidget';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { RegistryPhaseBanner } from '@/components/RegistryPhaseBanner';
 
 export default async function DashboardPage(props: {
   searchParams: Promise<{
@@ -33,6 +35,13 @@ export default async function DashboardPage(props: {
     redirect('/login?error=inactive');
   }
 
+  // Fetch registry settings to check for PRELAUNCH
+  const { data: registrySettings } = await supabase
+    .from('registry_settings')
+    .select('phase, official_start_date')
+    .eq('registry_key', 'ULTREON_3')
+    .single();
+
   // Fetch all active hospitals from the database for filter purposes (Admins/Monitors only)
   let hospitals: { id: string; name: string }[] = [];
   if (profile.role === 'admin' || profile.role === 'monitor') {
@@ -59,6 +68,40 @@ export default async function DashboardPage(props: {
   }
 
   const { data: cases, error: casesError } = await query.order('created_at', { ascending: false });
+
+  // Fetch Targets for the widget
+  let centerTarget = null;
+  let operatorTarget = null;
+  let operatorName = profile.full_name;
+
+  if (profile.hospital_id) {
+    const { data: ctData } = await supabase
+      .from('registry_center_targets')
+      .select('*')
+      .eq('hospital_id', profile.hospital_id)
+      .eq('active', true)
+      .maybeSingle();
+    centerTarget = ctData;
+
+    // Fetch operator target if user is an operator
+    const { data: opLink } = await supabase
+      .from('operator_user_links')
+      .select('operator_id, operators(first_name, last_name)')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    
+    if (opLink && opLink.operator_id) {
+      const opObj = Array.isArray(opLink.operators) ? opLink.operators[0] : opLink.operators;
+      operatorName = opObj ? `${opObj.first_name} ${opObj.last_name}` : profile.full_name;
+      const { data: otData } = await supabase
+        .from('registry_operator_targets')
+        .select('*')
+        .eq('operator_id', opLink.operator_id)
+        .eq('active', true)
+        .maybeSingle();
+      operatorTarget = otData;
+    }
+  }
 
   if (cases) {
     const total = cases.length;
@@ -152,7 +195,7 @@ export default async function DashboardPage(props: {
   }
 
   const hospitalName = profile.hospitals
-    ? (Array.isArray(profile.hospitals) ? profile.hospitals[0]?.name : (profile.hospitals as any).name)
+    ? (Array.isArray(profile.hospitals) ? profile.hospitals[0]?.name : (profile.hospitals as { name: string }).name)
     : 'Ninguno asignado';
 
   const getScoreColorClass = (score: number) => {
@@ -208,6 +251,12 @@ export default async function DashboardPage(props: {
       {/* Content Area */}
       <div className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
         
+        {/* PRELAUNCH / LIVE BANNER */}
+        <RegistryPhaseBanner 
+          phase={registrySettings?.phase} 
+          officialStartDate={registrySettings?.official_start_date} 
+        />
+
         {/* Welcome and Call to Actions */}
         <div className="bg-card border border-border rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
@@ -376,6 +425,18 @@ export default async function DashboardPage(props: {
           </div>
         </div>
 
+        {/* Targets Widget */}
+        {(profile.role === 'hospital_user' || profile.role === 'operator_user') && profile.hospital_id && centerTarget && (
+          <TargetDashboardWidget 
+            centerTarget={centerTarget}
+            operatorTarget={operatorTarget}
+            cases={cases || []}
+            role={profile.role}
+            hospitalName={hospitalName}
+            operatorName={operatorName}
+          />
+        )}
+
         {/* Dashboard Filters Component */}
         <DashboardFilters
           hospitals={hospitals}
@@ -505,7 +566,7 @@ export default async function DashboardPage(props: {
                       const ffr_oct = record.ffr_oct_module?.pullback_corrections_made ? 'Si' : 'No';
                       const expansion = record.findings_data?.expansion_percentage;
                       const pullbacks = record.acquisition_data?.pullbacks || [];
-                      const contrast = pullbacks.length > 0 ? pullbacks.reduce((sum: number, pb: any) => sum + (Number(pb.fast_volume_ml) || 0), 0) : null;
+                      const contrast = pullbacks.length > 0 ? pullbacks.reduce((sum: number, pb: { fast_volume_ml: number | string }) => sum + (Number(pb.fast_volume_ml) || 0), 0) : null;
 
                       return (
                         <tr key={record.id} className="hover:bg-background/20 transition-all">
@@ -531,7 +592,7 @@ export default async function DashboardPage(props: {
                             <div className="text-[9px] text-muted-foreground font-normal">{dateString}</div>
                           </td>
                           <td className="p-4 text-muted-foreground dark:text-muted-foreground">
-                            {record.hospitals ? (Array.isArray(record.hospitals) ? record.hospitals[0]?.name : (record.hospitals as any).name) : 'N/A'}
+                            {record.hospitals ? (Array.isArray(record.hospitals) ? record.hospitals[0]?.name : (record.hospitals as { name: string }).name) : 'N/A'}
                           </td>
                           <td className="p-4">
                             <span className="px-2 py-0.5 bg-cyan-950 text-cyan-400 border border-cyan-800/40 rounded">

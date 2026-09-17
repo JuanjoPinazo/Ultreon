@@ -131,14 +131,20 @@ body {
 
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
   /* Enforce white background and black text globally for printing */
   body, main { 
     background-color: white !important; 
     color: black !important; 
+    font-size: 9pt !important;
   }
   
   /* Hide UI elements not meant for print */
-  header, nav, footer, .no-print { 
+  header, nav, footer, .no-print, button, select { 
     display: none !important; 
   }
   

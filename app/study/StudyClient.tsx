@@ -81,7 +81,7 @@ function PillarCard({ pillar, index }: { pillar: any; index: number }) {
         {pillar.icon}
       </div>
       <h3 className="text-lg font-bold text-foreground mb-2 leading-tight">{pillar.title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">
+      <p className="text-sm text-foreground-secondary leading-relaxed">
         {pillar.desc}
       </p>
     </div>
@@ -102,7 +102,7 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
               U3
             </div>
             <div className="font-bold text-sm tracking-tight text-foreground">
-              ULTREON™ <span className="text-muted-foreground font-normal">Registro Clínico</span>
+              ULTREON™ <span className="text-foreground-secondary font-normal">Registro Clínico</span>
             </div>
           </div>
           <Link
@@ -118,7 +118,7 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
       <section className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-500/10 via-background to-background" />
         <div className="max-w-4xl mx-auto px-6 relative text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-soft dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-950/50 text-cyan-800 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 text-xs font-bold uppercase tracking-wider mb-2">
             Documento de Proyecto
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
@@ -127,21 +127,21 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
               ULTREON™ 3.0
             </span>
           </h1>
-          <h2 className="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-200">
+          <h2 className="text-lg md:text-xl font-bold md:font-semibold text-foreground-secondary">
             Post-Market Evaluation & Clinical Utility Registry
           </h2>
-          <p className="text-base md:text-lg text-slate-700 dark:text-slate-300 font-medium leading-relaxed max-w-3xl mx-auto">
+          <p className="text-base md:text-lg text-foreground-secondary font-medium leading-[1.7] max-w-3xl mx-auto">
             Registro observacional multicéntrico orientado a evaluar la utilidad clínica de las nuevas funcionalidades de ULTREON 3.0 en la práctica intervencionista real.
           </p>
         </div>
       </section>
 
       {/* PILLARS GRID */}
-      <section className="py-16 bg-surface-secondary dark:bg-slate-900/20 border-y border-border">
+      <section className="py-16 bg-surface-secondary border-y border-border">
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-black text-foreground">Pilares de Evaluación</h2>
-            <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mt-3 max-w-2xl mx-auto">
+            <p className="text-sm text-foreground-secondary font-medium mt-3 max-w-2xl mx-auto">
               El registro captura evidencia del impacto real de la plataforma en nueve dimensiones críticas del procedimiento intervencionista.
             </p>
           </div>
@@ -164,9 +164,9 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
           </div>
           <h2 className="text-3xl font-black text-foreground tracking-tight">Qué esperamos obtener del Registro</h2>
           
-          <div className="text-left space-y-6 text-muted-foreground bg-card border border-border rounded-3xl p-8 md:p-10 shadow-sm">
+          <div className="text-left space-y-6 text-foreground-secondary bg-card border border-border rounded-3xl p-8 md:p-10 shadow-sm">
             <p className="text-base leading-relaxed">
-              El objetivo fundamental de este registro no es simplemente acumular casos, sino responder a las <strong>preguntas clave</strong> que definen el valor añadido del software de inteligencia artificial en el mundo real:
+              El objetivo fundamental de este registro no es simplemente acumular casos, sino responder a las <strong className="text-foreground">preguntas clave</strong> que definen el valor añadido del software de inteligencia artificial en el mundo real:
             </p>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
@@ -182,7 +182,7 @@ export default function StudyClient({ initialHospitals, initialStats, initialGov
                 <span>¿Es la adopción de protocolos como el Fast Pullback o el co-registro un factor determinante para democratizar el uso de imagen intracoronaria, haciéndolo más eficiente en tiempo y recursos?</span>
               </li>
             </ul>
-            <p className="text-sm pt-4 border-t border-border">
+            <p className="text-sm pt-4 border-t border-border text-muted-foreground">
               Los datos extraídos de esta plataforma eCRF nutrirán el análisis de estas hipótesis, estableciendo la base para futuras publicaciones y presentaciones en congresos (ESC / PCR).
             </p>
           </div>

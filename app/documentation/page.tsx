@@ -34,7 +34,19 @@ export default async function DocumentationPage(props: {
   };
 
   // Fetch hospitals for admins
-  let hospitals: { id: string; name: string; prefix?: string; operators?: string[] }[] = [];
+  let hospitals: { 
+    id: string; 
+    name: string; 
+    prefix?: string; 
+    operators?: string[];
+    target?: {
+      target_total: number;
+      target_monthly: number | null;
+      target_weekly: number | null;
+      start_date: string;
+      end_date: string | null;
+    } | null;
+  }[] = [];
   if (profile.role === 'admin' || profile.role === 'super_admin') {
     const { data: hospData } = await supabase
       .from('hospitals')
@@ -75,11 +87,26 @@ export default async function DocumentationPage(props: {
     });
   }
 
-  // Attach prefixes and operators to the hospitals array
+  // Fetch targets
+  const { data: targetsData } = await supabase
+    .from('registry_center_targets')
+    .select('hospital_id, target_total, target_monthly, target_weekly, start_date, end_date')
+    .eq('active', true);
+
+  const targetsMap = new Map((targetsData || []).map(t => [t.hospital_id, {
+    target_total: t.target_total,
+    target_monthly: t.target_monthly,
+    target_weekly: t.target_weekly,
+    start_date: t.start_date,
+    end_date: t.end_date
+  }]));
+
+  // Attach prefixes, operators and targets to the hospitals array
   hospitals = hospitals.map(h => ({
     ...h,
     prefix: settingsMap.get(h.id) || 'UNKNOWN',
-    operators: operatorsByHospital.get(h.id) || []
+    operators: operatorsByHospital.get(h.id) || [],
+    target: targetsMap.get(h.id) || null
   }));
 
   // Get user's hospital name

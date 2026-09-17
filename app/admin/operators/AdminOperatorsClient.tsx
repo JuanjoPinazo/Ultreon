@@ -13,6 +13,11 @@ interface HospitalOperatorLink {
   hospitals: { name: string };
 }
 
+interface OperatorUserLink {
+  user_id: string;
+  profiles: { email: string };
+}
+
 interface Operator {
   id: string;
   full_name: string;
@@ -20,6 +25,7 @@ interface Operator {
   is_active: boolean;
   created_at: string;
   hospital_operators: HospitalOperatorLink[];
+  operator_user_links?: OperatorUserLink[];
 }
 
 const emptyForm = {
@@ -32,9 +38,11 @@ const emptyForm = {
 export default function AdminOperatorsClient({
   initialOperators,
   allHospitals,
+  allProfiles,
 }: {
   initialOperators: Operator[];
   allHospitals: { id: string; name: string }[];
+  allProfiles: { id: string; full_name: string; email: string; role: string }[];
 }) {
   const [operators, setOperators] = useState<Operator[]>(initialOperators);
   const [showAdd, setShowAdd] = useState(false);
@@ -43,9 +51,32 @@ export default function AdminOperatorsClient({
   const [formData, setFormData] = useState(emptyForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  
+  // Linking state
+  const [linkingOperatorId, setLinkingOperatorId] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string>('');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedHospitalFilter, setSelectedHospitalFilter] = useState('all');
+  const [sortField, setSortField] = useState<'name' | 'hospital' | 'link' | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (field: 'name' | 'hospital' | 'link') => {
+    if (sortField === field) {
+      if (sortOrder === 'asc') setSortOrder('desc');
+      else { setSortField(null); setSortOrder('asc'); }
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedHospitalFilter('all');
+    setSortField(null);
+    setSortOrder('asc');
+  };
 
   const toggleHospital = (id: string) => {
     setFormData(prev => ({
@@ -142,6 +173,34 @@ export default function AdminOperatorsClient({
     setIsSubmitting(false);
   };
 
+  const handleLinkUser = async () => {
+    if (!linkingOperatorId || !selectedUserId) return;
+    setIsSubmitting(true);
+    // import dynamically or add to imports
+    const { linkOperatorToUserAction } = await import('@/lib/supabase/actions');
+    const res = await linkOperatorToUserAction(linkingOperatorId, selectedUserId);
+    if (res.error) {
+      alert(res.error);
+    } else {
+      setLinkingOperatorId(null);
+      setTimeout(() => window.location.reload(), 500);
+    }
+    setIsSubmitting(false);
+  };
+
+  const handleUnlinkUser = async (opId: string) => {
+    if (!confirm('¿Estás seguro de desvincular este usuario?')) return;
+    setIsSubmitting(true);
+    const { unlinkOperatorAction } = await import('@/lib/supabase/actions');
+    const res = await unlinkOperatorAction(opId);
+    if (res.error) {
+      alert(res.error);
+    } else {
+      setTimeout(() => window.location.reload(), 500);
+    }
+    setIsSubmitting(false);
+  };
+
   // Build the view model. If an operator belongs to multiple hospitals,
   // we can show them uniquely but sort them by their primary (first) hospital,
   // or we can show a row per hospital connection if filtering.
@@ -160,20 +219,28 @@ export default function AdminOperatorsClient({
 
   const sortedOperators = useMemo(() => {
     return [...filteredOperators].sort((a, b) => {
-      // Get primary hospital name (alphabetically first if multiple)
-      const aHospitals = a.hospital_operators.map(ho => ho.hospitals.name).sort();
-      const bHospitals = b.hospital_operators.map(ho => ho.hospitals.name).sort();
-      
-      const aPrimary = aHospitals.length > 0 ? aHospitals[0] : 'ZZZ'; // Push those with no hospital to bottom
-      const bPrimary = bHospitals.length > 0 ? bHospitals[0] : 'ZZZ';
-      
-      if (aPrimary !== bPrimary) {
-        return aPrimary.localeCompare(bPrimary);
+      if (sortField) {
+        let valA = '';
+        let valB = '';
+        if (sortField === 'name') { valA = a.full_name || ''; valB = b.full_name || ''; }
+        if (sortField === 'hospital') {
+          valA = a.hospital_operators.length > 0 ? a.hospital_operators.map(ho => ho.hospitals.name).sort()[0] : 'ZZZ';
+          valB = b.hospital_operators.length > 0 ? b.hospital_operators.map(ho => ho.hospitals.name).sort()[0] : 'ZZZ';
+        }
+        if (sortField === 'link') {
+          valA = a.operator_user_links && a.operator_user_links.length > 0 ? 'VINCULADO' : 'SIN USUARIO';
+          valB = b.operator_user_links && b.operator_user_links.length > 0 ? 'VINCULADO' : 'SIN USUARIO';
+        }
+        return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      } else {
+        // Default sort (original behavior)
+        const aPrimary = a.hospital_operators.length > 0 ? a.hospital_operators.map(ho => ho.hospitals.name).sort()[0] : 'ZZZ';
+        const bPrimary = b.hospital_operators.length > 0 ? b.hospital_operators.map(ho => ho.hospitals.name).sort()[0] : 'ZZZ';
+        if (aPrimary !== bPrimary) return aPrimary.localeCompare(bPrimary);
+        return a.full_name.localeCompare(b.full_name);
       }
-      // If same primary hospital, sort by name
-      return a.full_name.localeCompare(b.full_name);
     });
-  }, [filteredOperators]);
+  }, [filteredOperators, sortField, sortOrder]);
 
 
 
@@ -263,6 +330,57 @@ export default function AdminOperatorsClient({
               </div>
             </div>
 
+            <div className="pt-4 border-t border-border/60">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase font-mono">Pago y Compliance</h4>
+                <div className="px-2 py-0.5 rounded border border-emerald-900/20 bg-emerald-950/80 text-emerald-400 text-[9px] font-bold">
+                  APTO PARA LIQUIDACIÓN
+                </div>
+              </div>
+              <div className="p-4 bg-muted/50 rounded-xl border border-border">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                  <div>
+                    <div className="text-[10px] uppercase font-mono text-muted-foreground">Contrato</div>
+                    <div className="text-xs font-bold text-foreground">VIGENTE</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase font-mono text-muted-foreground">FMV</div>
+                    <div className="text-xs font-bold text-foreground">APROBADO</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase font-mono text-muted-foreground">Compatibilidad</div>
+                    <div className="text-xs font-bold text-foreground">NOT_REQUIRED</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase font-mono text-muted-foreground">Autorización</div>
+                    <div className="text-xs font-bold text-foreground">OK</div>
+                  </div>
+                </div>
+                
+                <div className="border-t border-border/60 pt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="col-span-2">
+                    <div className="text-[10px] uppercase font-mono text-muted-foreground">Beneficiario Vigente</div>
+                    <div className="text-xs font-bold text-foreground">QA Beneficiary</div>
+                    <div className="text-[10px] text-muted-foreground">Inicio: 01/09/2026</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase font-mono text-muted-foreground">Modalidad Factura</div>
+                    <div className="text-xs font-bold text-foreground">PROFESSIONAL</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase font-mono text-muted-foreground">Impuestos</div>
+                    <div className="text-xs font-bold text-foreground">IVA: 21% | IRPF: 15%</div>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex justify-end">
+                  <button type="button" className="px-3 py-1.5 bg-background border border-border text-xs font-medium rounded-lg hover:bg-card transition-colors">
+                    Configurar Compliance
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div className="flex gap-2 justify-end pt-4 border-t border-border/60 mt-6">
               <button
                 onClick={cancel}
@@ -318,6 +436,14 @@ export default function AdminOperatorsClient({
               </option>
             ))}
           </select>
+          {(searchQuery || selectedHospitalFilter !== 'all' || sortField) && (
+            <button
+              onClick={clearFilters}
+              className="px-3 py-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground border border-border rounded-lg bg-card hover:bg-slate-800 transition-colors whitespace-nowrap"
+            >
+              Limpiar Filtros
+            </button>
+          )}
         </div>
       </div>
 
@@ -326,9 +452,16 @@ export default function AdminOperatorsClient({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-background/50 border-b border-border text-[10px] uppercase font-mono text-muted-foreground">
-              <th className="px-4 py-3 font-bold tracking-wider">Operador</th>
-              <th className="px-4 py-3 font-bold tracking-wider">Hospitales Asociados</th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('name')}>
+                Operador {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th className="px-4 py-3 font-bold tracking-wider cursor-pointer hover:text-foreground" onClick={() => handleSort('hospital')}>
+                Hospitales Asociados {sortField === 'hospital' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
               <th className="px-4 py-3 font-bold tracking-wider text-center">Estado</th>
+              <th className="px-4 py-3 font-bold tracking-wider text-center cursor-pointer hover:text-foreground" onClick={() => handleSort('link')}>
+                Acceso al sistema {sortField === 'link' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
               <th className="px-4 py-3 font-bold tracking-wider text-right">Acciones</th>
             </tr>
           </thead>
@@ -370,6 +503,16 @@ export default function AdminOperatorsClient({
                         <span className="text-[9px] font-bold bg-card text-muted-foreground px-2 py-0.5 rounded border border-border dark:border-slate-700">INACTIVO</span>
                       )}
                     </td>
+                    <td className="px-4 py-3 align-middle text-center">
+                      {op.operator_user_links && op.operator_user_links.length > 0 ? (
+                        <div className="flex flex-col items-center">
+                          <span className="text-[9px] font-bold bg-cyan-950/80 text-cyan-400 px-2 py-0.5 rounded border border-cyan-900/20">USUARIO VINCULADO</span>
+                          <span className="text-[10px] font-mono text-muted-foreground mt-1">{op.operator_user_links[0].profiles.email}</span>
+                        </div>
+                      ) : (
+                        <span className="text-[9px] font-bold bg-slate-200 dark:bg-slate-800 text-muted-foreground px-2 py-0.5 rounded border border-border">SIN USUARIO</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 align-middle text-right">
                       <div className="flex justify-end gap-2">
                         <button
@@ -378,6 +521,21 @@ export default function AdminOperatorsClient({
                         >
                           Editar
                         </button>
+                        {op.operator_user_links && op.operator_user_links.length > 0 ? (
+                          <button
+                            onClick={() => handleUnlinkUser(op.id)}
+                            className="px-2.5 py-1.5 bg-orange-950/40 hover:bg-orange-900/60 border border-orange-900/40 text-orange-400 text-[10px] font-bold rounded transition-colors"
+                          >
+                            Desvincular
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setLinkingOperatorId(op.id)}
+                            className="px-2.5 py-1.5 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-900/40 text-cyan-400 text-[10px] font-bold rounded transition-colors"
+                          >
+                            Vincular
+                          </button>
+                        )}
                         <button
                           onClick={() => setDeleteConfirmId(op.id)}
                           className="px-2.5 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-900/40 text-red-400 text-[10px] font-bold rounded transition-colors"
@@ -420,7 +578,7 @@ export default function AdminOperatorsClient({
 
             {sortedOperators.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground text-xs">
+                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground text-xs">
                   No se encontraron operadores.
                 </td>
               </tr>
@@ -428,6 +586,45 @@ export default function AdminOperatorsClient({
           </tbody>
         </table>
       </div>
+
+      {linkingOperatorId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <Card className="max-w-md w-full p-6 animate-fade-slide">
+            <h3 className="text-lg font-bold mb-2">Vincular Usuario a Operador</h3>
+            <p className="text-sm text-muted-foreground mb-4">Seleccione un usuario existente para vincularlo a este operador clínico.</p>
+            
+            <div className="mb-6">
+              <label className="block text-xs font-bold text-muted-foreground uppercase mb-2">Usuario disponible</label>
+              <select
+                value={selectedUserId}
+                onChange={(e) => setSelectedUserId(e.target.value)}
+                className="w-full px-3 py-2 bg-background border border-border rounded-xl text-sm"
+              >
+                <option value="">Seleccionar usuario...</option>
+                {allProfiles.map(p => (
+                  <option key={p.id} value={p.id}>{p.email} ({p.full_name || 'Sin nombre'})</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setLinkingOperatorId(null)}
+                className="px-4 py-2 border border-border hover:bg-background rounded-xl text-xs font-bold text-muted-foreground"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleLinkUser}
+                disabled={isSubmitting || !selectedUserId}
+                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold disabled:opacity-50"
+              >
+                Vincular
+              </button>
+            </div>
+          </Card>
+        </div>
+      )}
 
     </div>
   );

@@ -34,9 +34,19 @@ export default async function AdminOperatorsPage() {
     .eq('is_active', true)
     .order('name');
 
+  // Fetch all profiles for linking
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, full_name, email, role')
+    .order('email');
+
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto animate-fade-in">
-      <AdminOperatorsClient initialOperators={operators as any} allHospitals={hospitals || []} />
+      <AdminOperatorsClient 
+        initialOperators={operators as any} 
+        allHospitals={hospitals || []}
+        allProfiles={profiles || []}
+      />
     </div>
   );
 }
