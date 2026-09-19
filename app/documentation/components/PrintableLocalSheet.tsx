@@ -3,11 +3,11 @@ import React from 'react';
 export default function PrintableLocalSheet() {
   const currentDate = new Date().toLocaleDateString('es-ES');
 
-  // Generate 25 rows for manual entry
-  const rows = Array.from({ length: 25 }, (_, i) => i + 1);
+  // Generate 15 rows for manual entry
+  const rows = Array.from({ length: 15 }, (_, i) => i + 1);
 
   return (
-    <div className="print-page w-full max-w-4xl mx-auto bg-white text-black font-sans text-sm pb-12">
+    <div className="print-page bg-white text-black font-sans text-sm pb-12 break-before">
       
       {/* Header with strong warnings */}
       <div className="border-4 border-red-700 bg-red-50 p-6 mb-8 text-center print-border">
@@ -38,11 +38,11 @@ export default function PrintableLocalSheet() {
       <table className="w-full border-collapse border border-black mb-8">
         <thead>
           <tr className="bg-gray-100 uppercase tracking-widest text-xs">
-            <th className="border border-black p-3 text-center w-12">#</th>
-            <th className="border border-black p-3 text-left w-48">Código del Registro</th>
-            <th className="border border-black p-3 text-left w-48">NHC / SIP local</th>
-            <th className="border border-black p-3 text-center w-32">Fecha</th>
-            <th className="border border-black p-3 text-left">Observaciones</th>
+            <th className="border border-black p-3 text-center whitespace-normal break-normal" style={{ width: '5%' }}>#</th>
+            <th className="border border-black p-3 text-left whitespace-normal break-normal" style={{ width: '25%' }}>Código del Registro</th>
+            <th className="border border-black p-3 text-left whitespace-normal break-normal" style={{ width: '25%' }}>NHC / SIP local</th>
+            <th className="border border-black p-3 text-center whitespace-normal break-normal" style={{ width: '15%' }}>Fecha</th>
+            <th className="border border-black p-3 text-left whitespace-normal break-normal" style={{ width: '30%' }}>Observaciones</th>
           </tr>
         </thead>
         <tbody>

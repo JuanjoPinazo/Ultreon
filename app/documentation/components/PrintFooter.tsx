@@ -7,7 +7,7 @@ interface PrintFooterProps {
 export default function PrintFooter({ hospitalName }: PrintFooterProps) {
   const currentDate = new Date().toLocaleDateString('es-ES');
   return (
-    <div className="fixed bottom-0 left-0 w-full text-[10px] text-slate-400 border-t border-slate-200 pt-2 pb-4 flex justify-between items-center bg-white print:block hidden">
+    <div className="w-full text-[10px] text-slate-400 border-t border-slate-200 pt-2 pb-2 flex justify-between items-center bg-white print:flex hidden mt-4 avoid-break">
       <div>
         <strong>Centro:</strong> {hospitalName || 'No asignado'}
       </div>

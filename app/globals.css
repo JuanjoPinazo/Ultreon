@@ -133,43 +133,93 @@ body {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 15mm 12mm 15mm 12mm;
   }
 
-  /* Enforce white background and black text globally for printing */
-  body, main { 
-    background-color: white !important; 
-    color: black !important; 
-    font-size: 9pt !important;
-  }
-  
-  /* Hide UI elements not meant for print */
-  header, nav, footer, .no-print, button, select { 
-    display: none !important; 
-  }
-  
-  /* Optimize printable components */
-  .print-page { 
-    page-break-after: always; 
-    margin: 0; 
-    padding: 1cm;
+  body, main {
     background-color: white !important;
+    color: black !important;
+    font-size: 9pt !important;
+    line-height: 1.35;
   }
-  
-  .print-page:last-child {
-    page-break-after: auto;
+
+  /* Hide UI elements not meant for print */
+  header, nav, footer, .no-print, button, select, .screen-only {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  /* Optimize printable components */
+  .print-page {
+    width: 100%;
+    max-width: 186mm;
+    margin: 0 auto;
+    box-sizing: border-box;
+    background: white;
+    color: black;
   }
 
   /* Reset container styles that might interfere with printing */
-  .bg-card {
+  .bg-card, .bg-gray-50, .bg-gray-100, .bg-gray-200 {
     background-color: transparent !important;
-    border: none !important;
+    border-color: #000 !important;
     box-shadow: none !important;
+    color: #000 !important;
+  }
+
+  .text-white {
+    color: black !important;
+  }
+
+  .bg-black {
+    background-color: transparent !important;
+    border: 1px solid black !important;
   }
   
   /* Ensure borders print correctly for checkboxes/inputs */
   .print-border {
     border: 1px solid black !important;
   }
+
+  /* A4 Print Layout Controls */
+  .break-before {
+    page-break-before: always;
+    break-before: page;
+  }
+  .break-after {
+    page-break-after: always;
+    break-after: page;
+  }
+  .avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Checkbox for print */
+  .print-checkbox {
+    width: 4mm;
+    height: 4mm;
+    border: 0.4mm solid #000 !important;
+    display: inline-block;
+    flex: 0 0 4mm;
+    background: transparent;
+  }
+
+  /* Table fixes */
+  table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+  
+  /* Fonts */
+  .print-title { font-size: 16pt !important; }
+  .print-section { font-size: 12pt !important; }
+  .print-label { font-size: 9pt !important; }
 }
 

@@ -4,7 +4,7 @@ export default function PrintableECRF() {
   const currentDate = new Date().toLocaleDateString('es-ES');
 
   // Helpers to draw checkboxes
-  const Box = () => <span className="inline-block w-4 h-4 border border-black align-middle mr-2"></span>;
+  const Box = () => <span className="print-checkbox align-middle mr-2"></span>;
   const Scale7 = () => (
     <div className="flex gap-4 items-center">
       <span>Nada</span>
@@ -19,7 +19,7 @@ export default function PrintableECRF() {
   );
 
   return (
-    <div className="print-page w-full max-w-4xl mx-auto bg-white text-black font-sans text-[13px] leading-tight pb-12">
+    <div className="print-page bg-white text-black font-sans text-[13px] leading-tight pb-12 break-before">
       
       {/* Header */}
       <div className="border-b-2 border-black pb-4 mb-6 flex justify-between items-end">
@@ -40,8 +40,8 @@ export default function PrintableECRF() {
       </div>
 
       {/* SECCIÓN 1 */}
-      <div className="mb-8" style={{ pageBreakInside: 'avoid' }}>
-        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4">SECCIÓN 1 — DATOS DEL CASO</h3>
+      <div className="mb-8 avoid-break">
+        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4 print-section">SECCIÓN 1 — DATOS DEL CASO</h3>
         <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-4">
           <div className="border-b border-gray-400 pb-1 flex items-end">
             <span className="font-bold mr-2 w-24">Fecha:</span> <span className="text-gray-300">___ / ___ / 202__</span>
@@ -68,11 +68,11 @@ export default function PrintableECRF() {
       </div>
 
       {/* SECCIÓN 2 */}
-      <div className="mb-8 print-page" style={{ pageBreakInside: 'avoid' }}>
-        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4">SECCIÓN 2 — ADQUISICIONES OCT</h3>
+      <div className="mb-8">
+        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4 print-section avoid-break">SECCIÓN 2 — ADQUISICIONES OCT</h3>
         
         {[1, 2, 3].map((num) => (
-          <div key={num} className="border border-black p-4 mb-4" style={{ pageBreakInside: 'avoid' }}>
+          <div key={num} className="border border-black p-4 mb-4 avoid-break">
             <div className="font-bold border-b border-black pb-1 mb-3">Adquisición nº {num}</div>
             <div className="grid grid-cols-3 gap-4 mb-3">
               <div>
@@ -162,15 +162,15 @@ export default function PrintableECRF() {
       </div>
 
       {/* SECCIÓN 3 y 4 */}
-      <div className="mb-8 print-page" style={{ pageBreakInside: 'avoid' }}>
-        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4">SECCIÓN 3 — ESTRATEGIA INICIAL PLANIFICADA (SOLO ANGIOGRAFÍA)</h3>
+      <div className="mb-8 break-before">
+        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4 print-section">SECCIÓN 3 — ESTRATEGIA INICIAL PLANIFICADA (SOLO ANGIOGRAFÍA)</h3>
         <div className="border border-gray-300 p-2 min-h-[80px] mb-8">
           <div className="border-b border-dotted border-gray-300 h-6"></div>
           <div className="border-b border-dotted border-gray-300 h-6"></div>
           <div className="border-b border-dotted border-gray-300 h-6"></div>
         </div>
 
-        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4">SECCIÓN 4 — HALLAZGOS OCT PRE-PCI</h3>
+        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4 print-section">SECCIÓN 4 — HALLAZGOS OCT PRE-PCI</h3>
         
         <div className="mb-6">
           <div className="font-bold mb-2">Hallazgos principales en OCT (marque todos los aplicables):</div>
@@ -198,7 +198,7 @@ export default function PrintableECRF() {
         </div>
 
         {/* MÓDULO CALCIO */}
-        <div className="border border-black p-4 mb-4">
+        <div className="border border-black p-4 mb-4 avoid-break">
           <div className="font-bold bg-black text-white inline-block px-2 py-1 mb-4 text-xs">MÓDULO DE CALCIO (Luz &gt; 180º, grosor &gt; 0.5mm, longitud)</div>
           
           <div className="space-y-4">
@@ -232,8 +232,8 @@ export default function PrintableECRF() {
         </div>
 
         {/* MÓDULO TCI & LÍPIDOS & FFR */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="border border-black p-3">
+        <div className="grid grid-cols-2 print:grid-cols-1 gap-4">
+          <div className="border border-black p-3 avoid-break">
              <div className="font-bold bg-black text-white inline-block px-2 py-1 mb-3 text-xs">MÓDULO DE LÍPIDOS</div>
              <div className="space-y-3">
                <div><span className="block mb-1">Precisión de detección:</span><Scale7 /></div>
@@ -244,7 +244,7 @@ export default function PrintableECRF() {
              </div>
           </div>
           
-          <div className="border border-black p-3">
+          <div className="border border-black p-3 avoid-break">
              <div className="font-bold bg-black text-white inline-block px-2 py-1 mb-3 text-xs">MÓDULO FFR-OCT</div>
              <div className="space-y-2">
                <div><span className="block text-xs font-bold">¿Se realizaron correcciones en el pullback?</span><div className="flex gap-4"><label><Box /> Sí</label><label><Box /> No</label></div></div>
@@ -261,8 +261,8 @@ export default function PrintableECRF() {
       </div>
 
       {/* SECCIÓN 5 y 6 */}
-      <div className="mb-8 print-page" style={{ pageBreakInside: 'avoid' }}>
-        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4">SECCIÓN 5 — IMPACTO Y POST-PCI</h3>
+      <div className="mb-8 break-before">
+        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4 print-section">SECCIÓN 5 — IMPACTO Y POST-PCI</h3>
         
         <div className="mb-6">
           <div className="font-bold mb-1">Si la estrategia inicial cambió, ¿qué se modificó? (Stents, preparación, etc.)</div>
@@ -305,7 +305,7 @@ export default function PrintableECRF() {
           </div>
         </div>
 
-        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4">SECCIÓN 6 — VALOR CLÍNICO Y ADOPCIÓN</h3>
+        <h3 className="bg-black text-white px-2 py-1 font-bold mb-4 print-section">SECCIÓN 6 — VALOR CLÍNICO Y ADOPCIÓN</h3>
         
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">

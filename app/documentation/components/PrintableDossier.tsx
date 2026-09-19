@@ -35,7 +35,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
     <div className="w-full bg-white text-black font-sans">
       
       {/* ---------------- A. PORTADA ---------------- */}
-      <div className="print-page w-full max-w-4xl mx-auto flex flex-col justify-between min-h-[950px]">
+      <div className="print-page flex flex-col justify-between avoid-break">
         <div className="border-b-4 border-slate-900 pb-6 mb-12 mt-12">
           <div className="flex justify-between items-end">
             <div>
@@ -130,12 +130,12 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
 
         <div className="pt-8 border-t border-slate-200 flex justify-between text-xs text-slate-500 uppercase tracking-widest">
           <span>Generado: {currentDate}</span>
-          <span>Versión 1.0 (Sprint 5A)</span>
+          <span>Site Pack v1.0</span>
         </div>
       </div>
 
       {/* ---------------- B. RESUMEN DEL REGISTRO ---------------- */}
-      <div className="print-page w-full max-w-4xl mx-auto">
+      <div className="print-page break-before">
         <h2 className="text-3xl font-black uppercase text-slate-900 mb-8 border-b-2 border-slate-900 pb-2">Resumen del Registro</h2>
         <div className="space-y-6 text-sm leading-relaxed text-justify">
           <p>
@@ -151,7 +151,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
       </div>
 
       {/* ---------------- C. OBJETIVOS CIENTÍFICOS ---------------- */}
-      <div className="print-page w-full max-w-4xl mx-auto">
+      <div className="print-page break-before">
         <h2 className="text-3xl font-black uppercase text-slate-900 mb-8 border-b-2 border-slate-900 pb-2">Objetivos Científicos</h2>
         <ul className="space-y-6 text-sm">
           <li>
@@ -182,7 +182,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
       </div>
 
       {/* ---------------- G. GUÍA RÁPIDA DEL INVESTIGADOR ---------------- */}
-      <div className="print-page w-full max-w-4xl mx-auto">
+      <div className="print-page break-before">
         <h2 className="text-3xl font-black uppercase text-slate-900 mb-8 border-b-2 border-slate-900 pb-2">Guía Rápida del Investigador</h2>
         <div className="space-y-6 text-sm">
           <p className="font-bold text-red-700 bg-red-50 p-4 border border-red-200">
@@ -220,7 +220,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
       <PrintableECRF />
       
       {/* ---------------- O. SOPORTE Y N. CORRECCIÓN ---------------- */}
-      <div className="print-page w-full max-w-4xl mx-auto">
+      <div className="print-page break-before">
         <h2 className="text-3xl font-black uppercase text-slate-900 mb-8 border-b-2 border-slate-900 pb-2">Soporte y Corrección de Datos</h2>
         
         <div className="mb-12">
@@ -247,7 +247,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
       </div>
 
       {/* ---------------- P. CONTROL DE VERSIONES ---------------- */}
-      <div className="print-page w-full max-w-4xl mx-auto">
+      <div className="print-page break-before">
         <h2 className="text-3xl font-black uppercase text-slate-900 mb-8 border-b-2 border-slate-900 pb-2">Control de Versiones del Documento</h2>
         
         <table className="w-full text-left border-collapse border border-slate-300 text-sm">
@@ -266,7 +266,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
               <td className="border border-slate-300 p-2">1.0</td>
               <td className="border border-slate-300 p-2">{currentDate}</td>
               <td className="border border-slate-300 p-2">N/A</td>
-              <td className="border border-slate-300 p-2">Versión inicial Sprint 5A (Prelaunch)</td>
+              <td className="border border-slate-300 p-2">Versión inicial de Prelanzamiento</td>
             </tr>
           </tbody>
         </table>

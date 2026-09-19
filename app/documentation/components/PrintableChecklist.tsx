@@ -18,7 +18,7 @@ interface HospitalData {
 
 export default function PrintableChecklist({ hospital }: { hospital?: HospitalData | null }) {
   return (
-    <div className="print-page w-full max-w-4xl mx-auto bg-white text-black font-sans">
+    <div className="print-page bg-white text-black font-sans break-before">
       <div className="border-b-4 border-slate-900 pb-4 mb-8">
         <h2 className="text-3xl font-black uppercase text-slate-900">Site Initiation Checklist</h2>
         <p className="text-sm font-medium text-slate-500 mt-2 uppercase tracking-widest">REGISTRO CLÍNICO ULTREON™ 3.0</p>

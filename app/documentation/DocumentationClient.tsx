@@ -49,8 +49,30 @@ export default function DocumentationClient({
 
   const handlePrint = (docType: string) => {
     setActiveTab(docType);
+    
+    // Set document title for PDF saving
+    const originalTitle = document.title;
+    const prefix = activeHospitalData?.prefix || 'XX';
+    
+    const titleMap: Record<string, string> = {
+      'dossier': `ULTREON_SitePack_${prefix}_v1.0`,
+      'ecrf': `ULTREON_eCRF_v3.0`,
+      'operator_profile': `ULTREON_PerfilOperadores_${prefix}`,
+      'inclusions': `ULTREON_ControlInclusiones_${prefix}`,
+      'signatures': `ULTREON_Firmas_${prefix}`,
+      'training': `ULTREON_Formacion_${prefix}`,
+      'checklist': `ULTREON_Checklist_${prefix}`,
+      'incidents': `ULTREON_Incidencias_${prefix}`,
+      'local_sheet': `ULTREON_HojaLocal_${prefix}`
+    };
+    
+    document.title = titleMap[docType] || `ULTREON_Document_${prefix}`;
+
     setTimeout(() => {
       window.print();
+      setTimeout(() => {
+        document.title = originalTitle;
+      }, 1000);
     }, 100);
   };
 

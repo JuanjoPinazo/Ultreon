@@ -20,7 +20,7 @@ export default function PrintableInclusionsControl({ hospital }: { hospital: Hos
   const currentDate = new Date().toLocaleDateString('es-ES');
   
   const targetTotal = hospital?.target?.target_total || 20;
-  const rowsPerPage = 20;
+  const rowsPerPage = 12;
   
   const totalPages = Math.ceil(targetTotal / rowsPerPage);
   const pages = Array.from({ length: totalPages }, (_, i) => i);
@@ -33,7 +33,7 @@ export default function PrintableInclusionsControl({ hospital }: { hospital: Hos
         const rows = Array.from({ length: endRow - startRow + 1 }, (_, i) => startRow + i);
 
         return (
-          <div key={pageIndex} className="print-page w-full max-w-4xl mx-auto bg-white text-black font-sans text-sm pb-12">
+          <div key={pageIndex} className="print-page bg-white text-black font-sans text-sm pb-12 break-before break-after">
             
             {/* Header */}
             <div className="border-b-4 border-slate-900 pb-6 mb-8 flex justify-between items-end">
@@ -64,12 +64,12 @@ export default function PrintableInclusionsControl({ hospital }: { hospital: Hos
             <table className="w-full border-collapse border border-black mb-8">
               <thead>
                 <tr className="bg-slate-200 uppercase tracking-widest text-xs">
-                  <th className="border border-black p-3 text-center w-12">Nº</th>
-                  <th className="border border-black p-3 text-left w-40">Código de Caso</th>
-                  <th className="border border-black p-3 text-center w-28">Fecha</th>
-                  <th className="border border-black p-3 text-left">Operador</th>
-                  <th className="border border-black p-3 text-center w-36">Estado eCRF</th>
-                  <th className="border border-black p-3 text-left w-48">Observaciones</th>
+                  <th className="border border-black p-3 text-center whitespace-normal break-normal" style={{ width: '7%' }}>Nº</th>
+                  <th className="border border-black p-3 text-left whitespace-normal break-normal" style={{ width: '24%' }}>Código de Caso</th>
+                  <th className="border border-black p-3 text-center whitespace-normal break-normal" style={{ width: '15%' }}>Fecha</th>
+                  <th className="border border-black p-3 text-left whitespace-normal break-normal" style={{ width: '18%' }}>Operador</th>
+                  <th className="border border-black p-3 text-center whitespace-normal break-normal" style={{ width: '18%' }}>Estado eCRF</th>
+                  <th className="border border-black p-3 text-left whitespace-normal break-normal" style={{ width: '18%' }}>Observaciones</th>
                 </tr>
               </thead>
               <tbody>

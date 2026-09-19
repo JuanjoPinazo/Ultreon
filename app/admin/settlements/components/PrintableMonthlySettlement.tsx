@@ -31,7 +31,7 @@ export default function PrintableMonthlySettlement({ settlementData }: Printable
   }));
 
   return (
-    <div className="print-page w-full max-w-4xl mx-auto bg-white text-black font-sans pb-12">
+    <div className="print-page bg-white text-black font-sans pb-12 break-before">
       
       {/* Header */}
       <div className="border-b-4 border-slate-900 pb-4 mb-8">

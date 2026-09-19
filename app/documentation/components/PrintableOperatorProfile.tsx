@@ -18,7 +18,7 @@ interface HospitalData {
 
 export default function PrintableOperatorProfile({ hospital }: { hospital: HospitalData | null }) {
   const currentDate = new Date().toLocaleDateString('es-ES');
-  const Box = () => <span className="inline-block w-4 h-4 border border-black align-middle mr-2"></span>;
+  const Box = () => <span className="print-checkbox align-middle mr-2"></span>;
 
   // We print profiles for the registered operators or blank lines if none
   const operatorsList = (hospital?.operators && hospital.operators.length > 0) 
@@ -26,7 +26,7 @@ export default function PrintableOperatorProfile({ hospital }: { hospital: Hospi
     : ['________________________', '________________________', '________________________'];
 
   return (
-    <div className="print-page w-full max-w-4xl mx-auto bg-white text-black font-sans text-sm pb-12">
+    <div className="print-page bg-white text-black font-sans text-sm pb-12 break-before">
       
       {/* Header */}
       <div className="border-b-4 border-slate-900 pb-6 mb-8 flex justify-between items-end">
@@ -49,7 +49,7 @@ export default function PrintableOperatorProfile({ hospital }: { hospital: Hospi
 
       <div className="space-y-8">
         {operatorsList.map((op, idx) => (
-          <div key={idx} className="border-2 border-black p-4" style={{ pageBreakInside: 'avoid' }}>
+          <div key={idx} className="border-2 border-black p-4 avoid-break">
             <div className="flex justify-between items-end border-b border-black pb-2 mb-4">
               <div className="font-bold text-lg uppercase">Operador: <span className="font-normal uppercase text-slate-700">{op}</span></div>
               <div className="text-xs font-bold">Fecha de alta: ___ / ___ / 202_</div>
