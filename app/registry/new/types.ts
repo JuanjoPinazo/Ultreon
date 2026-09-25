@@ -32,6 +32,8 @@ export interface ECRFFormData {
   oct_influenced_strategy_change?: boolean | null;
   
   // Calcium
+  calcium_not_applicable?: boolean;
+  calcium_not_applicable_reason?: string;
   perception_accuracy_calcium?: number;
   ease_of_interpretation_calcium?: number;
   clinical_utility_calcium?: number;
@@ -43,6 +45,8 @@ export interface ECRFFormData {
   different_strategy_without_ultreon_calcium?: string;
 
   // Lipid
+  lipid_not_applicable?: boolean;
+  lipid_not_applicable_reason?: string;
   perception_accuracy_lipid?: number;
   ease_of_interpretation_lipid?: number;
   clinical_utility_lipid?: number;
@@ -119,6 +123,11 @@ export const createEmptyUltreonFormData = (): ECRFFormData => ({
   oct_findings: [],
   oct_provided_new_info: null,
   oct_influenced_strategy_change: null,
+  
+  calcium_not_applicable: false,
+  calcium_not_applicable_reason: '',
+  lipid_not_applicable: false,
+  lipid_not_applicable_reason: '',
   
   strategy_change_details: [],
   oct_performed_post: null,

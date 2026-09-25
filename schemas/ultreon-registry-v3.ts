@@ -62,6 +62,8 @@ export const ultreonRegistryV3Schema = z.object({
   
   calcium_module: z.object({ 
     has_calcium_module: z.boolean(),
+    calcium_not_applicable: z.boolean().optional(),
+    calcium_not_applicable_reason: z.string().optional(),
     perception_accuracy: z.number().optional(),
     ease_of_interpretation: z.number().optional(),
     clinical_utility: z.number().optional(),
@@ -75,6 +77,8 @@ export const ultreonRegistryV3Schema = z.object({
   
   lipid_module: z.object({ 
     has_lipid_module: z.boolean(), 
+    lipid_not_applicable: z.boolean().optional(),
+    lipid_not_applicable_reason: z.string().optional(),
     lipid_impacted_decision: z.boolean().optional(),
     perception_accuracy: z.number().optional(),
     ease_of_interpretation: z.number().optional(),

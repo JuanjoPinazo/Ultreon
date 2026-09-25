@@ -1,6 +1,6 @@
 import React from 'react';
 import { ECRFFormData } from '../types';
-import { ClinicalSelect, ClinicalMultiSelect, ClinicalRadioChips, ClinicalScale7 } from './ClinicalUX';
+import { ClinicalSelect, ClinicalMultiSelect, ClinicalRadioChips, ClinicalScale } from './ClinicalUX';
 
 interface Props {
   formData: ECRFFormData;
@@ -53,10 +53,11 @@ export const Step6Closure = ({ formData, setFormData }: Props) => {
 
       <div className="pt-4 border-t border-border">
         <h2 className="text-lg font-bold text-foreground mb-4">Valoración Global</h2>
-        <ClinicalScale7
+        <ClinicalScale
           label="Usabilidad global"
           value={formData.global_usability}
           onChange={(v: number) => updateField('global_usability', v)}
+          minLabel="Muy baja" maxLabel="Muy alta"
         />
       </div>
 

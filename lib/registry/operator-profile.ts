@@ -58,8 +58,13 @@ export async function upsertOperatorProfile(profile: OperatorClinicalProfile): P
       }, { onConflict: 'operator_id' });
 
     if (error) {
-      console.error('Error upserting operator profile:', error);
-      return { success: false, error };
+      console.error('Error upserting operator profile', {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint,
+      });
+      return { success: false, error: new Error(`No se pudo guardar el perfil clínico del operador. Detalle: ${error?.message || 'Error desconocido'}`) };
     }
 
     return { success: true };

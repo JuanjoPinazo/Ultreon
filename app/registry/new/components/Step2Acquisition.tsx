@@ -1,6 +1,6 @@
 import React from 'react';
 import { ECRFFormData } from '../types';
-import { ClinicalSelect, ClinicalRadioChips, ClinicalScale7, PullbackCard, ConditionalSection, ClinicalNumberStepper } from './ClinicalUX';
+import { ClinicalSelect, ClinicalRadioChips, ClinicalScale, PullbackCard, ConditionalSection, ClinicalNumberStepper } from './ClinicalUX';
 
 interface Props {
   formData: ECRFFormData;
@@ -65,10 +65,11 @@ export const Step2Acquisition = ({ formData, setFormData }: Props) => {
                 min={1}
                 max={200}
               />
-              <ClinicalScale7
+              <ClinicalScale
                 label="Impacto del co-registro sobre tiempo/esfuerzo"
                 value={pb.co_registration_impact}
                 onChange={(v: number) => updatePullback(idx, 'co_registration_impact', v)}
+                minLabel="Mínimo impacto" maxLabel="Máximo impacto"
               />
             </div>
 
@@ -105,22 +106,25 @@ export const Step2Acquisition = ({ formData, setFormData }: Props) => {
                 
               </div>
 
-              <ClinicalScale7
+              <ClinicalScale
                 label="Facilidad de uso"
                 value={pb.fast_ease_of_use}
                 onChange={(v: number) => updatePullback(idx, 'fast_ease_of_use', v)}
+                minLabel="Muy difícil" maxLabel="Muy fácil"
               />
 
-              <ClinicalScale7
+              <ClinicalScale
                 label="Aclaramiento de sangre"
                 value={pb.fast_blood_clearance}
                 onChange={(v: number) => updatePullback(idx, 'fast_blood_clearance', v)}
+                minLabel="Muy deficiente" maxLabel="Excelente"
               />
 
-              <ClinicalScale7
+              <ClinicalScale
                 label="Impacto del pullback rápido sobre tiempo/esfuerzo"
                 value={pb.fast_time_impact}
                 onChange={(v: number) => updatePullback(idx, 'fast_time_impact', v)}
+                minLabel="Mínimo impacto" maxLabel="Máximo impacto"
               />
             </ConditionalSection>
 
@@ -141,18 +145,20 @@ export const Step2Acquisition = ({ formData, setFormData }: Props) => {
                 />
               </div>
 
-              <ClinicalScale7 
+              <ClinicalScale 
                 label="Factibilidad para realizar OCT en TCI" 
                 value={formData.tci_feasibility} 
                 onChange={(v: number) => updateField('tci_feasibility', v)} 
+                minLabel="Mínima factibilidad" maxLabel="Máxima factibilidad"
               />
               
               
 
-              <ClinicalScale7 
+              <ClinicalScale 
                 label="Aclaramiento de sangre" 
                 value={formData.blood_clearance_tci} 
                 onChange={(v: number) => updateField('blood_clearance_tci', v)} 
+                minLabel="Muy deficiente" maxLabel="Excelente"
               />
               
               <ClinicalRadioChips 

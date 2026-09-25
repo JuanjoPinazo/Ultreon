@@ -461,10 +461,57 @@ export async function saveRegistryCaseAction(payload: any) {
       generatedCode = draftData.anonymous_code;
     }
 
+    // --- SERVER SIDE CANONICALIZATION ---
+    let finalPayload = { ...payload };
+    
+    // Safety check pullbacks
+    const pullbacks = finalPayload.acquisition_data?.pullbacks || [];
+    const allPostPci = pullbacks.length > 0 && pullbacks.every((pb: any) => pb.type === 'POST-PCI');
+
+    if (finalPayload.calcium_module) {
+      if (allPostPci) {
+        finalPayload.calcium_module.calcium_not_applicable = true;
+        finalPayload.calcium_module.calcium_not_applicable_reason = 'ALL_PULLBACKS_POST_PCI';
+        finalPayload.calcium_module.perception_accuracy = undefined;
+        finalPayload.calcium_module.ease_of_interpretation = undefined;
+        finalPayload.calcium_module.clinical_utility = undefined;
+        finalPayload.calcium_module.auto_detect_added_info = undefined;
+        finalPayload.calcium_module.influenced_decision = undefined;
+        finalPayload.calcium_module.improvement_ideas = undefined;
+        finalPayload.calcium_module.changed_prep_strategy = undefined;
+        finalPayload.calcium_module.calcium_treatment_chosen = undefined;
+        finalPayload.calcium_module.different_strategy_without_ultreon = undefined;
+      } else {
+        if (finalPayload.calcium_module.calcium_not_applicable) {
+          finalPayload.calcium_module.calcium_not_applicable = false;
+          finalPayload.calcium_module.calcium_not_applicable_reason = undefined;
+        }
+      }
+    }
+
+    if (finalPayload.lipid_module) {
+      if (allPostPci) {
+        finalPayload.lipid_module.lipid_not_applicable = true;
+        finalPayload.lipid_module.lipid_not_applicable_reason = 'ALL_PULLBACKS_POST_PCI';
+        finalPayload.lipid_module.perception_accuracy = undefined;
+        finalPayload.lipid_module.ease_of_interpretation = undefined;
+        finalPayload.lipid_module.clinical_utility = undefined;
+        finalPayload.lipid_module.auto_detect_added_info = undefined;
+        finalPayload.lipid_module.influenced_decision = undefined;
+        finalPayload.lipid_module.improvement_ideas = undefined;
+      } else {
+        if (finalPayload.lipid_module.lipid_not_applicable) {
+          finalPayload.lipid_module.lipid_not_applicable = false;
+          finalPayload.lipid_module.lipid_not_applicable_reason = undefined;
+        }
+      }
+    }
+
     const upsertData = {
-      ...payload,
+      ...finalPayload,
       id: finalId,
       anonymous_code: generatedCode,
+      schema_version: '3.1',
       updated_at: new Date().toISOString(),
     };
     

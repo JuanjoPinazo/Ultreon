@@ -39,6 +39,22 @@ export default function CaseDetailClient({ record, profileRole }: CaseDetailProp
   const renderModule = (title: string, data: any) => {
     if (isModuleEmpty(data)) return null;
 
+    if (data.calcium_not_applicable === true || data.lipid_not_applicable === true) {
+      return (
+        <div className="bg-surface border border-border rounded-xl mb-6 shadow-sm overflow-hidden">
+          <div className="bg-surface-secondary border-b border-border px-6 py-3 flex justify-between items-center">
+            <h3 className="text-sm font-bold text-foreground">{title}</h3>
+            <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">NO APLICABLE</span>
+          </div>
+          <div className="p-6">
+            <p className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <span className="text-xl">☑</span> No aplicable — Todos los pull-backs del caso son POST-PCI
+            </p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="bg-surface border border-border rounded-xl mb-6 shadow-sm overflow-hidden">
         <div className="bg-surface-secondary border-b border-border px-6 py-3">
@@ -66,7 +82,7 @@ export default function CaseDetailClient({ record, profileRole }: CaseDetailProp
         <div className="p-6 space-y-6">
           {data.pullbacks.map((pullback: any, index: number) => (
             <div key={index} className="bg-surface-secondary/50 border border-border rounded-lg p-5">
-              <h4 className="text-xs font-bold text-foreground mb-3 uppercase tracking-wider">Adquisición {index + 1}</h4>
+              <h4 className="text-xs font-bold text-foreground mb-3 uppercase tracking-wider">Pull-back Nº {index + 1}</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
                 {Object.entries(pullback).map(([k, v]) => {
                   if (k === 'id') return null;

@@ -130,7 +130,7 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
 
         <div className="pt-8 border-t border-slate-200 flex justify-between text-xs text-slate-500 uppercase tracking-widest">
           <span>Generado: {currentDate}</span>
-          <span>Site Pack v1.0</span>
+          <span>Site Pack v1.1</span>
         </div>
       </div>
 
