@@ -122,7 +122,7 @@ export const ClinicalScale = ({ label, value, onChange, error, minLabel = "Min",
 
 export const ClinicalNumberStepper = ({ label, value, onChange, unit = "", min = 0 }: any) => {
   const handleChange = (e: any) => {
-    const val = e.target.value;
+    const val = e.target.value.replace(/\D/g, '');
     if (val === '') onChange('');
     else {
       const num = parseInt(val, 10);
@@ -138,7 +138,7 @@ export const ClinicalNumberStepper = ({ label, value, onChange, unit = "", min =
           type="number"
           inputMode="numeric"
           min={min}
-          className="w-full bg-surface border border-border text-foreground h-10 text-center font-bold outline-none rounded-lg focus:bg-surface-secondary focus:border-primary focus:ring-1 focus:ring-primary transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          className="w-full bg-surface border border-border text-foreground h-10 text-center font-bold outline-none rounded-lg focus:bg-surface-secondary focus:border-primary focus:ring-1 focus:ring-primary transition-all no-spinner"
           value={value || ''}
           onChange={handleChange}
         />

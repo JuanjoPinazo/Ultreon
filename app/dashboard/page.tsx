@@ -44,7 +44,7 @@ export default async function DashboardPage(props: {
 
   // Fetch all active hospitals from the database for filter purposes (Admins/Monitors only)
   let hospitals: { id: string; name: string }[] = [];
-  if (profile.role === 'admin' || profile.role === 'monitor') {
+  if (profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'monitor') {
     const { data: hospitalsData } = await supabase
       .from('hospitals')
       .select('id, name')
@@ -105,11 +105,12 @@ export default async function DashboardPage(props: {
 
   if (cases) {
     const total = cases.length;
-    const reales = cases.filter(c => !c.is_demo).length;
+    const reales = cases.filter(c => !c.is_demo && !c.is_prelaunch).length;
     const demos = cases.filter(c => c.is_demo).length;
+    const prelaunches = cases.filter(c => !c.is_demo && c.is_prelaunch).length;
     const drafts = cases.filter(c => c.status === 'DRAFT').length;
     const completeds = cases.filter(c => c.status === 'COMPLETED').length;
-    console.log(`[DEBUG DASHBOARD] Total V3: ${total} | Reales: ${reales} | Demo: ${demos} | Drafts: ${drafts} | Completeds: ${completeds}`);
+    console.log(`[DEBUG DASHBOARD] Total V3: ${total} | Oficiales: ${reales} | Prelaunch: ${prelaunches} | Demo: ${demos} | Drafts: ${drafts} | Completeds: ${completeds}`);
   }
 
   // Get search params for filtering
@@ -117,16 +118,17 @@ export default async function DashboardPage(props: {
   const filterHospital = searchParams.hospital || '';
   const filterSegment = searchParams.segment || '';
   const filterDateRange = searchParams.dateRange || 'all';
-  const filterCaseType = searchParams.caseType || 'real';
+  const filterCaseType = searchParams.caseType || 'official';
 
   // Apply filters in memory
   const filteredCases = (cases || []).filter((record) => {
-    // 0. Demo Filter (Real by default)
-    if (filterCaseType === 'real' && record.is_demo === true) return false;
+    // 0. Case Type Filter (official by default)
+    if (filterCaseType === 'official' && (record.is_demo === true || record.is_prelaunch === true)) return false;
+    if (filterCaseType === 'prelaunch' && (record.is_prelaunch !== true || record.is_demo === true)) return false;
     if (filterCaseType === 'demo' && record.is_demo !== true) return false;
 
     // 1. Hospital Filter (only applicable to admins/monitors)
-    if (profile.role === 'admin' || profile.role === 'monitor') {
+    if (profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'monitor') {
       if (filterHospital && record.hospital_id !== filterHospital) {
         return false;
       }
@@ -208,6 +210,16 @@ export default async function DashboardPage(props: {
   return (
     <main className="min-h-screen bg-background text-foreground flex flex-col antialiased font-sans">
       
+      {/* Prelaunch Banner */}
+      {registrySettings?.phase === 'PRELAUNCH' && (
+        <div className="bg-indigo-600 dark:bg-indigo-900/80 text-white px-4 py-3 flex items-center justify-center gap-3 text-sm font-medium shadow-sm">
+          <span className="text-xl">🚀</span>
+          <div>
+            <strong>ENTORNO DE PRELANZAMIENTO:</strong> Los casos introducidos durante esta fase son pruebas clínicas y no computan como actividad oficial del Registro.
+          </div>
+        </div>
+      )}
+
       {/* Header Bar */}
       <header className="bg-card border-b border-border p-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3">
@@ -266,7 +278,7 @@ export default async function DashboardPage(props: {
               Bienvenido, {profile.full_name || 'Colega médico'}
             </h2>
             <p className="text-xs text-muted-foreground font-medium">
-              {profile.role === 'admin'
+              {(profile.role === 'admin' || profile.role === 'clinical_admin')
                 ? 'Tienes acceso total para gestionar hospitales, usuarios y ver la telemetría clínica de todos los centros.'
                 : profile.role === 'hospital_user'
                 ? `Registrado en: ${hospitalName}. Puedes crear nuevos casos y consultar tu historial.`
@@ -275,7 +287,7 @@ export default async function DashboardPage(props: {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {profile.role === 'admin' && (
+            {(profile.role === 'admin' || profile.role === 'clinical_admin') && (
               <Link
                 href="/admin"
                 className="px-5 py-3 bg-surface border border-input-border hover:border-primary hover:bg-surface-secondary text-foreground font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-focus-ring shadow-sm"
@@ -299,7 +311,7 @@ export default async function DashboardPage(props: {
               Resultados y Análisis
             </Link>
 
-            {(profile.role === 'admin' || profile.role === 'hospital_user') && (
+            {(profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'hospital_user') && (
               <Link
                 href="/registry/new"
                 className="px-5 py-3 bg-primary hover:bg-primary-hover text-surface font-black rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-lg shadow-primary/10"
@@ -440,7 +452,7 @@ export default async function DashboardPage(props: {
         {/* Dashboard Filters Component */}
         <DashboardFilters
           hospitals={hospitals}
-          showHospitalFilter={profile.role === 'admin' || profile.role === 'monitor'}
+          showHospitalFilter={profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'monitor'}
         />
 
         {/* KPIs Summary Panel */}
@@ -530,7 +542,7 @@ export default async function DashboardPage(props: {
           {filteredCases.length === 0 ? (
             <div className="bg-card border border-border rounded-3xl p-12 text-center">
               <p className="text-sm text-muted-foreground font-mono">No se han encontrado registros con los filtros activos.</p>
-              {(profile.role === 'admin' || profile.role === 'hospital_user') && (
+              {(profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'hospital_user') && (
                 <Link
                   href="/registry/new"
                   className="inline-block mt-4 text-xs text-cyan-400 font-bold hover:underline"
@@ -555,7 +567,7 @@ export default async function DashboardPage(props: {
                       <th className="p-4 text-center">Score OPSTAR</th>
                       <th className="p-4 text-center">Validado (Monitor)</th>
                       <th className="p-4 text-center">Bloqueado</th>
-                      {(profile.role === 'admin' || profile.role === 'monitor') && <th className="p-4 pr-6 text-right">Acciones</th>}
+                      {(profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'monitor') && <th className="p-4 pr-6 text-right">Acciones</th>}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 text-xs font-mono">
@@ -576,6 +588,11 @@ export default async function DashboardPage(props: {
                               {record.is_demo && (
                                 <span className="px-1.5 py-0.5 bg-demo-soft text-demo dark:bg-demo/20 dark:text-demo-soft text-[9px] rounded font-bold uppercase">
                                   DEMO
+                                </span>
+                              )}
+                              {!record.is_demo && record.is_prelaunch && (
+                                <span className="px-1.5 py-0.5 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 text-[9px] rounded font-bold uppercase border border-indigo-200 dark:border-indigo-800/50">
+                                  PRELANZAMIENTO
                                 </span>
                               )}
                               {record.status === 'DRAFT' && (
@@ -640,7 +657,7 @@ export default async function DashboardPage(props: {
                               </span>
                             )}
                           </td>
-                          {(profile.role === 'admin' || profile.role === 'monitor') && (
+                          {(profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'monitor') && (
                             <td className="p-4 pr-6 text-right space-x-2">
                               {/* Toggle Validation Action Button */}
                               <form action={handleToggleValidate.bind(null, record.id, record.monitor_validated)} className="inline-block">

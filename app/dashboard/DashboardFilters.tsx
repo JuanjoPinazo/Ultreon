@@ -105,10 +105,10 @@ export default function DashboardFilters({
             onChange={(e) => updateFilters('caseType', e.target.value)}
             className="w-full px-3 py-2.5 rounded-xl bg-background border border-border focus:border-primary/50 text-xs text-muted-foreground outline-none cursor-pointer"
           >
-            <option value="real">Oficiales</option>
-            <option value="prelaunch">Prelanzamiento (QA)</option>
-            <option value="demo">Casos DEMO</option>
-            <option value="all">Todos (Reales + QA + Demo)</option>
+            <option value="official">Oficiales</option>
+            <option value="prelaunch">Prelanzamiento</option>
+            <option value="demo">Demo</option>
+            <option value="all">Todos</option>
           </select>
         </div>
       )}

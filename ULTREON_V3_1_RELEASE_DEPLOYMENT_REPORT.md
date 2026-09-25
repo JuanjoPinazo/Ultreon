@@ -12,7 +12,7 @@ Se ha completado satisfactoriamente el ciclo de Release & Deployment para la ver
 - Pipeline estático validado: `npm run lint`, `npx tsc --noEmit` y `npm run build` ejecutados exitosamente con **Exit Code 0**.
 
 ### 2. Control de Versiones & Vercel Preview
-- **Commit SHA**: `generado-en-deploy`
+- **Commit SHA**: `b8f20cf8c0262b875e9831151c6dec4167a9fd6e`
 - **Release Branch**: `release/ultreon-v3.1`
 - Vercel Preview completado con estado **READY**. Smoke tests aprobados en preview environment.
 

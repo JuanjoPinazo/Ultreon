@@ -18,10 +18,30 @@ async function checkAdmin() {
     .eq('id', user.id)
     .single();
 
-  if (profileError || !profile || profile.role !== 'admin' || !profile.is_active) {
+  if (profileError || !profile || (profile.role !== 'admin' && profile.role !== 'clinical_admin') || !profile.is_active) {
     return false;
   }
   return true;
+}
+
+async function getAdminRole() {
+  const supabase = await createServerClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) return null;
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('role, is_active')
+    .eq('id', user.id)
+    .single();
+
+  if (profileError || !profile || !profile.is_active) {
+    return null;
+  }
+  if (profile.role === 'admin' || profile.role === 'clinical_admin') {
+    return profile.role;
+  }
+  return null;
 }
 
 // 1. LOGIN ACTION
@@ -172,9 +192,12 @@ export async function createUserAction(data: {
   hospitalId: string | null;
   isActive: boolean;
 }) {
-  const isAdmin = await checkAdmin();
-  if (!isAdmin) {
+  const adminRole = await getAdminRole();
+  if (!adminRole) {
     return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+  if (adminRole === 'clinical_admin' && data.role === 'admin') {
+    return { error: 'No autorizado. Un Administrador Clínico no puede crear usuarios con rol Administrador.' };
   }
 
   try {
@@ -193,7 +216,14 @@ export async function createUserAction(data: {
     });
 
     if (authError) {
-      return { error: authError.message };
+      console.error('Supabase auth.admin.createUser error:', authError);
+      let errorMessage = authError.message;
+      if (errorMessage.includes('Database error creating new user')) {
+        errorMessage = 'Error en base de datos al crear usuario (Posible causa: el rol seleccionado no existe en el CHECK constraint remoto profiles_role_check, o falló el trigger on_auth_user_created).';
+      } else if (errorMessage.toLowerCase().includes('already registered')) {
+        errorMessage = 'El usuario ya existe.';
+      }
+      return { error: errorMessage };
     }
 
     // Double check/upsert in profiles to make sure it exists
@@ -233,9 +263,27 @@ export async function updateUserAction(
     password?: string;
   }
 ) {
-  const isAdmin = await checkAdmin();
-  if (!isAdmin) {
+  const adminRole = await getAdminRole();
+  if (!adminRole) {
     return { error: 'No autorizado. Se requieren permisos de administrador.' };
+  }
+  
+  if (adminRole === 'clinical_admin') {
+    // Determine the target user's current role
+    const supabase = await createServerClient();
+    const { data: targetProfile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', id)
+      .single();
+      
+    if (targetProfile?.role === 'admin' || targetProfile?.role === 'super_admin') {
+      return { error: 'No autorizado. No puede modificar a un Administrador.' };
+    }
+    
+    if (data.role === 'admin') {
+      return { error: 'No autorizado. Un Administrador Clínico no puede otorgar el rol Administrador.' };
+    }
   }
 
   try {
@@ -331,7 +379,7 @@ export async function toggleCaseLockAction(id: string, locked: boolean) {
       .eq('id', user.id)
       .single();
 
-    if (!profile || (profile.role !== 'admin' && profile.role !== 'monitor')) {
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'clinical_admin' && profile.role !== 'monitor')) {
       return { error: 'No autorizado.' };
     }
 
@@ -362,7 +410,7 @@ export async function toggleCaseValidationAction(id: string, validated: boolean)
       .eq('id', user.id)
       .single();
 
-    if (!profile || (profile.role !== 'admin' && profile.role !== 'monitor')) {
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'clinical_admin' && profile.role !== 'monitor')) {
       return { error: 'No autorizado.' };
     }
 
@@ -586,7 +634,7 @@ export async function toggleFollowUpValidationAction(id: string, validated: bool
       .eq('id', user.id)
       .single();
 
-    if (!profile || (profile.role !== 'admin' && profile.role !== 'monitor')) {
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'clinical_admin' && profile.role !== 'monitor')) {
       return { error: 'No autorizado. Se requieren permisos de monitor o administrador.' };
     }
 
@@ -1357,7 +1405,7 @@ export async function updateOctCoreLabReviewAction(data: {
     .eq('id', user.id)
     .single();
 
-  if (!profile || !['admin', 'monitor'].includes(profile.role)) {
+  if (!profile || !['admin', 'clinical_admin', 'monitor'].includes(profile.role)) {
     return { error: 'Solo admin y monitor pueden validar' };
   }
 
@@ -1412,7 +1460,7 @@ export async function deleteOctEvidenceAction(evidenceId: string) {
 
     if (
       evidence.uploaded_by !== user.id &&
-      !['admin', 'monitor'].includes(profile?.role || '')
+      !['admin', 'clinical_admin', 'monitor'].includes(profile?.role || '')
     ) {
       return { error: 'No tienes permisos para eliminar' };
     }
@@ -1485,11 +1533,11 @@ export async function updateCaseStatusAction(data: {
     }
 
     // Permission checks for status transitions
-    if (data.newStatus === 'locked' && !['admin', 'monitor'].includes(profile.role)) {
+    if (data.newStatus === 'locked' && !['admin', 'clinical_admin', 'monitor'].includes(profile.role)) {
       return { error: 'Solo admin/monitor pueden bloquear' };
     }
 
-    if (data.newStatus === 'validated' && !['admin', 'monitor'].includes(profile.role)) {
+    if (data.newStatus === 'validated' && !['admin', 'clinical_admin', 'monitor'].includes(profile.role)) {
       return { error: 'Solo admin/monitor pueden validar' };
     }
 
@@ -1716,7 +1764,7 @@ export async function deleteHospitalAction(id: string) {
       .eq('id', user.id)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || profile.role !== 'admin' && profile.role !== 'clinical_admin') {
       return { error: 'No autorizado. Se requieren permisos de administrador.' };
     }
 

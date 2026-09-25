@@ -124,3 +124,9 @@ Siguiendo la directiva final, se ha optado por **evitar un refactor destructivo*
 - Se excluyó la carpeta `scratch/` del linter (mediante `tsconfig.json` e `eslint.config.mjs`) para silenciar errores de los scripts temporales, respetando su existencia para debugging.
 - El warning de deprecación de rules en Next.js se ha silenciado ignorando las flags conflictivas (`@typescript-eslint/no-explicit-any`, etc).
 - `npm run lint`, `npx tsc --noEmit` y `npm run build` pasan exitosamente.
+
+## INVESTIGATOR MODEL & ROLES
+- **Investigador Coordinador del Registro**: Rol global e institucional (Dr. Ramón López-Palop).
+- **Investigador Principal del Centro**: El IP responsable a nivel local.
+- **Operador vs Usuario**: Estricta separación conceptual. Los operadores (los que intervienen) son independientes de los usuarios (quienes documentan o ingresan datos).
+- El **Site Pack** ha sido actualizado para reflejar este organigrama y sus firmas correspondientes.

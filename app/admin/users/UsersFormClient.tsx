@@ -25,9 +25,10 @@ interface UsersFormClientProps {
   users: Profile[];
   hospitals: Hospital[];
   currentUserId?: string;
+  currentUserRole?: string;
 }
 
-export default function UsersFormClient({ users, hospitals, currentUserId }: UsersFormClientProps) {
+export default function UsersFormClient({ users, hospitals, currentUserId, currentUserRole }: UsersFormClientProps) {
   const [isPending, startTransition] = useTransition();
   const [localUsers, setLocalUsers] = useState<Profile[]>(users);
 
@@ -85,6 +86,10 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
   };
 
   const handleEditClick = (u: Profile) => {
+    if (currentUserRole === 'clinical_admin' && (u.role === 'admin' || u.role === 'super_admin')) {
+      alert('No tienes permisos para modificar a un administrador.');
+      return;
+    }
     setDeleteConfirmId(null);
     setEmail(u.email);
     setFullName(u.full_name || '');
@@ -163,6 +168,8 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
     switch (role) {
       case 'admin':
         return <span className="px-2 py-0.5 bg-red-950/80 text-red-400 border border-red-900/30 rounded text-[9px] font-mono font-bold">ADMIN</span>;
+      case 'clinical_admin':
+        return <span className="px-2 py-0.5 bg-fuchsia-950/80 text-fuchsia-400 border border-fuchsia-900/30 rounded text-[9px] font-mono font-bold">CLINICAL ADMIN</span>;
       case 'monitor':
         return <span className="px-2 py-0.5 bg-amber-950/80 text-amber-400 border border-amber-900/30 rounded text-[9px] font-mono font-bold">MONITOR</span>;
       case 'hospital_user':
@@ -301,7 +308,11 @@ export default function UsersFormClient({ users, hospitals, currentUserId }: Use
                 >
                   <option value="hospital_user">Médico (hospital_user)</option>
                   <option value="monitor">Monitor (monitor)</option>
-                  <option value="admin">Administrador (admin)</option>
+                  {currentUserRole !== 'clinical_admin' && (
+                    <option value="admin">Administrador (admin)</option>
+                  )}
+                  <option value="clinical_admin">Administrador Clínico (clinical_admin)</option>
+                  <option value="scientific_reviewer">Revisor Científico (scientific_reviewer)</option>
                   <option value="viewer">Visor Lectura (viewer)</option>
                 </select>
               </div>

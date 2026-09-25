@@ -61,8 +61,9 @@ export default async function TargetsPage() {
   // Fetch all completed real cases for metrics
   const { data: cases } = await supabase
     .from('ultreon_registry_cases')
-    .select('id, hospital_id, operator_id, status, is_demo, procedure_date')
+    .select('id, hospital_id, operator_id, status, is_demo, is_prelaunch, procedure_date')
     .eq('is_demo', false)
+    .eq('is_prelaunch', false)
     .eq('status', 'COMPLETED');
 
   return (

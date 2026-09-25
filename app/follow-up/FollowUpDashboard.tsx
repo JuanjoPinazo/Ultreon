@@ -36,7 +36,8 @@ export default function FollowUpDashboard({
   const filteredCases = useMemo(() => {
     return initialCases.filter((c) => {
       // Demo Filter
-      if (filterCaseType === 'real' && c.is_demo === true) return false;
+      if (filterCaseType === 'official' && (c.is_demo === true || c.is_prelaunch === true)) return false;
+      if (filterCaseType === 'prelaunch' && (c.is_prelaunch !== true || c.is_demo === true)) return false;
       if (filterCaseType === 'demo' && c.is_demo !== true) return false;
 
       // Hospital Filter
@@ -89,7 +90,7 @@ export default function FollowUpDashboard({
       c.operators?.full_name || 'N/A',
       new Date(c.created_at).toLocaleDateString(),
       (c.case_status === 'complete' || c.case_status === 'completed' || c.status === 'COMPLETED') ? 'Completado' : 'Borrador',
-      c.is_demo ? 'DEMO' : 'Real'
+      c.is_demo ? 'DEMO' : (c.is_prelaunch ? 'Prelanzamiento' : 'Oficial')
     ]);
     
     const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].map(e => e.join(",")).join("\n");
@@ -213,7 +214,8 @@ export default function FollowUpDashboard({
                 onChange={(e) => setFilterCaseType(e.target.value)}
                 className="px-3 py-2 bg-background border border-border rounded-xl text-xs text-foreground outline-none"
               >
-                <option value="real">Casos Reales</option>
+                <option value="official">Casos Oficiales</option>
+                <option value="prelaunch">Prelanzamiento</option>
                 <option value="demo">Casos DEMO</option>
                 <option value="all">Todos</option>
               </select>
@@ -259,10 +261,14 @@ export default function FollowUpDashboard({
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        {c.is_demo ? (
+                        {c.is_demo && (
                           <span className="px-2.5 py-1 bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-950/50 dark:text-orange-400 dark:border-orange-800/50 text-[10px] font-bold uppercase tracking-wider rounded-full border">DEMO</span>
-                        ) : (
-                          <span className="px-2.5 py-1 bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950/50 dark:text-blue-400 dark:border-blue-800/50 text-[10px] font-bold uppercase tracking-wider rounded-full border">Real</span>
+                        )}
+                        {!c.is_demo && c.is_prelaunch && (
+                          <span className="px-2.5 py-1 bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-950/50 dark:text-indigo-400 dark:border-indigo-800/50 text-[10px] font-bold uppercase tracking-wider rounded-full border">Prelanzamiento</span>
+                        )}
+                        {!c.is_demo && !c.is_prelaunch && (
+                          <span className="px-2.5 py-1 bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950/50 dark:text-blue-400 dark:border-blue-800/50 text-[10px] font-bold uppercase tracking-wider rounded-full border">Oficial</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-right">

@@ -1,6 +1,12 @@
 import React from 'react';
 
-export default function PrintableSignatures() {
+interface HospitalData {
+  id: string;
+  name: string;
+  principalInvestigator?: string | null;
+}
+
+export default function PrintableSignatures({ hospital }: { hospital?: HospitalData | null }) {
   return (
     <div className="print-page bg-white text-black font-sans break-before">
       <div className="border-b-4 border-slate-900 pb-4 mb-8">
@@ -44,7 +50,7 @@ export default function PrintableSignatures() {
       <div className="mt-12">
         <p className="text-xs text-slate-500 mb-8">Firma del Investigador Principal ratificando la delegación de funciones:</p>
         <div className="flex justify-between">
-          <div className="w-64 border-b border-slate-400"></div>
+          <div className="w-64 border-b border-slate-400 text-center font-bold text-sm mb-1">{hospital?.principalInvestigator || ''}</div>
           <div className="w-32 border-b border-slate-400"></div>
         </div>
         <div className="flex justify-between mt-2 text-xs text-slate-400">

@@ -63,7 +63,6 @@ export const Step2Acquisition = ({ formData, setFormData }: Props) => {
                 onChange={(v: string) => updatePullback(idx, 'fps', Number(v))}
                 step={1}
                 min={1}
-                max={200}
               />
               <ClinicalScale
                 label="Impacto del co-registro sobre tiempo/esfuerzo"

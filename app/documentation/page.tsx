@@ -46,8 +46,9 @@ export default async function DocumentationPage(props: {
       start_date: string;
       end_date: string | null;
     } | null;
+    principalInvestigator?: string | null;
   }[] = [];
-  if (profile.role === 'admin' || profile.role === 'super_admin') {
+  if (profile.role === 'admin' || profile.role === 'super_admin' || profile.role === 'clinical_admin') {
     const { data: hospData } = await supabase
       .from('hospitals')
       .select('id, name')
@@ -69,21 +70,35 @@ export default async function DocumentationPage(props: {
   
   const settingsMap = new Map((settingsData || []).map(s => [s.hospital_id, s.code_prefix]));
 
-  // Fetch profiles to get operators for each hospital
-  const { data: profilesData } = await supabase
-    .from('profiles')
-    .select('hospital_id, full_name, email')
-    .eq('role', 'hospital_user');
+  // Fetch actual operators from hospital_operators
+  const { data: hopData } = await supabase
+    .from('hospital_operators')
+    .select('hospital_id, operators(full_name)')
+    .eq('is_active', true);
 
   const operatorsByHospital = new Map<string, string[]>();
-  if (profilesData) {
-    profilesData.forEach(p => {
-      if (p.hospital_id) {
-        if (!operatorsByHospital.has(p.hospital_id)) {
-          operatorsByHospital.set(p.hospital_id, []);
+  if (hopData) {
+    hopData.forEach((row: any) => {
+      if (row.hospital_id && row.operators?.full_name) {
+        if (!operatorsByHospital.has(row.hospital_id)) {
+          operatorsByHospital.set(row.hospital_id, []);
         }
-        operatorsByHospital.get(p.hospital_id)!.push(p.full_name || p.email);
+        operatorsByHospital.get(row.hospital_id)!.push(row.operators.full_name);
       }
+    });
+  }
+
+  // Fetch Principal Investigators
+  const { data: invData } = await supabase
+    .from('opstar_investigators')
+    .select('hospital_id, full_name')
+    .eq('is_principal_investigator', true)
+    .eq('is_active', true);
+    
+  const piByHospital = new Map<string, string>();
+  if (invData) {
+    invData.forEach(inv => {
+      if (inv.hospital_id) piByHospital.set(inv.hospital_id, inv.full_name);
     });
   }
 
@@ -106,6 +121,7 @@ export default async function DocumentationPage(props: {
     ...h,
     prefix: settingsMap.get(h.id) || 'UNKNOWN',
     operators: operatorsByHospital.get(h.id) || [],
+    principalInvestigator: piByHospital.get(h.id) || null,
     target: targetsMap.get(h.id) || null
   }));
 

@@ -6,8 +6,13 @@ import UsersFormClient from './UsersFormClient';
 export default async function AdminUsersPage() {
   const supabase = await createServerClient();
 
-  // Get current logged-in user ID (to prevent self-deletion)
+  // Get current logged-in user ID and role
   const { data: { user: currentUser } } = await supabase.auth.getUser();
+  const { data: currentProfile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', currentUser?.id || '')
+    .single();
 
   // Fetch all user profiles sorted by created date
   const { data: users, error: usersError } = await supabase
@@ -35,6 +40,7 @@ export default async function AdminUsersPage() {
       users={users || []}
       hospitals={hospitals || []}
       currentUserId={currentUser?.id}
+      currentUserRole={currentProfile?.role}
     />
   );
 }

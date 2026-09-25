@@ -22,6 +22,7 @@ interface HospitalData {
     end_date: string | null;
     status?: 'DRAFT' | 'ACTIVE' | 'CLOSED';
   } | null;
+  principalInvestigator?: string | null;
 }
 
 export default function PrintableDossier({ hospital }: { hospital: HospitalData | null }) {
@@ -79,9 +80,16 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Investigador Principal</span>
-              <div className="text-xl border-b-2 border-slate-200 pb-2 text-slate-300">______________________________________</div>
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Investigador Coordinador</span>
+              <div className="text-xl border-b-2 border-slate-200 pb-2 text-slate-900 font-bold">{registrySupportConfig.coordinatingInvestigator}</div>
             </div>
+            <div className="space-y-2">
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Investigador Principal</span>
+              <div className="text-xl border-b-2 border-slate-200 pb-2 text-slate-900 font-bold">{hospital.principalInvestigator || 'Pendiente'}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Objetivo Asignado</span>
               <div className="text-xl border-b-2 border-slate-200 pb-2 text-slate-900 font-bold">
@@ -207,13 +215,21 @@ export default function PrintableDossier({ hospital }: { hospital: HospitalData 
 
           <h3 className="text-lg font-bold mt-4">5. Corrección de Datos</h3>
           <p>Un caso en estado DRAFT puede editarse libremente. Una vez marcado como COMPLETED, el caso se bloquea y requiere de una justificación auditada para cualquier modificación. Contacte con el soporte técnico o el coordinador (CRA) para solicitar correcciones.</p>
+
+          <h3 className="text-lg font-bold mt-4">6. Organización del Centro y Roles</h3>
+          <ul className="list-disc pl-4 space-y-1">
+            <li><strong>Investigador Coordinador del Registro:</strong> Máximo responsable científico a nivel global (Dr. Ramón López-Palop).</li>
+            <li><strong>Investigador Principal del Centro:</strong> Responsable local del registro en el hospital.</li>
+            <li><strong>Operador:</strong> Médico que realiza el procedimiento. No requiere usuario de acceso a la plataforma web.</li>
+            <li><strong>Usuario (CRA/Data Entry):</strong> Personal con credenciales de acceso para registrar los datos. Puede coincidir o no con el Operador.</li>
+          </ul>
         </div>
       </div>
 
       {/* ---------------- SUB-COMPONENTS ---------------- */}
       <PrintableOperatorProfile hospital={hospital} />
       <PrintableChecklist hospital={hospital} />
-      <PrintableSignatures />
+      <PrintableSignatures hospital={hospital} />
       <PrintableTraining />
       <PrintableInclusionsControl hospital={hospital} />
       <PrintableIncidents />

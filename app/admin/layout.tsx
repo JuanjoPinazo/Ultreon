@@ -25,7 +25,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     .eq('id', user.id)
     .single();
 
-  if (!profile || !profile.is_active || profile.role !== 'admin') {
+  if (!profile || !profile.is_active || (profile.role !== 'admin' && profile.role !== 'clinical_admin')) {
     redirect('/dashboard');
   }
 
@@ -56,7 +56,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
           </div>
 
           {/* Navigation Links */}
-          <AdminNav />
+          <AdminNav role={profile.role} />
         </div>
 
         {/* Footer actions */}

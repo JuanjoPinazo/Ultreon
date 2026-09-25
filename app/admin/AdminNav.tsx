@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function AdminNav() {
+export default function AdminNav({ role = 'admin' }: { role?: string }) {
   const pathname = usePathname();
 
   const navItems = [
@@ -121,6 +121,18 @@ export default function AdminNav() {
   return (
     <nav className="p-4 space-y-1">
       {navItems.map((item) => {
+        // Hide economic routes for clinical_admin
+        if (role === 'clinical_admin') {
+          if (
+            item.href.includes('/economics') ||
+            item.href.includes('/settlements') ||
+            item.href.includes('/consumption') ||
+            item.href.includes('/business-intelligence')
+          ) {
+            return null;
+          }
+        }
+        
         const isActive = pathname === item.href;
         return (
           <Link

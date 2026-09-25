@@ -24,6 +24,7 @@ interface HospitalData {
     end_date: string | null;
     status?: 'DRAFT' | 'ACTIVE' | 'CLOSED';
   } | null;
+  principalInvestigator?: string | null;
 }
 
 interface DocumentationClientProps {

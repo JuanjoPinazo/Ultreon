@@ -158,7 +158,7 @@ export async function deleteCaseMediaAction(
       .eq('id', user.id)
       .single();
 
-    const isAdmin = profile?.role === 'admin' || profile?.role === 'monitor';
+    const isAdmin = profile?.role === 'admin' || profile?.role === 'clinical_admin' || profile?.role === 'monitor';
     const isOwner = media.uploaded_by === user.id;
 
     if (!isAdmin && !isOwner) {
@@ -271,7 +271,7 @@ export async function updateCaseMediaAction(
       .eq('id', user.id)
       .single();
 
-    const isAdmin = profile?.role === 'admin' || profile?.role === 'monitor';
+    const isAdmin = profile?.role === 'admin' || profile?.role === 'clinical_admin' || profile?.role === 'monitor';
     const isOwner = media.uploaded_by === user.id;
 
     if (!isAdmin && !isOwner) {
@@ -322,7 +322,7 @@ export async function markAsKeyImageAction(
       .eq('id', user.id)
       .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'monitor') {
+    if (profile?.role !== 'admin' && profile?.role !== 'clinical_admin' && profile?.role !== 'monitor') {
       return { error: 'No tiene permiso para marcar key images' };
     }
 
@@ -366,7 +366,7 @@ export async function submitCoreLabReviewAction(
       .eq('id', user.id)
       .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'monitor') {
+    if (profile?.role !== 'admin' && profile?.role !== 'clinical_admin' && profile?.role !== 'monitor') {
       return { error: 'No tiene permiso para hacer revisión Core Lab' };
     }
 
@@ -444,7 +444,7 @@ export async function getCoreLabPendingCasesAction(): Promise<{
       .eq('id', user.id)
       .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'monitor') {
+    if (profile?.role !== 'admin' && profile?.role !== 'clinical_admin' && profile?.role !== 'monitor') {
       return { error: 'No tiene permiso' };
     }
 

@@ -92,13 +92,23 @@ export async function proxy(request: NextRequest) {
     }
 
     // Admin-only protection
-    if (path.startsWith('/admin') && profile.role !== 'admin') {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+    const isAdminArea = path.startsWith('/admin');
+    const isEconomicArea = path.startsWith('/admin/economics') || path.startsWith('/admin/settlements') || path.startsWith('/admin/consumption') || path.startsWith('/admin/business-intelligence');
+    
+    if (isAdminArea) {
+      if (profile.role !== 'admin' && profile.role !== 'clinical_admin') {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+      
+      if (isEconomicArea && profile.role === 'clinical_admin') {
+        // Absolute deny for clinical_admin on economic routes
+        return NextResponse.redirect(new URL('/admin', request.url));
+      }
     }
 
     // Root redirect
     if (path === '/') {
-      const redirectUrl = profile.role === 'admin' ? '/admin' : '/dashboard';
+      const redirectUrl = (profile.role === 'admin' || profile.role === 'clinical_admin') ? '/admin' : '/dashboard';
       return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
   }

@@ -91,27 +91,39 @@ export default function OperatorProfileModal({ isOpen, onClose, operatorId, oper
                 <label className="text-xs font-semibold text-muted-foreground">OCT</label>
                 <input 
                   type="number" min="0" max="10" 
-                  value={profile.image_usage_oct || 0}
-                  onChange={e => updateField('image_usage_oct', parseInt(e.target.value) || 0)}
-                  className="bg-card border border-input-border dark:border-slate-700 text-foreground rounded-lg p-2.5 outline-none" 
+                  inputMode="numeric"
+                  value={profile.image_usage_oct === undefined ? '' : profile.image_usage_oct}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    updateField('image_usage_oct', val === '' ? 0 : Math.min(10, parseInt(val, 10) || 0));
+                  }}
+                  className="bg-card border border-input-border dark:border-slate-700 text-foreground rounded-lg p-2.5 outline-none no-spinner" 
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-muted-foreground">IVUS</label>
                 <input 
                   type="number" min="0" max="10" 
-                  value={profile.image_usage_ivus || 0}
-                  onChange={e => updateField('image_usage_ivus', parseInt(e.target.value) || 0)}
-                  className="bg-card border border-input-border dark:border-slate-700 text-foreground rounded-lg p-2.5 outline-none" 
+                  inputMode="numeric"
+                  value={profile.image_usage_ivus === undefined ? '' : profile.image_usage_ivus}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    updateField('image_usage_ivus', val === '' ? 0 : Math.min(10, parseInt(val, 10) || 0));
+                  }}
+                  className="bg-card border border-input-border dark:border-slate-700 text-foreground rounded-lg p-2.5 outline-none no-spinner" 
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-muted-foreground">Solo Angio</label>
                 <input 
                   type="number" min="0" max="10" 
-                  value={profile.image_usage_angio || 0}
-                  onChange={e => updateField('image_usage_angio', parseInt(e.target.value) || 0)}
-                  className="bg-card border border-input-border dark:border-slate-700 text-foreground rounded-lg p-2.5 outline-none" 
+                  inputMode="numeric"
+                  value={profile.image_usage_angio === undefined ? '' : profile.image_usage_angio}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    updateField('image_usage_angio', val === '' ? 0 : Math.min(10, parseInt(val, 10) || 0));
+                  }}
+                  className="bg-card border border-input-border dark:border-slate-700 text-foreground rounded-lg p-2.5 outline-none no-spinner" 
                 />
               </div>
             </div>
