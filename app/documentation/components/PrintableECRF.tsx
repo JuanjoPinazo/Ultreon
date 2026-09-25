@@ -5,16 +5,16 @@ export default function PrintableECRF() {
 
   // Helpers to draw checkboxes
   const Box = () => <span className="print-checkbox align-middle mr-2"></span>;
-  const Scale7 = () => (
+  const Scale10 = ({ minLabel = "Nada", maxLabel = "Mucho" }) => (
     <div className="flex gap-4 items-center">
-      <span>Nada</span>
-      {[1, 2, 3, 4, 5, 6, 7].map(num => (
+      <span className="text-xs">{minLabel}</span>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
         <div key={num} className="flex flex-col items-center">
-          <span className="text-xs">{num}</span>
-          <span className="inline-block w-5 h-5 border border-black"></span>
+          <span className="text-[10px]">{num}</span>
+          <span className="inline-block w-4 h-4 border border-black"></span>
         </div>
       ))}
-      <span>Mucho</span>
+      <span className="text-xs">{maxLabel}</span>
     </div>
   );
 
@@ -51,18 +51,41 @@ export default function PrintableECRF() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 mt-6">
-          <div className="border-b border-gray-400 pb-1 flex flex-col">
-            <span className="font-bold mb-1">Presentación clínica:</span>
-            <span className="text-gray-300 mt-2">_______________________________________________</span>
+        <div className="mt-6 border border-gray-300 p-4">
+          <div className="mb-4">
+            <span className="font-bold mb-2 block">Presentación clínica:</span>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <label><Box /> SCA CEST</label>
+              <label><Box /> SCA SNEST</label>
+              <label><Box /> Angina inestable</label>
+              <label><Box /> Angina estable</label>
+              <label><Box /> Isquemia silente</label>
+              <div className="flex items-end"><label><Box /> Otro:</label> <span className="border-b border-gray-400 w-full ml-1 inline-block"></span></div>
+            </div>
           </div>
-          <div className="border-b border-gray-400 pb-1 flex flex-col">
-            <span className="font-bold mb-1">Tipo de lesión:</span>
-            <span className="text-gray-300 mt-2">_______________________________________________</span>
+          <div className="mb-4">
+            <span className="font-bold mb-2 block">Tipo de lesión:</span>
+            <div className="grid grid-cols-4 gap-2 text-xs">
+              <label><Box /> De novo</label>
+              <label><Box /> Reestenosis</label>
+              <label><Box /> Tronco Coronario Izquierdo</label>
+              <label><Box /> Injerto venoso</label>
+              <label><Box /> Lesión calcificada</label>
+              <label><Box /> Bifurcación</label>
+              <label><Box /> Oclusión total crónica</label>
+              <div className="flex items-end"><label><Box /> Otro:</label> <span className="border-b border-gray-400 w-full ml-1 inline-block"></span></div>
+            </div>
           </div>
-          <div className="border-b border-gray-400 pb-1 flex flex-col col-span-2 mt-4">
-            <span className="font-bold mb-1">Indicación principal para OCT:</span>
-            <span className="text-gray-300 mt-2">_____________________________________________________________________________________________</span>
+          <div>
+            <span className="font-bold mb-2 block">Indicación principal para OCT:</span>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <label><Box /> Optimización de stent</label>
+              <label><Box /> Evaluación de placa</label>
+              <label><Box /> Evaluación de calcio</label>
+              <label><Box /> Fallo de stent</label>
+              <label><Box /> Guía de tratamiento</label>
+              <div className="flex items-end"><label><Box /> Otro:</label> <span className="border-b border-gray-400 w-full ml-1 inline-block"></span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -73,7 +96,7 @@ export default function PrintableECRF() {
         
         {[1, 2, 3].map((num) => (
           <div key={num} className="border border-black p-4 mb-4 avoid-break">
-            <div className="font-bold border-b border-black pb-1 mb-3">Adquisición nº {num}</div>
+            <div className="font-bold border-b border-black pb-1 mb-3">Pull-back Nº {num}</div>
             <div className="grid grid-cols-3 gap-4 mb-3">
               <div>
                 <span className="font-bold block mb-1">Momento:</span>
@@ -122,7 +145,7 @@ export default function PrintableECRF() {
 
             <div className="mb-4">
               <span className="font-bold block mb-2">Impacto del co-registro en la intervención:</span>
-              <Scale7 />
+              <Scale10 minLabel="Mínimo impacto" maxLabel="Máximo impacto" />
             </div>
 
             <div className="bg-gray-100 p-3 border border-dashed border-gray-400">
@@ -145,15 +168,15 @@ export default function PrintableECRF() {
               <div className="space-y-3">
                 <div>
                   <span className="block mb-1">Facilidad de adquisición técnica:</span>
-                  <Scale7 />
+                  <Scale10 minLabel="Mínimo" maxLabel="Máximo" />
                 </div>
                 <div>
                   <span className="block mb-1">Calidad del lavado (Clearance):</span>
-                  <Scale7 />
+                  <Scale10 minLabel="Mínimo" maxLabel="Máximo" />
                 </div>
                 <div>
                   <span className="block mb-1">Impacto clínico/operativo del Fast Pullback:</span>
-                  <Scale7 />
+                  <Scale10 minLabel="Mínimo" maxLabel="Máximo" />
                 </div>
               </div>
             </div>
@@ -199,17 +222,22 @@ export default function PrintableECRF() {
 
         {/* MÓDULO CALCIO */}
         <div className="border border-black p-4 mb-4 avoid-break">
-          <div className="font-bold bg-black text-white inline-block px-2 py-1 mb-4 text-xs">MÓDULO DE CALCIO (Luz &gt; 180º, grosor &gt; 0.5mm, longitud)</div>
+          <div className="flex justify-between items-center mb-4">
+            <div className="font-bold bg-black text-white inline-block px-2 py-1 text-xs">MÓDULO DE CALCIO (Luz &gt; 180º, grosor &gt; 0.5mm, longitud)</div>
+            <div className="text-xs font-bold text-gray-600 bg-gray-100 px-2 py-1 border border-gray-300">
+              <label><Box /> No aplicable — Todos los pull-backs del caso son POST-PCI</label>
+            </div>
+          </div>
           
           <div className="space-y-4">
             <div className="flex justify-between items-center border-b border-gray-200 pb-2">
-              <span className="w-1/2">Precisión percibida en la detección:</span> <Scale7 />
+              <span className="w-1/3">Precisión percibida en la detección:</span> <Scale10 minLabel="Mínima precisión" maxLabel="Máxima precisión" />
             </div>
             <div className="flex justify-between items-center border-b border-gray-200 pb-2">
-              <span className="w-1/2">Facilidad de interpretación:</span> <Scale7 />
+              <span className="w-1/3">Facilidad de interpretación:</span> <Scale10 minLabel="Muy difícil" maxLabel="Muy fácil" />
             </div>
             <div className="flex justify-between items-center border-b border-gray-200 pb-2">
-              <span className="w-1/2">Utilidad clínica general:</span> <Scale7 />
+              <span className="w-1/3">Utilidad clínica general:</span> <Scale10 minLabel="Mínima utilidad" maxLabel="Máxima utilidad" />
             </div>
             
             <div className="mt-4 font-bold">¿La detección automática aportó información que había pasado desapercibida?</div>
@@ -234,11 +262,16 @@ export default function PrintableECRF() {
         {/* MÓDULO TCI & LÍPIDOS & FFR */}
         <div className="grid grid-cols-2 print:grid-cols-1 gap-4">
           <div className="border border-black p-3 avoid-break">
-             <div className="font-bold bg-black text-white inline-block px-2 py-1 mb-3 text-xs">MÓDULO DE LÍPIDOS</div>
+             <div className="flex justify-between items-start mb-3">
+               <div className="font-bold bg-black text-white inline-block px-2 py-1 text-xs">MÓDULO DE LÍPIDOS</div>
+             </div>
+             <div className="text-[10px] font-bold text-gray-600 bg-gray-100 p-1 mb-3 border border-gray-300">
+               <label><Box /> No aplicable — Todos los pull-backs son POST-PCI</label>
+             </div>
              <div className="space-y-3">
-               <div><span className="block mb-1">Precisión de detección:</span><Scale7 /></div>
-               <div><span className="block mb-1">Facilidad de interpretación:</span><Scale7 /></div>
-               <div><span className="block mb-1">Impacto en zona de aterrizaje:</span><Scale7 /></div>
+               <div><span className="block mb-1">Precisión de detección:</span><Scale10 minLabel="Mínima" maxLabel="Máxima" /></div>
+               <div><span className="block mb-1">Facilidad de interpretación:</span><Scale10 minLabel="Difícil" maxLabel="Fácil" /></div>
+               <div><span className="block mb-1">Impacto en zona de aterrizaje:</span><Scale10 minLabel="Mínimo" maxLabel="Máximo" /></div>
                <div className="mt-2 font-bold text-xs">¿Modificó el plan de stenting?</div>
                <div className="flex gap-4"><label><Box /> Sí</label><label><Box /> No</label></div>
              </div>
@@ -254,7 +287,7 @@ export default function PrintableECRF() {
                   <label><Box /> De Conservador a PCI</label>
                   <label><Box /> De PCI a Conservador</label>
                </div>
-               <div className="mt-2"><span className="block text-xs font-bold">Confianza en el valor:</span><Scale7 /></div>
+               <div className="mt-2"><span className="block text-xs font-bold">Confianza en el valor:</span><Scale10 minLabel="Mínimo" maxLabel="Máximo" /></div>
              </div>
           </div>
         </div>
@@ -265,9 +298,15 @@ export default function PrintableECRF() {
         <h3 className="bg-black text-white px-2 py-1 font-bold mb-4 print-section">SECCIÓN 5 — IMPACTO Y POST-PCI</h3>
         
         <div className="mb-6">
-          <div className="font-bold mb-1">Si la estrategia inicial cambió, ¿qué se modificó? (Stents, preparación, etc.)</div>
-          <div className="border-b border-dotted border-gray-300 h-6"></div>
-          <div className="border-b border-dotted border-gray-300 h-6"></div>
+          <div className="font-bold mb-2">Si la estrategia inicial cambió, ¿qué se modificó? (Stents, preparación, etc.)</div>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <label><Box /> Cambio de diámetro de stent</label>
+            <label><Box /> Cambio de longitud de stent</label>
+            <label><Box /> Estrategia de preparación de placa</label>
+            <label><Box /> Número de stents</label>
+            <label><Box /> Presión de inflado</label>
+            <div className="flex items-end"><label><Box /> Otro:</label> <span className="border-b border-gray-400 w-full ml-1 inline-block"></span></div>
+          </div>
         </div>
 
         <div className="border-t border-b border-gray-300 py-4 mb-6">
@@ -311,7 +350,7 @@ export default function PrintableECRF() {
           <div className="grid grid-cols-2 gap-6">
             <div>
               <div className="font-bold mb-2">Usabilidad global de ULTREON™ 3.0:</div>
-              <Scale7 />
+              <Scale10 minLabel="Mínimo" maxLabel="Máximo" />
             </div>
             <div>
               <div className="font-bold mb-2">¿Prevé aumentar la utilización de OCT en su práctica tras usar esta versión?</div>

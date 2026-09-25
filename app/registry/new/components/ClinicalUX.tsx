@@ -49,7 +49,7 @@ export const ClinicalMultiSelect = ({ label, options, selected = [], onChange, e
               onClick={() => toggle(val)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                 isSelected
-                  ? 'bg-primary-soft border-primary text-foreground shadow-sm dark:bg-primary/20 dark:border-primary/50 dark:text-primary-soft'
+                  ? 'bg-primary-soft border-primary text-foreground font-bold shadow-md ring-1 ring-primary/40 dark:bg-primary/20 dark:border-primary/50 dark:text-primary-soft dark:ring-0'
                   : 'bg-surface border-input-border text-foreground-secondary hover:border-primary hover:text-foreground dark:border-input-border dark:text-muted-foreground dark:hover:border-primary dark:hover:text-foreground'
               }`}
             >
@@ -78,7 +78,7 @@ export const ClinicalRadioChips = ({ label, options, value, onChange, error }: a
             onClick={() => onChange(val)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               isSelected
-                ? 'bg-primary-soft border-primary text-foreground shadow-sm dark:bg-primary/20 dark:border-primary/50 dark:text-primary-soft'
+                ? 'bg-primary-soft border-primary text-foreground font-bold shadow-md ring-1 ring-primary/40 dark:bg-primary/20 dark:border-primary/50 dark:text-primary-soft dark:ring-0'
                 : 'bg-surface border-input-border text-foreground-secondary hover:border-primary hover:text-foreground dark:border-input-border dark:text-muted-foreground dark:hover:border-primary dark:hover:text-foreground'
             }`}
           >
@@ -91,19 +91,19 @@ export const ClinicalRadioChips = ({ label, options, value, onChange, error }: a
   </div>
 );
 
-export const ClinicalScale7 = ({ label, value, onChange, error }: any) => {
+export const ClinicalScale = ({ label, value, onChange, error, minLabel = "Min", maxLabel = "Max" }: any) => {
   return (
     <div className="flex flex-col gap-2 mb-4 w-full">
       <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
-      <div className="flex flex-nowrap w-full justify-between sm:justify-start sm:gap-2">
-        {[1, 2, 3, 4, 5, 6, 7].map(num => (
+      <div className="flex flex-nowrap w-full justify-between sm:justify-start sm:gap-1.5 overflow-x-auto pb-2">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
           <button
             key={num}
             type="button"
             onClick={() => onChange(num)}
-            className={`flex-1 sm:flex-none sm:w-11 h-11 rounded-lg font-bold border transition-all flex items-center justify-center text-sm ${
+            className={`flex-none w-10 h-10 rounded-lg font-bold border transition-all flex items-center justify-center text-sm shrink-0 ${
               value === num
-                ? 'bg-primary-soft border-primary text-foreground shadow-sm ring-1 ring-primary/20 dark:bg-primary/20 dark:border-primary/50 dark:text-primary-soft'
+                ? 'bg-primary-soft border-primary text-foreground font-bold shadow-md ring-1 ring-primary/40 dark:bg-primary/20 dark:border-primary/50 dark:text-primary-soft dark:ring-0'
                 : 'bg-surface border-input-border text-foreground-secondary hover:bg-surface-secondary hover:border-primary dark:bg-background dark:border-input-border dark:text-muted-foreground dark:hover:bg-muted dark:hover:border-primary'
             }`}
           >
@@ -111,67 +111,42 @@ export const ClinicalScale7 = ({ label, value, onChange, error }: any) => {
           </button>
         ))}
       </div>
+      <div className="flex justify-between text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-[-4px]">
+        <span>1 = {minLabel}</span>
+        <span>10 = {maxLabel}</span>
+      </div>
       {error && <span className="text-[10px] text-red-400">{error}</span>}
     </div>
   );
 };
 
-export const ClinicalNumberStepper = ({ label, value, onChange, unit = "", step = 1, min = 0, max = 999 }: any) => {
-  const [inputValue, setInputValue] = useState(value || '');
-
-  useEffect(() => {
-    setInputValue(value || '');
-  }, [value]);
-
-  const handleDecrement = () => {
-    const current = Number(value) || 0;
-    if (current - step >= min) onChange(String(current - step));
-  };
-
-  const handleIncrement = () => {
-    const current = Number(value) || 0;
-    if (current + step <= max) onChange(String(current + step));
-  };
-
+export const ClinicalNumberStepper = ({ label, value, onChange, unit = "", min = 0 }: any) => {
   const handleChange = (e: any) => {
     const val = e.target.value;
-    setInputValue(val);
     if (val === '') onChange('');
-    else if (!isNaN(Number(val))) onChange(val);
+    else {
+      const num = parseInt(val, 10);
+      if (!isNaN(num) && num >= min) onChange(num.toString());
+    }
   };
 
   return (
     <div className="flex flex-col gap-1.5 mb-4">
       <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
-      <div className="flex items-center">
-        <button 
-          type="button" 
-          onClick={handleDecrement}
-          className="bg-surface-secondary hover:bg-muted border border-border border-r-0 text-muted-foreground w-12 h-10 flex items-center justify-center rounded-l-lg font-bold text-lg transition-colors"
-        >
-          -
-        </button>
-        <div className="relative flex-1">
-          <input
-            type="text"
-            inputMode="decimal"
-            className="w-full bg-surface border-y border-border text-foreground h-10 text-center font-bold outline-none focus:bg-surface-secondary transition-colors"
-            value={inputValue}
-            onChange={handleChange}
-          />
-          {unit && inputValue !== '' && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none font-bold">
-              {unit}
-            </span>
-          )}
-        </div>
-        <button 
-          type="button" 
-          onClick={handleIncrement}
-          className="bg-surface-secondary hover:bg-muted border border-border border-l-0 text-muted-foreground w-12 h-10 flex items-center justify-center rounded-r-lg font-bold text-lg transition-colors"
-        >
-          +
-        </button>
+      <div className="relative w-full sm:w-48">
+        <input
+          type="number"
+          inputMode="numeric"
+          min={min}
+          className="w-full bg-surface border border-border text-foreground h-10 text-center font-bold outline-none rounded-lg focus:bg-surface-secondary focus:border-primary focus:ring-1 focus:ring-primary transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          value={value || ''}
+          onChange={handleChange}
+        />
+        {unit && value !== '' && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none font-bold">
+            {unit}
+          </span>
+        )}
       </div>
     </div>
   );

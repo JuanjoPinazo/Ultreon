@@ -1,6 +1,7 @@
 import React from 'react';
 import { ECRFFormData } from '../types';
-import { ClinicalSelect, ClinicalMultiSelect, ClinicalRadioChips, ClinicalScale7, ConditionalSection } from './ClinicalUX';
+import { ClinicalSelect, ClinicalMultiSelect, ClinicalRadioChips, ClinicalScale, ConditionalSection } from './ClinicalUX';
+import { deriveGlobalModuleApplicability } from '../helpers';
 
 interface Props {
   formData: ECRFFormData;
@@ -32,6 +33,8 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
   const hasLipid = formData.oct_findings.some(f => f.toLowerCase().includes('lípido') || f.toLowerCase().includes('lipídica'));
   
   const hasTci = formData.pullbacks.slice(0, formData.pullback_count).some(pb => pb.vessel === 'LM' || pb.vessel === 'Left Main');
+  
+  const applicability = deriveGlobalModuleApplicability(formData.pullbacks.slice(0, formData.pullback_count));
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
@@ -64,12 +67,19 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
 
       {/* A. DETECCIÓN AUTOMÁTICA */}
       <ConditionalSection title="Detección de calcio por IA" show={hasCalcium} colorClass="amber">
-        <ClinicalScale7 label="Percepción de precisión" value={formData.perception_accuracy_calcium} onChange={(v: number) => updateField('perception_accuracy_calcium', v)} />
-        <ClinicalScale7 label="Facilidad en la interpretación" value={formData.ease_of_interpretation_calcium} onChange={(v: number) => updateField('ease_of_interpretation_calcium', v)} />
-        <ClinicalScale7 label="Utilidad clínica" value={formData.clinical_utility_calcium} onChange={(v: number) => updateField('clinical_utility_calcium', v)} />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          <ClinicalRadioChips label="¿La detección automática aportó info relevante?" value={formData.auto_detect_added_info_calcium === true ? 'Si' : formData.auto_detect_added_info_calcium === false ? 'No' : ''} onChange={(v: string) => updateField('auto_detect_added_info_calcium', v === 'Si')} options={['Si', 'No']} />
+        {applicability.calciumNotApplicable ? (
+          <div className="flex items-center gap-3 bg-card border border-border rounded-lg p-4 text-muted-foreground">
+            <span className="text-xl">☑</span>
+            <span className="font-medium">No aplicable — Todos los pull-backs del caso son POST-PCI</span>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <ClinicalScale label="Percepción de precisión" value={formData.perception_accuracy_calcium} onChange={(v: number) => updateField('perception_accuracy_calcium', v)} minLabel="Mínima precisión" maxLabel="Máxima precisión" />
+            <ClinicalScale label="Facilidad en la interpretación" value={formData.ease_of_interpretation_calcium} onChange={(v: number) => updateField('ease_of_interpretation_calcium', v)} minLabel="Muy difícil" maxLabel="Muy fácil" />
+            <ClinicalScale label="Utilidad clínica" value={formData.clinical_utility_calcium} onChange={(v: number) => updateField('clinical_utility_calcium', v)} minLabel="Mínima utilidad" maxLabel="Máxima utilidad" />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <ClinicalRadioChips label="¿La detección automática aportó info relevante?" value={formData.auto_detect_added_info_calcium === true ? 'Si' : formData.auto_detect_added_info_calcium === false ? 'No' : ''} onChange={(v: string) => updateField('auto_detect_added_info_calcium', v === 'Si')} options={['Si', 'No']} />
           <ClinicalRadioChips label="¿Influyó en decisiones?" value={formData.influenced_decision_calcium === true ? 'Si' : formData.influenced_decision_calcium === false ? 'No' : ''} onChange={(v: string) => updateField('influenced_decision_calcium', v === 'Si')} options={['Si', 'No']} />
         </div>
         
@@ -90,17 +100,26 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
             { value: 'Combinación', label: 'Combinación de varias' },
             { value: 'Otra', label: 'Otra' }
           ]} />
-          <ClinicalRadioChips label="Sin Ultreon, ¿habría elegido otra estrategia?" value={formData.different_strategy_without_ultreon_calcium} onChange={(v: string) => updateField('different_strategy_without_ultreon_calcium', v)} options={['Si', 'No', 'No sabe']} />
-        </div>
+            <ClinicalRadioChips label="Sin Ultreon, ¿habría elegido otra estrategia?" value={formData.different_strategy_without_ultreon_calcium} onChange={(v: string) => updateField('different_strategy_without_ultreon_calcium', v)} options={['Si', 'No', 'No sabe']} />
+          </div>
+          </div>
+        )}
       </ConditionalSection>
 
       <ConditionalSection title="Detección de lípidos por IA" show={hasLipid} colorClass="emerald">
-        <ClinicalScale7 label="Percepción de precisión" value={formData.perception_accuracy_lipid} onChange={(v: number) => updateField('perception_accuracy_lipid', v)} />
-        <ClinicalScale7 label="Facilidad en la interpretación" value={formData.ease_of_interpretation_lipid} onChange={(v: number) => updateField('ease_of_interpretation_lipid', v)} />
-        <ClinicalScale7 label="Utilidad clínica" value={formData.clinical_utility_lipid} onChange={(v: number) => updateField('clinical_utility_lipid', v)} />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          <ClinicalRadioChips label="¿Detección automática aportó info adicional?" value={formData.auto_detect_added_info_lipid === true ? 'Si' : formData.auto_detect_added_info_lipid === false ? 'No' : ''} onChange={(v: string) => updateField('auto_detect_added_info_lipid', v === 'Si')} options={['Si', 'No']} />
+        {applicability.lipidNotApplicable ? (
+          <div className="flex items-center gap-3 bg-card border border-border rounded-lg p-4 text-muted-foreground">
+            <span className="text-xl">☑</span>
+            <span className="font-medium">No aplicable — Todos los pull-backs del caso son POST-PCI</span>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <ClinicalScale label="Percepción de precisión" value={formData.perception_accuracy_lipid} onChange={(v: number) => updateField('perception_accuracy_lipid', v)} minLabel="Mínima precisión" maxLabel="Máxima precisión" />
+            <ClinicalScale label="Facilidad en la interpretación" value={formData.ease_of_interpretation_lipid} onChange={(v: number) => updateField('ease_of_interpretation_lipid', v)} minLabel="Muy difícil" maxLabel="Muy fácil" />
+            <ClinicalScale label="Utilidad clínica" value={formData.clinical_utility_lipid} onChange={(v: number) => updateField('clinical_utility_lipid', v)} minLabel="Mínima utilidad" maxLabel="Máxima utilidad" />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <ClinicalRadioChips label="¿Detección automática aportó info adicional?" value={formData.auto_detect_added_info_lipid === true ? 'Si' : formData.auto_detect_added_info_lipid === false ? 'No' : ''} onChange={(v: string) => updateField('auto_detect_added_info_lipid', v === 'Si')} options={['Si', 'No']} />
           <ClinicalRadioChips label="¿Influyó en la toma de decisiones?" value={formData.influenced_decision_lipid === true ? 'Si' : formData.influenced_decision_lipid === false ? 'No' : ''} onChange={(v: string) => updateField('influenced_decision_lipid', v === 'Si')} options={['Si', 'No']} />
         </div>
         
@@ -108,6 +127,8 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
           <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">¿Cómo podría mejorarse?</label>
           <input type="text" className="bg-card border border-input-border dark:border-slate-700 text-slate-800 dark:text-foreground rounded-lg p-2.5 text-sm outline-none" value={formData.improvement_ideas_lipid || ''} onChange={e => updateField('improvement_ideas_lipid', e.target.value)} />
         </div>
+          </div>
+        )}
       </ConditionalSection>
 
       {/* B. TCI — IMPACTO CLÍNICO */}
@@ -167,8 +188,8 @@ export const Step4Findings = ({ formData, setFormData }: Props) => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <ClinicalScale7 label="Lavado de sangre" value={formData.blood_clearance_ffr_oct} onChange={(v: number) => updateField('blood_clearance_ffr_oct', v)} />
-              <ClinicalScale7 label="Confianza en la información proporcionada por FFR-OCT" value={formData.ffr_oct_confidence} onChange={(v: number) => updateField('ffr_oct_confidence', v)} />
+              <ClinicalScale label="Lavado de sangre" value={formData.blood_clearance_ffr_oct} onChange={(v: number) => updateField('blood_clearance_ffr_oct', v)} minLabel="Muy deficiente" maxLabel="Excelente" />
+              <ClinicalScale label="Confianza en la información proporcionada por FFR-OCT" value={formData.ffr_oct_confidence} onChange={(v: number) => updateField('ffr_oct_confidence', v)} minLabel="Mínima confianza" maxLabel="Máxima confianza" />
             </div>
           </div>
         )}

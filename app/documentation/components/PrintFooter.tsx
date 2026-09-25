@@ -12,7 +12,7 @@ export default function PrintFooter({ hospitalName }: PrintFooterProps) {
         <strong>Centro:</strong> {hospitalName || 'No asignado'}
       </div>
       <div>
-        <strong>Versión Oficial:</strong> Site Pack v1.0 &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Fecha Efectiva:</strong> 01/10/2026
+        <strong>Versión Oficial:</strong> Site Pack v1.1 &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Fecha Efectiva:</strong> 01/10/2026
       </div>
       <div>
         <strong>Generado el:</strong> {currentDate}

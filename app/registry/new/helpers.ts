@@ -13,6 +13,47 @@ export function cleanFormData(data: ECRFFormData): ECRFFormData {
   // 1. Pullbacks cleanup based on count
   cleaned.pullbacks = cleaned.pullbacks.slice(0, cleaned.pullback_count);
 
+  // 1b. Module Applicability (ALL POST-PCI)
+  const applicability = deriveGlobalModuleApplicability(cleaned.pullbacks);
+  
+  if (applicability.calciumNotApplicable) {
+    cleaned.calcium_not_applicable = true;
+    cleaned.calcium_not_applicable_reason = applicability.reason;
+    // Wipe incompatible fields
+    cleaned.perception_accuracy_calcium = undefined;
+    cleaned.ease_of_interpretation_calcium = undefined;
+    cleaned.clinical_utility_calcium = undefined;
+    cleaned.auto_detect_added_info_calcium = undefined;
+    cleaned.influenced_decision_calcium = undefined;
+    cleaned.improvement_ideas_calcium = undefined;
+    cleaned.changed_prep_strategy_calcium = undefined;
+    cleaned.calcium_treatment_chosen = undefined;
+    cleaned.different_strategy_without_ultreon_calcium = undefined;
+  } else {
+    // If transitioning out of N/A, ensure the flag is cleared
+    if (cleaned.calcium_not_applicable) {
+      cleaned.calcium_not_applicable = false;
+      cleaned.calcium_not_applicable_reason = '';
+    }
+  }
+
+  if (applicability.lipidNotApplicable) {
+    cleaned.lipid_not_applicable = true;
+    cleaned.lipid_not_applicable_reason = applicability.reason;
+    // Wipe incompatible fields
+    cleaned.perception_accuracy_lipid = undefined;
+    cleaned.ease_of_interpretation_lipid = undefined;
+    cleaned.clinical_utility_lipid = undefined;
+    cleaned.auto_detect_added_info_lipid = undefined;
+    cleaned.influenced_decision_lipid = undefined;
+    cleaned.improvement_ideas_lipid = undefined;
+  } else {
+    if (cleaned.lipid_not_applicable) {
+      cleaned.lipid_not_applicable = false;
+      cleaned.lipid_not_applicable_reason = '';
+    }
+  }
+
   // 2. Acquisition specific fields (Fast Pullback)
   cleaned.pullbacks = cleaned.pullbacks.map(pb => {
     if (pb.speed !== '75 Fast') {
@@ -35,7 +76,7 @@ export function cleanFormData(data: ECRFFormData): ECRFFormData {
   const hasCalcium = cleaned.lesion_type.includes('Lesión calcificada') || 
                      cleaned.oct_findings.some(f => f.includes('Calcio') || f.includes('calcio'));
   
-  if (!hasCalcium) {
+  if (!hasCalcium && !cleaned.calcium_not_applicable) {
     cleaned.perception_accuracy_calcium = undefined;
     cleaned.ease_of_interpretation_calcium = undefined;
     cleaned.clinical_utility_calcium = undefined;
@@ -164,6 +205,8 @@ export function preparePayloadForSubmit(data: ECRFFormData): UltreonRegistryV3Fo
 
     calcium_module: hasCalcium ? {
       has_calcium_module: true,
+      calcium_not_applicable: data.calcium_not_applicable,
+      calcium_not_applicable_reason: data.calcium_not_applicable_reason,
       perception_accuracy: data.perception_accuracy_calcium,
       ease_of_interpretation: data.ease_of_interpretation_calcium,
       clinical_utility: data.clinical_utility_calcium,
@@ -177,6 +220,8 @@ export function preparePayloadForSubmit(data: ECRFFormData): UltreonRegistryV3Fo
 
     lipid_module: hasLipid ? {
       has_lipid_module: true,
+      lipid_not_applicable: data.lipid_not_applicable,
+      lipid_not_applicable_reason: data.lipid_not_applicable_reason,
       perception_accuracy: data.perception_accuracy_lipid,
       ease_of_interpretation: data.ease_of_interpretation_lipid,
       clinical_utility: data.clinical_utility_lipid,
@@ -333,5 +378,31 @@ export function mapPersistedCaseToFormData(dbRecord: any): ECRFFormData {
     future_indications: Array.isArray(global.future_indications) ? global.future_indications : [],
     highest_potential_feature: global.highest_potential_feature || '',
     final_comments: global.final_comments || ''
+  };
+}
+
+export function deriveGlobalModuleApplicability(pullbacks: any[]) {
+  if (!pullbacks || pullbacks.length === 0) {
+    return {
+      calciumNotApplicable: false,
+      lipidNotApplicable: false,
+      reason: ''
+    };
+  }
+
+  const allPostPci = pullbacks.every(pb => pb.type === 'POST-PCI');
+
+  if (allPostPci) {
+    return {
+      calciumNotApplicable: true,
+      lipidNotApplicable: true,
+      reason: 'ALL_PULLBACKS_POST_PCI'
+    };
+  }
+
+  return {
+    calciumNotApplicable: false,
+    lipidNotApplicable: false,
+    reason: ''
   };
 }
