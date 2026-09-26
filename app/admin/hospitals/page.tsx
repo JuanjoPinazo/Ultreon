@@ -1,10 +1,10 @@
 // app/admin/hospitals/page.tsx
 import React from 'react';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient as createServerClient } from '@/lib/supabase/server';
 import HospitalsFormClient from './HospitalsFormClient';
 
 export default async function AdminHospitalsPage() {
-  const supabase = createAdminClient();
+  const supabase = await createServerClient();
 
   // Fetch all hospitals ordered by name
   const { data: hospitals, error: hospitalsError } = await supabase

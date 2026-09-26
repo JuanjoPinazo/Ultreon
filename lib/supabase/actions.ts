@@ -660,29 +660,10 @@ export async function toggleFollowUpValidationAction(id: string, validated: bool
 // 12. GET ACTIVE HOSPITALS WITH INVESTIGATORS (ordered by Principal Investigator first, then display_order)
 export async function getActiveHospitalsWithInvestigators() {
   try {
-    const supabaseSession = await createServerClient();
-    const adminClient = createAdminClient();
-
-    // Get current user role to conditionally bypass RLS enum error for clinical_admin
-    const { data: { user } } = await supabaseSession.auth.getUser();
-    let isSuperUser = false;
-    
-    if (user) {
-      const { data: profile } = await supabaseSession
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-        
-      if (profile && (profile.role === 'admin' || profile.role === 'clinical_admin' || profile.role === 'monitor')) {
-        isSuperUser = true;
-      }
-    }
-
-    const dbClient = isSuperUser ? adminClient : supabaseSession;
+    const supabase = await createServerClient();
     
     // Fetch active hospitals
-    const { data: hospitals, error: hospError } = await dbClient
+    const { data: hospitals, error: hospError } = await supabase
       .from('hospitals')
       .select('*')
       .eq('is_active', true)
@@ -692,7 +673,7 @@ export async function getActiveHospitalsWithInvestigators() {
     if (!hospitals) return [];
     
     // Fetch active investigators (PIs) (RLS-aware)
-    const { data: investigators, error: invError } = await dbClient
+    const { data: investigators, error: invError } = await supabase
       .from('opstar_investigators')
       .select('*')
       .eq('is_active', true)
@@ -706,7 +687,7 @@ export async function getActiveHospitalsWithInvestigators() {
     const cleanInvestigators = investigators || [];
     
     // Fetch active operators from hospital_operators (RLS-aware)
-    const { data: hopOps, error: hopError } = await dbClient
+    const { data: hopOps, error: hopError } = await supabase
       .from('hospital_operators')
       .select(`
         hospital_id,
@@ -739,7 +720,7 @@ export async function getActiveHospitalsWithInvestigators() {
           : null
       }));
     // Fetch case counts per hospital (RLS-aware)
-    const { data: casesData } = await dbClient
+    const { data: casesData } = await supabase
       .from('ecrf_opstar_records')
       .select('hospital_id');
       
@@ -2021,8 +2002,8 @@ export async function getAllOperatorsAction() {
   if (!isAdmin) return { error: 'No autorizado.' };
 
   try {
-    const adminClient = createAdminClient();
-    const { data, error } = await adminClient
+    const supabase = await createServerClient();
+    const { data, error } = await supabase
       .from('operators')
       .select(`
         id, full_name, email, is_active, created_at,

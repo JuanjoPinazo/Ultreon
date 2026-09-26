@@ -1,20 +1,18 @@
 import { createClient as createServerClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import TargetsClient from './TargetsClient';
 
 export default async function TargetsPage() {
-  const supabaseSession = await createServerClient();
-  const adminClient = createAdminClient();
+  const supabase = await createServerClient();
   
-  const { data: { user }, error: authError } = await supabaseSession.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   if (authError || !user) {
     redirect('/login');
   }
 
   // Verificar admin
-  const { data: profile } = await supabaseSession
+  const { data: profile } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user.id)
@@ -25,25 +23,25 @@ export default async function TargetsPage() {
   }
 
   // Fetch Hospitals
-  const { data: hospitals } = await adminClient
+  const { data: hospitals } = await supabase
     .from('hospitals')
     .select('id, name')
     .order('name');
 
   // Fetch Center Targets
-  const { data: centerTargets } = await adminClient
+  const { data: centerTargets } = await supabase
     .from('registry_center_targets')
     .select('*')
     .eq('active', true);
 
   // Fetch Operator Targets
-  const { data: operatorTargets } = await adminClient
+  const { data: operatorTargets } = await supabase
     .from('registry_operator_targets')
     .select('*')
     .eq('active', true);
 
   // Fetch Operators with hospital mapping
-  const { data: hospitalOperators } = await adminClient
+  const { data: hospitalOperators } = await supabase
     .from('hospital_operators')
     .select(`
       hospital_id,

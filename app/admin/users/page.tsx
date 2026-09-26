@@ -1,12 +1,10 @@
 // app/admin/users/page.tsx
 import React from 'react';
 import { createClient as createServerClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
 import UsersFormClient from './UsersFormClient';
 
 export default async function AdminUsersPage() {
   const supabase = await createServerClient();
-  const adminClient = createAdminClient();
 
   // Get current logged-in user ID and role
   const { data: { user: currentUser } } = await supabase.auth.getUser();
@@ -16,8 +14,8 @@ export default async function AdminUsersPage() {
     .eq('id', currentUser?.id || '')
     .single();
 
-  // Fetch all user profiles sorted by created date using admin client
-  const { data: users, error: usersError } = await adminClient
+  // Fetch all user profiles sorted by created date
+  const { data: users, error: usersError } = await supabase
     .from('profiles')
     .select('*, hospitals(name)')
     .order('created_at', { ascending: false });
@@ -26,8 +24,8 @@ export default async function AdminUsersPage() {
     console.error('Error fetching user profiles:', usersError);
   }
 
-  // Fetch all active hospitals for selections using admin client
-  const { data: hospitals, error: hospitalsError } = await adminClient
+  // Fetch all active hospitals for selections
+  const { data: hospitals, error: hospitalsError } = await supabase
     .from('hospitals')
     .select('id, name')
     .eq('is_active', true)

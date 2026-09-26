@@ -121,13 +121,16 @@ export default function AdminNav({ role = 'admin' }: { role?: string }) {
   return (
     <nav className="p-4 space-y-1">
       {navItems.map((item) => {
-        // Hide economic routes for clinical_admin
+        // Hide economic and non-clinical routes for clinical_admin
         if (role === 'clinical_admin') {
           if (
             item.href.includes('/economics') ||
             item.href.includes('/settlements') ||
             item.href.includes('/consumption') ||
-            item.href.includes('/business-intelligence')
+            item.href.includes('/business-intelligence') ||
+            item.href.includes('/stock') ||
+            item.href.includes('/orders') ||
+            item.href.includes('/site-monitoring')
           ) {
             return null;
           }
