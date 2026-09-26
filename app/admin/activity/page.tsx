@@ -1,65 +1,67 @@
 import React from 'react';
 import { createClient as createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import ActivityClient from './ActivityClient';
 
 export default async function ActivityPage() {
-  const supabase = await createServerClient();
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const supabaseSession = await createServerClient();
+  const adminClient = createAdminClient();
+  const { data: { user }, error: userError } = await supabaseSession.auth.getUser();
 
   if (userError || !user) {
     redirect('/login');
   }
 
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseSession
     .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single();
 
-  if (profile?.role !== 'admin') {
+  if (profile?.role !== 'admin' && profile?.role !== 'super_admin' && profile?.role !== 'clinical_admin') {
     redirect('/dashboard');
   }
 
   // Fetch Hospitals
-  const { data: hospitals } = await supabase
+  const { data: hospitals } = await adminClient
     .from('hospitals')
     .select('id, name')
     .order('name');
 
   // Fetch Center Targets
-  const { data: centerTargets } = await supabase
+  const { data: centerTargets } = await adminClient
     .from('registry_center_targets')
     .select('*')
     .eq('active', true);
 
   // Fetch Cases
-  const { data: cases } = await supabase
+  const { data: cases } = await adminClient
     .from('ultreon_registry_cases')
     .select('id, hospital_id, operator_id, status, is_demo, procedure_date, created_at');
 
   // Fetch Consumptions
-  const { data: consumptions } = await supabase
+  const { data: consumptions } = await adminClient
     .from('registry_case_consumption')
     .select('id, hospital_id, status, quantity, consumption_date');
 
   // Fetch Stock
-  const { data: stock } = await supabase
+  const { data: stock } = await adminClient
     .from('registry_center_stock')
     .select('hospital_id, quantity_on_hand, quantity_reserved');
 
   // Fetch Orders
-  const { data: orders } = await supabase
+  const { data: orders } = await adminClient
     .from('registry_orders')
     .select('id, hospital_id, status');
 
   // Fetch Order Items
-  const { data: orderItems } = await supabase
+  const { data: orderItems } = await adminClient
     .from('registry_order_items')
     .select('order_id, quantity');
 
   // Fetch Registry Settings
-  const { data: registrySettings } = await supabase
+  const { data: registrySettings } = await adminClient
     .from('registry_settings')
     .select('*')
     .eq('registry_key', 'ULTREON_3')

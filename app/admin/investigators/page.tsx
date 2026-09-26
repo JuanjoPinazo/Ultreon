@@ -1,10 +1,10 @@
 // app/admin/investigators/page.tsx
 import React from 'react';
-import { createClient as createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import InvestigatorsFormClient from './InvestigatorsFormClient';
 
 export default async function AdminInvestigatorsPage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   // Fetch all investigators with hospital details
   const { data: investigators, error: invError } = await supabase

@@ -1,9 +1,9 @@
 import React from 'react';
-import { createClient as createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import StudyGovernanceClient from './StudyGovernanceClient';
 
 export default async function AdminStudyGovernancePage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   const { data: governance, error: govError } = await supabase
     .from('opstar_study_governance')
