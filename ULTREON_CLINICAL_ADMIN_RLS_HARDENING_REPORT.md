@@ -1,26 +1,17 @@
 # ULTREON™ v3.1 – CLINICAL_ADMIN RLS HARDENING REPORT
 
 ## 1. ENUM `user_role` Verification
+- **Roles Inventoried**: A query on the `public.profiles` table revealed that only `hospital_user` (26), `admin` (1), and `clinical_admin` (1) are currently in use.
 - **Before**: The PostgreSQL enum `user_role` did not include the `clinical_admin` role. As a result, the `get_current_user_role()` function failed when trying to cast the text `'clinical_admin'` into `public.user_role`.
-- **After**: A SQL migration script (`scratch/0000_clinical_admin_policies.sql`) has been prepared to alter the `public.user_role` enum and add `'clinical_admin'`, along with `'super_admin'` and `'scientific_reviewer'`.
+- **After**: A SQL migration script (`scratch/0000_clinical_admin_policies.sql`) has been prepared to alter the `public.user_role` enum and explicitly add `'clinical_admin'`. Since `super_admin` and `scientific_reviewer` are not currently used in `profiles`, they were not added to keep the schema lean.
   
 ## 2. `get_current_user_role()` Function
 - **Before**: It queried `public.profiles` and explicitly cast `role::public.user_role`. This crashed for any roles missing from the enum.
-- **After**: The function has been re-created in the migration script to ensure the `user_role` return type is respected after the enum update, ensuring no runtime errors for `clinical_admin`.
+- **After**: The function has been re-created in the migration script to add `SET search_path = public` while maintaining `SECURITY DEFINER`. The `is_clinical_admin()` function has also been created to streamline policy checks.
 
 ## 3. RLS Policies Affected
 - **Replaced `createAdminClient` bypass**: Removed the unsafe `createAdminClient` pattern for `clinical_admin` from all Admin Pages (`users`, `hospitals`, `investigators`, `operators`, `targets`, `activity`, `study-governance`) and server actions.
-- **Clinical RLS Allow**: New Row Level Security policies have been generated in the SQL script that explicitly ALLOW `clinical_admin` to access operational and clinical scopes:
-  - `profiles`
-  - `hospitals`
-  - `opstar_investigators`
-  - `operators`, `hospital_operators`
-  - `operator_clinical_profiles`, `operator_clinical_profile_history`
-  - `ultreon_registry_cases`, `ecrf_opstar_records`
-  - `registry_center_targets`, `registry_operator_targets`
-  - `registry_case_consumption`, `registry_center_stock`, `registry_stock_movements`
-  - `registry_orders`, `registry_order_items`
-  - `opstar_study_governance`, `registry_settings`
+- **Clinical RLS Allow**: New Row Level Security policies have been generated in the SQL script that explicitly ALLOW `clinical_admin` to access operational and clinical scopes.
 - **Economic RLS Deny**: `clinical_admin` is omitted from RLS policies targeting tables like `registry_case_economics`, `monthly_settlements`, `settlement_items`, and `payment_beneficiaries`. Without an explicit ALLOW policy, PostgreSQL evaluates these as a strict DENY. The `createAdminClient` bypass was strictly removed, meaning the normal client with RLS will enforce this restriction automatically.
 
 ## 4. Operator Profile Foreign Key Bug

@@ -1,7 +1,5 @@
 -- 1. ADD CLINICAL_ADMIN TO ENUM
 ALTER TYPE public.user_role ADD VALUE IF NOT EXISTS 'clinical_admin';
-ALTER TYPE public.user_role ADD VALUE IF NOT EXISTS 'super_admin';
-ALTER TYPE public.user_role ADD VALUE IF NOT EXISTS 'scientific_reviewer';
 
 -- 2. VERIFY/RE-CREATE GET_CURRENT_USER_ROLE
 DROP FUNCTION IF EXISTS public.get_current_user_role() CASCADE;
@@ -16,7 +14,7 @@ BEGIN
   
   RETURN current_role;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- 3. CREATE IS_CLINICAL_ADMIN HELPER
 CREATE OR REPLACE FUNCTION public.is_clinical_admin()
@@ -24,7 +22,7 @@ RETURNS BOOLEAN AS $$
 BEGIN
   RETURN (public.get_current_user_role() = 'clinical_admin'::public.user_role);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- 4. FIX FK CONSTRAINT FOR OPERATOR CLINICAL PROFILES (BUG: FK was pointing to profiles instead of operators)
 ALTER TABLE public.operator_clinical_profiles 
